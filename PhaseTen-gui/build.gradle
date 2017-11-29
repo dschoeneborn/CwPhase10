@@ -1,0 +1,9 @@
+apply plugin: 'java'
+sourceSets.main.java.srcDirs = ['src/java']
+sourceSets.test.java.srcDirs = ['src/test']
+
+dependencies {
+	compile project(path: ':PhaseTen-common', configuration: 'archives')
+	compile project(path: ':PhaseTen-client', configuration: 'archives')
+    testCompile 'junit:junit:4.11'
+}

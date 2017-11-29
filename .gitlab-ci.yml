@@ -1,0 +1,11 @@
+image: gradle:latest
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - gradle build
+  tags:
+    - docker

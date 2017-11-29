@@ -1,0 +1,9 @@
+apply plugin: 'java'
+sourceSets.main.java.srcDirs = ['ejbModule/java']
+sourceSets.test.java.srcDirs = ['ejbModule/test']
+
+dependencies {
+	compile project(path: ':PhaseTen-common', configuration: 'archives')
+    testCompile 'junit:junit:4.11'
+    compile group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+}

@@ -1,0 +1,8 @@
+/.metadata/
+/.recommenders/
+/RemoteSystemsTempFiles/
+/PhaseTen-glassfish/
+bin/
+build/
+target/
+/.gradle/
