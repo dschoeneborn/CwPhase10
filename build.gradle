@@ -1,5 +1,9 @@
 subprojects {	
     repositories {
         mavenCentral()
+        maven {
+            url "http://www.mvnrepository.com"
+            url "http://repository.jboss.org/nexus/content/groups/public"
+        }
     }
 }
