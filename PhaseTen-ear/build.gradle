@@ -2,5 +2,5 @@ apply plugin: 'ear'
 
 dependencies {
 	deploy project(':PhaseTen-ejb')
-	deploy project(path: ':PhaseTen-common', configuration: 'archives')
+	earlib project(path: ':PhaseTen-ejb', configuration: 'compile')
 }

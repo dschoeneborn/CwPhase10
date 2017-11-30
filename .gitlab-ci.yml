@@ -1,11 +1,31 @@
-image: gradle:latest
+image: oracle/glassfish:4.1.2
 
 stages:
   - build
 
+variables:
+  ADMIN_PASSWORD: "admin"
+
 build:
   stage: build
   script:
-    - gradle build
+    - echo "AS_ADMIN_PASSWORD=${ADMIN_PASSWORD}" > /tmp/glassfishpwd
+    - asadmin start-domain
+    - ./gradlew clean ear
+    - asadmin -u "admin" --passwordfile /tmp/glassfishpwd --interactive=false deploy --force=true PhaseTen-ear/build/libs/PhaseTen-ear.ear
+    - ./gradlew build
   tags:
     - docker
+  artifacts:
+    paths:
+    - PhaseTen-client/build/libs/
+    - PhaseTen-client/build/reports/
+    - PhaseTen-common/build/libs/
+    - PhaseTen-common/build/reports/
+    - PhaseTen-ear/build/libs/
+    - PhaseTen-ear/build/reports/
+    - PhaseTen-ejb/build/libs/
+    - PhaseTen-ejb/build/reports/
+    - PhaseTen-gui/build/libs/
+    - PhaseTen-gui/build/reports/
+    expire_in: 1 week
