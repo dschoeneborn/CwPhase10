@@ -2,8 +2,8 @@
     <wb-module deploy-name="PhaseTen-ejb">
         <wb-resource deploy-path="/" source-path="/ejbModule/java"/>
         <wb-resource deploy-path="/" source-path="/ejbModule/test"/>
-        <property name="ClientJARURI" value="PhaseTen-common.jar"/>
-        <property name="ClientProject" value="PhaseTen-common"/>
         <property name="java-output-path" value="/PhaseTen-ejb/build/classes"/>
+        <property name="ClientProject" value="PhaseTen-common"/>
+        <property name="ClientJARURI" value="PhaseTen-common.jar"/>
     </wb-module>
 </project-modules>
