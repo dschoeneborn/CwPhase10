@@ -13,5 +13,24 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-dbcp2-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.5.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-transaction-3.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-api-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-core-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-jee-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-loader-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openwebbeans-ee-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/openwebbeans-ejb-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/openwebbeans-impl-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/openwebbeans-spi-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/openwebbeans-web-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.21.jar"/>
+	<classpathentry kind="lib" path="lib/xbean-finder-shaded-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/xbean-naming-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/xbean-reflect-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/xbean-asm5-shaded-4.5.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
