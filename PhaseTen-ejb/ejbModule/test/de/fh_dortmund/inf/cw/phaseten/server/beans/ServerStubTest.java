@@ -15,7 +15,7 @@ public class ServerStubTest {
 	@EJB
 	ServerStub serverStub;
 
-    @Module // here a single bean
+    @Module
     public StatelessBean app() throws Exception {
         final StatelessBean bean = new StatelessBean(ServerStub.class);
         bean.setLocalBean(new Empty());
@@ -24,7 +24,6 @@ public class ServerStubTest {
 
 	@Test
     public void testHelloWorld() throws Exception {
-		//StubLocal serverStub = (StubLocal) context.lookup("java:global/classes/ServerStub!de.fh_dortmund.inf.cw.phaseten.server.shared.StubLocal");
 		Assert.assertEquals("Hello World from GlassFish Server", serverStub.helloWorld());
     }
 
