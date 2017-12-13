@@ -1,21 +1,14 @@
 image: oracle/glassfish:4.1.2
 
-services:
-  - mysql:latest
-
-
 variables:
   MYSQL_DATABASE: PhaseTenDB
   MYSQL_ROOT_PASSWORD: root
-
-stages:
-  - build
-
-variables:
   ADMIN_PASSWORD: "admin"
 
+services:
+  - mysql
+
 build:
-  stage: build
   script:
     - echo "AS_ADMIN_PASSWORD=${ADMIN_PASSWORD}" > /tmp/glassfishpwd
     - asadmin start-domain

@@ -4,5 +4,7 @@ sourceSets.test.java.srcDirs = ['ejbModule/test']
 
 dependencies {
     compile group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
+
     testCompile 'junit:junit:4.11'
 }
