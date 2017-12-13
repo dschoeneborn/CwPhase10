@@ -1,5 +1,9 @@
 apply plugin: 'ear'
 
+ear {
+	appDirName 'EarContent/'
+}
+
 dependencies {
 	deploy project(':PhaseTen-ejb')
 	earlib project(path: ':PhaseTen-ejb', configuration: 'compile')

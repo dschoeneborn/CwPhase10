@@ -1,6 +1,21 @@
 apply plugin: 'java'
-sourceSets.main.java.srcDirs = ['ejbModule/java']
-sourceSets.test.java.srcDirs = ['ejbModule/test']
+
+sourceSets {
+    main {
+        java {
+            srcDir 'ejbModule/java'
+        }
+        resources {
+            srcDir 'ejbModule/java'
+            include 'META-INF/**'
+        }
+    }
+    test {
+        java {
+            srcDir 'ejbModule/test'
+        }
+    }
+}
 
 dependencies {
     compile project(path: ':PhaseTen-common', configuration: 'archives')
