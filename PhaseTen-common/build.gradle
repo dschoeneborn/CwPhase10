@@ -1,8 +1,32 @@
 apply plugin: 'java'
-sourceSets.main.java.srcDirs = ['ejbModule/java']
-sourceSets.test.java.srcDirs = ['ejbModule/test']
+
+sourceSets {
+    main {
+        java {
+            srcDir 'ejbModule/java'
+        }
+        resources {
+            srcDir 'ejbModule/java'
+            include 'META-INF/**'
+        }
+    }
+    test {
+        java {
+            srcDir 'ejbModule/test'
+        }
+    }
+}
+
+jar {
+  manifest {
+    attributes(
+      "Class-Path": ""
+    )
+  }
+}
 
 dependencies {
-    compile group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+    compile group: 'javax', name: 'javaee-api', version: '8.0'
+
     testCompile 'junit:junit:4.11'
 }
