@@ -14,23 +14,130 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/activemq-broker-5.14.1.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-client-5.14.1.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-jdbc-store-5.14.1.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-kahadb-store-5.14.1.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-openwire-legacy-5.14.1.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-protobuf-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-ra-5.14.1.jar"/>
+	<classpathentry kind="lib" path="lib/bcprov-jdk15on-1.51.jar"/>
+	<classpathentry kind="lib" path="lib/bval-core-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/bval-jsr-1.1.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-dbcp2-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.5.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-pool2-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/cryptacular-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-core-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-bindings-soap-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-bindings-xml-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-databinding-jaxb-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-frontend-jaxrs-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-frontend-jaxws-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-frontend-simple-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-management-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-client-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-extension-providers-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-extension-search-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-json-basic-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-security-cors-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-security-jose-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-security-jose-jaxrs-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-security-oauth2-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-rs-service-description-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-security-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-security-saml-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-transports-http-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-ws-addr-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-ws-policy-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-ws-security-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-wsdl-3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-connector-3.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-j2ee-connector_1.6_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-javamail_1.4_mail-1.9.0-alpha-2.jar"/>
 	<classpathentry kind="lib" path="lib/geronimo-transaction-3.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/hawtbuf-1.11.jar"/>
+	<classpathentry kind="lib" path="lib/howl-1.0.1-1.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb-2.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/jasypt-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/java-support-7.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/javaee-api-7.0-1.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-2.7.jar"/>
+	<classpathentry kind="lib" path="lib/johnzon-core-0.9.5.jar"/>
+	<classpathentry kind="lib" path="lib/johnzon-jaxrs-0.9.5.jar"/>
+	<classpathentry kind="lib" path="lib/johnzon-mapper-0.9.5.jar"/>
+	<classpathentry kind="lib" path="lib/mbean-annotation-api-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/mimepull-1.7.jar"/>
+	<classpathentry kind="lib" path="lib/neethi-3.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/openejb-api-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-client-7.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/openejb-core-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-cxf-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-cxf-rs-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-cxf-transport-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-daemon-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-ejbd-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-hsql-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-http-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-javaagent-7.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/openejb-jee-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-jee-accessors-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-jpa-integration-7.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/openejb-loader-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-multicast-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-rest-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-server-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openejb-webservices-7.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/openjpa-2.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-core-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-profile-api-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-saml-api-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-saml-impl-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-security-api-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-security-impl-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-soap-api-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-xacml-api-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-xacml-impl-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-xacml-saml-api-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-xacml-saml-impl-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-xmlsec-api-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/opensaml-xmlsec-impl-3.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/openwebbeans-ee-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/openwebbeans-ee-common-1.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/openwebbeans-ejb-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/openwebbeans-el22-1.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/openwebbeans-impl-1.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/openwebbeans-spi-1.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/openwebbeans-web-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/quartz-openejb-shade-2.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/saaj-impl-1.3.18.jar"/>
+	<classpathentry kind="lib" path="lib/serp-1.14.1.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.21.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.7.21.jar"/>
+	<classpathentry kind="lib" path="lib/stax2-api-3.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/swizzle-stream-1.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/sxc-jaxb-core-0.8.jar"/>
+	<classpathentry kind="lib" path="lib/sxc-runtime-0.8.jar"/>
+	<classpathentry kind="lib" path="lib/woodstox-core-asl-4.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/wsdl4j-1.6.3.jar"/>
+	<classpathentry kind="lib" path="lib/wss4j-bindings-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/wss4j-policy-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/wss4j-ws-security-common-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/wss4j-ws-security-dom-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/wss4j-ws-security-policy-stax-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/wss4j-ws-security-stax-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/xbean-asm5-shaded-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/xbean-bundleutils-4.5.jar"/>
 	<classpathentry kind="lib" path="lib/xbean-finder-shaded-4.5.jar"/>
 	<classpathentry kind="lib" path="lib/xbean-naming-4.5.jar"/>
 	<classpathentry kind="lib" path="lib/xbean-reflect-4.5.jar"/>
-	<classpathentry kind="lib" path="lib/xbean-asm5-shaded-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/xml-resolver-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/xmlschema-core-2.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/xmlsec-2.0.6.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

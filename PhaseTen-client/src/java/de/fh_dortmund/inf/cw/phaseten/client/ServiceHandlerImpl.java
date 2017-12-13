@@ -36,7 +36,6 @@ public class ServiceHandlerImpl implements ServiceHandler {
 		return instance;
 	}
 
-	@Override
 	public String helloWorld() {
 		return stubRemote.helloWorld();
 	}

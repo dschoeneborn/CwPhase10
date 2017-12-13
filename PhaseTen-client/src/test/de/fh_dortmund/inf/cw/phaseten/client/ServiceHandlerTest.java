@@ -16,6 +16,6 @@ public class ServiceHandlerTest {
 	
 	@Test
 	public void testHelloWorld() throws Exception {		
-		Assert.assertEquals("Hello World from GlassFish Server", this.serviceHandler.helloWorld());
+		Assert.assertEquals("Hello World from GlassFish Server. Entries: 0", this.serviceHandler.helloWorld());
 	}
 }
