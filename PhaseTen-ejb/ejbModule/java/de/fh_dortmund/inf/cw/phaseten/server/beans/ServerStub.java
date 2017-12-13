@@ -5,9 +5,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.TestType;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.StubLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.entities.TestType;
 
 /**
  * 
@@ -21,7 +21,7 @@ public class ServerStub implements StubRemote, StubLocal {
 
 	@Override
 	public String helloWorld() {
-		Query query = entityManager.createQuery("SELECT t from TestType as t");
+		Query query = entityManager.createNamedQuery("TestTypeQueryAll");
 		if (query.getResultList().size() == 0) {
 			entityManager.persist(new TestType());
 			entityManager.flush();

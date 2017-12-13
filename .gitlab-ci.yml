@@ -1,19 +1,18 @@
-image: oracle/glassfish:4.1.2
-
-variables:
-  MYSQL_DATABASE: PhaseTenDB
-  MYSQL_ROOT_PASSWORD: root
-  ADMIN_PASSWORD: "admin"
+image: glassfish
 
 services:
   - mysql
 
+variables:
+  MYSQL_DATABASE: phaseten
+  MYSQL_ROOT_PASSWORD: root
+
 build:
   script:
-    - curl http://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.45/mysql-connector-java-5.1.45.jar -o glassfish/domains/domain1/lib/ext/mysql-connector-java-5.1.34.jar
     - echo "AS_ADMIN_PASSWORD=${ADMIN_PASSWORD}" > /tmp/glassfishpwd
+    - wget "http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.45/mysql-connector-java-5.1.45.jar" -P "/usr/local/glassfish4/glassfish/domains/domain1/lib/ext/"
     - asadmin start-domain
-    - mv PhaseTen-ear/EarContent/META-INF/glassfish-resources-ci.xml PhaseTen-ear/EarContent/META-INF/glassfish-resources.xml
+    - mv PhaseTen-ear/glassfish-resources-ci.xml PhaseTen-ear/EarContent/META-INF/glassfish-resources.xml
     - ./gradlew clean ear
     - asadmin -u "admin" --passwordfile /tmp/glassfishpwd --interactive=false deploy --force=true PhaseTen-ear/build/libs/PhaseTen-ear.ear
     - ./gradlew build

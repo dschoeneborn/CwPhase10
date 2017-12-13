@@ -8,7 +8,7 @@
 						  datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
 		<property name="serverName" value="mysql" />
 		<property name="port" value="3306" />
-		<property name="databaseName" value="PhaseTenDB" />
+		<property name="databaseName" value="phaseten" />
 		<property name="user" value="root" />
 		<property name="password" value="root" />
 	</jdbc-connection-pool>
