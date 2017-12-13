@@ -13,31 +13,36 @@ import org.junit.runner.RunWith;
 
 import de.fh_dortmund.inf.cw.phaseten.server.shared.entities.TestType;
 
+/**
+ * 
+ * @author Marc, Daniela
+ *
+ */
 @RunWith(ApplicationComposer.class)
 public class ServerStubTest {
 	@EJB
 	ServerStub serverStub;
 
-    @Module 
-    public PersistenceUnit persistence() { 
-        PersistenceUnit unit = new PersistenceUnit("PhaseTenDB"); 
-        unit.setJtaDataSource("testTypeDatabase"); 
-        unit.setNonJtaDataSource("testTypeDatabaseUnmanaged"); 
-        unit.getClazz().add(TestType.class.getName()); 
-        unit.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)"); 
-        return unit; 
-    } 
-	
-    @Module
-    public StatelessBean app() throws Exception {
-        final StatelessBean bean = new StatelessBean(ServerStub.class);
-        bean.setLocalBean(new Empty());
-        return bean;
-    }
+	@Module
+	public PersistenceUnit persistence() {
+		PersistenceUnit unit = new PersistenceUnit("PhaseTenDB");
+		unit.setJtaDataSource("testTypeDatabase");
+		unit.setNonJtaDataSource("testTypeDatabaseUnmanaged");
+		unit.getClazz().add(TestType.class.getName());
+		unit.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
+		return unit;
+	}
+
+	@Module
+	public StatelessBean app() throws Exception {
+		final StatelessBean bean = new StatelessBean(ServerStub.class);
+		bean.setLocalBean(new Empty());
+		return bean;
+	}
 
 	@Test
-    public void testHelloWorld() throws Exception {
-		Assert.assertEquals("Hello World from GlassFish Server. Entries: 0", serverStub.helloWorld());
-    }
+	public void testHelloWorld() throws Exception {
+		Assert.assertEquals("Hello World from GlassFish Server. Entries: 1", serverStub.helloWorld());
+	}
 
 }
