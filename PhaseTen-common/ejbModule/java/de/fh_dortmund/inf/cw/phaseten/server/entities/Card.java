@@ -8,7 +8,7 @@ import javax.persistence.Id;
 /**
  * Card Entity.
  * 
- * @author Daniela
+ * @author Dennis Schöneborn, Daniela
  *
  */
 @Entity
@@ -18,7 +18,39 @@ public class Card {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public int id;
 
+	private Color color;
+	private CardValue cardValue;
+
+	/**
+	 * @param color
+	 * @param cardValue
+	 */
+	public Card(Color color, CardValue cardValue) {
+		super();
+		this.color = color;
+		this.cardValue = cardValue;
+	}
+
+	public Card() {
+
+        }
+
 	public int getId() {
 		return id;
 	}
+
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+		return color;
+	}
+
+	/**
+	 * @return the cardValue
+	 */
+	public CardValue getCardValue() {
+		return cardValue;
+	}
+
 }
