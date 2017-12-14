@@ -5,7 +5,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 /**
  * @author Dennis Schöneborn
- *
+ * @author Marc Mettke
  */
 public class Player {
 	private PlayerPile playerPile;
@@ -42,6 +42,14 @@ public class Player {
 	public void removeLobby()
 	{
 		this.lobby = null;
+	}
+
+	public PlayerPile getPlayerPile() {
+		return playerPile;
+	}
+
+	public String getName() {
+		return name;
 	}
 	
 }

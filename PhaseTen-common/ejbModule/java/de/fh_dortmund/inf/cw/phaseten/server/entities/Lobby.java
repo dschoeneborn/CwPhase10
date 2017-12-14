@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * @author Dennis Schöneborn
- *
+ * @author Marc Mettke
  */
 public class Lobby {
 	private static final int MAX_PLAYER = 6;
@@ -41,6 +41,10 @@ public class Lobby {
 			
 	}
 	
+	public Set<Player> getPlayer() {
+		return player;
+	}
+
 	public Game startGame()
 	{
 		//TODO Game erstellen

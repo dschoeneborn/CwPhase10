@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * @author Dennis Schöneborn
- *
+ * @author Marc Mettke
  */
 public class Game {
 	private Set<Player> player;
@@ -104,6 +104,21 @@ public class Game {
 	{
 		this.openPiles.add(pile);
 	}
+
+	public Set<Player> getPlayer() {
+		return player;
+	}
+
+	public PullStack getPullStack() {
+		return pullStack;
+	}
+
+	public LiFoStack getLiFoStack() {
+		return liFoStack;
+	}
+	
+	
+	
 	
 	//TODO Fassadenmethoden für die eintelnen Stacks
 	
