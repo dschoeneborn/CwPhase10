@@ -7,9 +7,8 @@ import org.junit.Test;
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandlerImpl;
 
 /**
- * 
- * @author Marc, Daniela
- *
+ * @author Marc Mettke
+ * @author Daniela
  */
 public class ServiceHandlerTest {
 	private ServiceHandlerImpl serviceHandler;

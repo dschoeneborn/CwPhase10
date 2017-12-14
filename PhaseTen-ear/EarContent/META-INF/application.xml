@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd" version="7">
+  <module>
+    <ejb>PhaseTen-ejb.jar</ejb>
+  </module>
+  <module>
+    <java>PhaseTen-common.jar</java>
+  </module>
+  <jms-destination>
+    <name>java:global/jms/CurrentPlayer</name>
+    <interface-name>javax.jms.Topic</interface-name>
+    <destination-name>CurrentPlayer</destination-name>
+  </jms-destination>
+  <jms-destination>
+    <name>java:global/jms/Lobby</name>
+    <interface-name>javax.jms.Topic</interface-name>
+    <destination-name>Lobby</destination-name>
+  </jms-destination>
+  <jms-destination>
+    <name>java:global/jms/Game</name>
+    <interface-name>javax.jms.Topic</interface-name>
+    <destination-name>Game</destination-name>
+  </jms-destination>
+</application>
