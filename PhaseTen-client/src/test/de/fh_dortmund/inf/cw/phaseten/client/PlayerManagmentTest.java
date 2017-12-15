@@ -7,48 +7,93 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 
 /**
  * @author Marc Mettke
  */
-public class PlayerManagmentTest implements MessageListener {
+public class PlayerManagmentTest {
 	private ServiceHandlerImpl serviceHandler;
-	private CountDownLatch latch;
-	private Message message;
+
+	private CountDownLatch latchPlayer;
+	private CountDownLatch latchLobby;
+	private Message messagePlayer;
+	private Message messageLobby;
 
 	@Before
 	public void setUp() throws Exception {
-		this.latch = new CountDownLatch(1);
 		this.serviceHandler = ServiceHandlerImpl.getInstance();
-		this.serviceHandler.playerConsumer.setMessageListener(this);
+		this.serviceHandler.playerConsumer.setMessageListener(new MessageListener() {
+			public void onMessage(Message message) {
+				messagePlayer = message;
+				latchPlayer.countDown();
+			}
+		});
+		this.serviceHandler.lobbyConsumer.setMessageListener(new MessageListener() {
+			public void onMessage(Message message) {
+				messageLobby = message;
+				latchLobby.countDown();
+			}
+		});
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		this.serviceHandler.playerConsumer.setMessageListener(null);
+		this.serviceHandler.lobbyConsumer.setMessageListener(null);		
 	}
 
 	@Test
 	public void testRequestPlayerMessage() throws Exception {
+		this.latchPlayer = new CountDownLatch(1);
 		this.serviceHandler.requestPlayerMessage();
-		this.latch.await(30, TimeUnit.SECONDS);
-		
-		Assert.assertTrue(message instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) message).getObject() instanceof CurrentPlayer);
+		this.latchPlayer.await(30, TimeUnit.SECONDS);
+
+		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
+		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 	}
 
 	@Test
 	public void register() throws Exception {
 		// throws UsernameAlreadyTakenException;
+		
+		String username = "testUser";
+		String password = "testPassword";
+		
+		this.latchPlayer = new CountDownLatch(1);
+		this.latchLobby = new CountDownLatch(1);
+		this.serviceHandler.register(username, password);
+		this.latchPlayer.await(30, TimeUnit.SECONDS);
+		this.latchLobby.await(30, TimeUnit.SECONDS);
+
+		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
+		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
+		Assert.assertTrue(messageLobby instanceof ObjectMessage);
+		Assert.assertTrue(((ObjectMessage) messageLobby).getObject() instanceof Lobby);
 	}
 
 	@Test
 	public void login() throws Exception {
 		// throws UserDoesNotExistException;
-	}
-	
-	public void onMessage(Message message) {
-		this.message = message;
-		latch.countDown();
+		
+		String username = "testUser";
+		String password = "testPassword";
+		
+		this.latchPlayer = new CountDownLatch(1);
+		this.latchLobby = new CountDownLatch(1);
+		this.serviceHandler.login(username, password);
+		this.latchPlayer.await(30, TimeUnit.SECONDS);
+		this.latchLobby.await(30, TimeUnit.SECONDS);
+
+		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
+		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
+		Assert.assertTrue(messageLobby instanceof ObjectMessage);
+		Assert.assertTrue(((ObjectMessage) messageLobby).getObject() instanceof Lobby);
 	}
 }

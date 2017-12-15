@@ -8,9 +8,11 @@ import java.util.List;
 
 /**
  * @author Dennis Schöneborn
- *
+ * @author Marc Mettke
  */
 public class PlayerPile extends Pile {
+	private static final long serialVersionUID = -3026757589448841719L;
+
 	public PlayerPile() {
 		this.cards = new LinkedList<Card>();
 	}

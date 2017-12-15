@@ -1,5 +1,9 @@
 package de.fh_dortmund.inf.cw.phaseten.server.shared;
 
+import java.util.Collection;
+
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InvalidCardCompilationException;
@@ -15,9 +19,9 @@ public interface GameManagment {
 	
 	void takeCardFromDiscardPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException;
 	
-	void addToOpenPile() throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException;
+	void addToOpenPile(Card card, DockPile dockPile) throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException;
 	
-	void goOut() throws NotYourTurnException, InvalidCardCompilationException;
+	void goOut(Collection<Card> cards) throws NotYourTurnException, InvalidCardCompilationException;
 	
-	void discardCardToDiscardPile() throws NotYourTurnException, TakeCardBeforeDiscardingException;
+	void discardCardToDiscardPile(Card card) throws NotYourTurnException, TakeCardBeforeDiscardingException;
 }

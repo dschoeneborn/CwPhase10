@@ -7,9 +7,10 @@ import java.util.LinkedList;
 
 /**
  * @author Dennis Schöneborn
- *
+ * @author Marc Mettke
  */
 public class SequenceDockPile extends DockPile {
+	private static final long serialVersionUID = -2641836374110431370L;
 
 	/**
 	 * 

@@ -1,6 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -10,6 +11,8 @@ import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.Topic;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
@@ -65,28 +68,29 @@ public class GameManagment implements GameManagmentRemote, GameManagmentLocal {
 	}
 
 	@Override
-	public void addToOpenPile() throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException {
+	public void addToOpenPile(Card card, DockPile dockPile)
+			throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException {
 		// TODO: Check if move is valid, proceed move
 		updateClient();			
 	}
 
 	@Override
-	public void goOut() throws NotYourTurnException, InvalidCardCompilationException {
+	public void goOut(Collection<Card> cards) throws NotYourTurnException, InvalidCardCompilationException {
 		// TODO: Check if move is valid, proceed move
 		updateClient();				
 	}
 
 	@Override
-	public void discardCardToDiscardPile() throws NotYourTurnException, TakeCardBeforeDiscardingException {
+	public void discardCardToDiscardPile(Card card) throws NotYourTurnException, TakeCardBeforeDiscardingException {
 		// TODO: Check if move is valid, proceed move
 		updateClient();				
 	}
 	
 	private void updateClient() {
-		// Send updated Player Cards to Client
-		this.playerManagment.sendPlayerMessage();
 		// Send updated Game to Client
 		this.sendGameMessage();
+		// Send updated Player Cards to Client
+		this.playerManagment.sendPlayerMessage();
 	}
 
 	private void sendGameMessage(Game game) {
