@@ -7,4 +7,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface LobbyManagmentLocal extends LobbyManagment {
+	public void sendLobbyMessage();
 }

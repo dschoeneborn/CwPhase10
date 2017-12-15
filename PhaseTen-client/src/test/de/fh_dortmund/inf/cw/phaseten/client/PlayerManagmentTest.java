@@ -37,6 +37,16 @@ public class PlayerManagmentTest implements MessageListener {
 		Assert.assertTrue(((ObjectMessage) message).getObject() instanceof CurrentPlayer);
 	}
 
+	@Test
+	public void register() throws Exception {
+		// throws UsernameAlreadyTakenException;
+	}
+
+	@Test
+	public void login() throws Exception {
+		// throws UserDoesNotExistException;
+	}
+	
 	public void onMessage(Message message) {
 		this.message = message;
 		latch.countDown();

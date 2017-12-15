@@ -7,4 +7,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface GameManagmentLocal extends GameManagment {
+	public void sendGameMessage();
 }
