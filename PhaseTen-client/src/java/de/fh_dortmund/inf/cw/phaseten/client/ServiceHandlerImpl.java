@@ -1,5 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.client;
 
+import java.util.Collection;
+
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSConsumer;
 import javax.jms.JMSContext;
@@ -11,6 +13,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InvalidCardCompilationException;
@@ -134,16 +138,17 @@ public class ServiceHandlerImpl implements ServiceHandler {
 		this.gameManagmentRemote.takeCardFromDrawPile();
 	}
 
-	public void addToOpenPile() throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException {
-		this.gameManagmentRemote.addToOpenPile();
+	public void addToOpenPile(Card card, DockPile dockPile)
+			throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException {
+		this.gameManagmentRemote.addToOpenPile(card, dockPile);
 	}
 
-	public void goOut() throws NotYourTurnException, InvalidCardCompilationException {
-		this.gameManagmentRemote.goOut();
+	public void goOut(Collection<Card> cards) throws NotYourTurnException, InvalidCardCompilationException {
+		this.gameManagmentRemote.goOut(cards);
 	}
 
-	public void discardCardToDiscardPile() throws NotYourTurnException, TakeCardBeforeDiscardingException {
-		this.gameManagmentRemote.discardCardToDiscardPile();
+	public void discardCardToDiscardPile(Card card) throws NotYourTurnException, TakeCardBeforeDiscardingException {
+		this.gameManagmentRemote.discardCardToDiscardPile(card);
 	}
 
 	public void onMessage(Message message) {

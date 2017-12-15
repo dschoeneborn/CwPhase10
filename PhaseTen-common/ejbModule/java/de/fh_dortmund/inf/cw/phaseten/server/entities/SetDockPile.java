@@ -7,9 +7,11 @@ import java.util.LinkedList;
 
 /**
  * @author Dennis Schöneborn
- *
+ * @author Marc Mettke
  */
 public class SetDockPile extends DockPile {
+	private static final long serialVersionUID = -5890944285337742574L;
+	
 	private CardValue cardValue;
 
 	/**

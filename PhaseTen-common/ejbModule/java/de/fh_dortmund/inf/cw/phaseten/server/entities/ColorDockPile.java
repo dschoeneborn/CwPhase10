@@ -7,9 +7,11 @@ import java.util.LinkedList;
 
 /**
  * @author Dennis Schöneborn
- *
+ * @author Marc Mettke
  */
 public class ColorDockPile extends DockPile {
+	private static final long serialVersionUID = -8155115717024180700L;
+	
 	private Color color;
 
 	private ColorDockPile() {
