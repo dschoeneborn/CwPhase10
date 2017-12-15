@@ -37,6 +37,21 @@ public class LobbyManagmentTest implements MessageListener {
 		Assert.assertTrue(((ObjectMessage) message).getObject() instanceof Lobby);
 	}
 
+	@Test
+	public void testEnterAsPlayer() throws Exception {
+		// throws NoFreeSlotException;
+	}
+
+	@Test
+	public void testEnterAsSpectator() throws Exception {
+		
+	}
+
+	@Test
+	public void testStartGame() throws Exception {
+		// throws NotEnoughPlayerException;
+	}
+	
 	public void onMessage(Message message) {
 		this.message = message;
 		latch.countDown();

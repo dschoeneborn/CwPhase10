@@ -37,6 +37,31 @@ public class GameManagmentTest implements MessageListener {
 		Assert.assertTrue(((ObjectMessage) message).getObject() instanceof Game);
 	}
 
+	@Test
+	public void testTakeCardFromDrawPile() throws Exception {
+		// throws NotYourTurnException, CardAlreadyTakenInThisTurnException;
+	}
+
+	@Test
+	public void testTakeCardFromDiscardPile() throws Exception {
+		// throws NotYourTurnException, CardAlreadyTakenInThisTurnException;
+	}
+
+	@Test
+	public void testAddToOpenPile() throws Exception {
+		// throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException;
+	}
+
+	@Test
+	public void testGoOut() throws Exception {
+		// throws NotYourTurnException, InvalidCardCompilationException;
+	}
+
+	@Test
+	public void testDiscardCardToDiscardPile() throws Exception {
+		// throws NotYourTurnException, TakeCardBeforeDiscardingException;
+	}
+	
 	public void onMessage(Message message) {
 		this.message = message;
 		latch.countDown();

@@ -30,4 +30,5 @@ build:
     - PhaseTen-ejb/build/reports/
     - PhaseTen-gui/build/libs/
     - PhaseTen-gui/build/reports/
+    - /usr/local/glassfish4/glassfish/domains/domain1/logs/server.log
     expire_in: 1 week

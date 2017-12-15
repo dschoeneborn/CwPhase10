@@ -6,3 +6,5 @@ bin/
 build/
 target/
 /.gradle/
+PhaseTen-common/\.settings/org\.eclipse\.jdt\.core\.prefs
+PhaseTen-ejb/\.settings/org\.eclipse\.jdt\.core\.prefs

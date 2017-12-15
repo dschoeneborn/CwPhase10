@@ -29,6 +29,6 @@ dependencies {
     compile project(path: ':PhaseTen-common', configuration: 'archives')
     compile group: 'javax', name: 'javaee-api', version: '8.0'
    
+    testCompile fileTree(include: ['*.jar'], dir: 'lib')
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.apache.openejb', name: 'openejb-core', version: '4.7.5'
 }

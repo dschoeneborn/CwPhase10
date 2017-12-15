@@ -11,6 +11,16 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InvalidCardCompilationException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
@@ -94,6 +104,46 @@ public class ServiceHandlerImpl implements ServiceHandler {
 
 	public void requestGameMessage() {
 		this.gameManagmentRemote.requestGameMessage();	
+	}
+
+	public void register(String username, String password) throws UsernameAlreadyTakenException {
+		this.playerManagmentRemote.register(username, password);
+	}
+
+	public void login(String username, String password) throws UserDoesNotExistException {
+		this.playerManagmentRemote.login(username, password);
+	}
+
+	public void enterAsPlayer() throws NoFreeSlotException {
+		this.lobbyManagmentRemote.enterAsPlayer();
+	}
+
+	public void enterAsSpectator() {
+		this.lobbyManagmentRemote.enterAsSpectator();
+	}
+
+	public void startGame() throws NotEnoughPlayerException {
+		this.lobbyManagmentRemote.startGame();
+	}
+
+	public void takeCardFromDrawPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException {
+		this.gameManagmentRemote.takeCardFromDrawPile();
+	}
+
+	public void takeCardFromDiscardPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException {
+		this.gameManagmentRemote.takeCardFromDrawPile();
+	}
+
+	public void addToOpenPile() throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException {
+		this.gameManagmentRemote.addToOpenPile();
+	}
+
+	public void goOut() throws NotYourTurnException, InvalidCardCompilationException {
+		this.gameManagmentRemote.goOut();
+	}
+
+	public void discardCardToDiscardPile() throws NotYourTurnException, TakeCardBeforeDiscardingException {
+		this.gameManagmentRemote.discardCardToDiscardPile();
 	}
 
 	public void onMessage(Message message) {
