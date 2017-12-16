@@ -5,7 +5,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/PhaseTen-common"/>
-	<classpathentry kind="lib" path="lib/javax.jms-api.jar"/>
-	<classpathentry kind="lib" path="lib/lib/appserv-rt.jar"/>
+	<classpathentry kind="lib" path="lib/glassfish/lib/appserv-rt.jar"/>
+	<classpathentry kind="lib" path="lib/glassfish/modules/javax.jms-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

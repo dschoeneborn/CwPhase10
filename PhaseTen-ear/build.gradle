@@ -1,6 +1,13 @@
 apply plugin: 'ear'
 
+ear {
+	appDirName 'EarContent/'
+	deploymentDescriptor {
+		module("PhaseTen-common.jar", "java")
+	}
+}
+
 dependencies {
 	deploy project(':PhaseTen-ejb')
-	earlib project(path: ':PhaseTen-ejb', configuration: 'compile')
+	deploy project(':PhaseTen-common')
 }

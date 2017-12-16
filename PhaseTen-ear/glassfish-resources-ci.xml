@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC
+	"-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN"
+	"http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+	<jdbc-connection-pool name="PhaseTenDBPool"
+						  res-type="javax.sql.ConnectionPoolDataSource"
+						  datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
+		<property name="serverName" value="mysql" />
+		<property name="port" value="3306" />
+		<property name="databaseName" value="phaseten" />
+		<property name="user" value="root" />
+		<property name="password" value="root" />
+	</jdbc-connection-pool>
+
+	<jdbc-resource enabled="true"
+				   jndi-name="java:app/jdbc/PhaseTenDB"
+				   pool-name="PhaseTenDBPool" />
+</resources>

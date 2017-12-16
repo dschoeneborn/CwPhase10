@@ -46,3 +46,17 @@ git clone git@gitlab.com:mettke/phaseten.git
 * Press *Next >*
 * Add *PhaseTen-ear*
 * Press *Finish*
+
+### Setup MySQL Database
+* Download *MySQL Workbench*
+* Add Connection...
+* *Connection Name*: phaseten
+* *Password*: passwort
+* *Default Schema*: phaseten
+* Download and extract JDBC-Connector: https://dev.mysql.com/downloads/connector/j/
+* Copy+Paste Jar into [GlassFish-Home]/glassfish/domains/domain1/lib/ext
+* Restart GlassFish
+* Test: *ServiceHandlerTest* (Remote)
+* Test: *ServerStubTest* (Local)
+* MySQL Workbench: SELECT * FROM phaseten.TESTTYPE; 
+* One Row should be returned
