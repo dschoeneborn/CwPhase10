@@ -1,0 +1,33 @@
+package de.fh_dortmund.inf.cw.phaseten.gui.playground;
+
+import java.awt.FlowLayout;
+
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+/**
+ * @author Robin Harbecke
+ *
+ */
+public class PlayerCardsPane extends JPanel{	
+	protected JScrollPane scrollPane;
+	protected JPanel cardList = new JPanel();
+	
+	public PlayerCardsPane() {
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));		
+		this.cardList.setLayout(new FlowLayout());
+		this.scrollPane = new JScrollPane(this.cardList);
+		this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		this.add(this.scrollPane);			
+	}	
+	
+	public void updateData() {//todo
+		this.cardList.removeAll();		
+		for (int i = 0; i < 7; i++) {
+			Card card = new Card();
+			this.cardList.add(card);
+		}	
+	}
+}
