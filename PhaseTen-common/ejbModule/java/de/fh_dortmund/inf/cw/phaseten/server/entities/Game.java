@@ -8,21 +8,59 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Daniela Kaiser
  */
+@Entity
 public class Game {
-	private Set<Player> player;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+
+	@ManyToMany
+	@JoinTable(name = "GAME_PLAYERS", joinColumns = { @JoinColumn(name = "GAME_ID") }, inverseJoinColumns = {
+			@JoinColumn(name = "PLAYER_ID") })
+	@Column(nullable = false)
+	@Basic(optional = false)
+	private Set<Player> players;
+
+	@Column(nullable = false)
+	@Basic(optional = false)
+	@OneToOne
+	@JoinColumn(name="PULLSTACK_ID", unique=true)
 	private PullStack pullStack;
+	
+	@Column(nullable = false)
+	@Basic(optional = false)
+	@OneToOne
+	@JoinColumn(name="LIFOSTACK_ID", unique=true)
 	private LiFoStack liFoStack;
+	
+	@Column
+	@OneToMany
+	@JoinColumn(name="OPENPILES_ID", unique=true)
 	private List<DockPile> openPiles;
 
 	/**
 	 * 
 	 */
 	private Game() {
-		this.player = new HashSet<>();
+		this.players = new HashSet<>();
 		this.pullStack = new PullStack();
 		this.liFoStack = new LiFoStack();
 		this.openPiles = new LinkedList<>();
@@ -83,10 +121,9 @@ public class Game {
 		this(p1, p2, p3, p4, p5);
 		this.addPlayer(p6);
 	}
-	
-	private void addPlayer(Player p)
-	{
-		this.player.add(p);
+
+	private void addPlayer(Player p) {
+		this.players.add(p);
 		p.setGame(this);
 	}
 
@@ -96,17 +133,16 @@ public class Game {
 	public List<DockPile> getOpenPiles() {
 		return openPiles;
 	}
-	
+
 	/**
 	 * @param pile
 	 */
-	public void addOpenPile(DockPile pile)
-	{
+	public void addOpenPile(DockPile pile) {
 		this.openPiles.add(pile);
 	}
 
 	public Set<Player> getPlayer() {
-		return player;
+		return players;
 	}
 
 	public PullStack getPullStack() {
@@ -116,10 +152,7 @@ public class Game {
 	public LiFoStack getLiFoStack() {
 		return liFoStack;
 	}
-	
-	
-	
-	
-	//TODO Fassadenmethoden für die eintelnen Stacks
-	
+
+	// TODO Fassadenmethoden für die eintelnen Stacks
+
 }
