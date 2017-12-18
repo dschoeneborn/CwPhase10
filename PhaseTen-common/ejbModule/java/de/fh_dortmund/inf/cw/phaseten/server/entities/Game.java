@@ -49,9 +49,9 @@ public class Game {
 	@JoinColumn(nullable = false, unique = true)
 	private LiFoStack liFoStack;
 
-//	@OneToMany
-//	@JoinColumn(unique = true)
-	@Transient
+	@OneToMany
+	@JoinColumn(unique = true)
+//	@Transient
 	private List<DockPile> openPiles;
 	
 	@OneToMany(mappedBy="game")

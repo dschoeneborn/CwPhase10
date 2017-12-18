@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -17,7 +19,8 @@ import javax.persistence.MappedSuperclass;
  * @author Daniela Kaiser
  * @author Sebastian Seitz
  */
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class DockPile extends Pile {
 	private static final long serialVersionUID = -4661422639855266071L;
 
