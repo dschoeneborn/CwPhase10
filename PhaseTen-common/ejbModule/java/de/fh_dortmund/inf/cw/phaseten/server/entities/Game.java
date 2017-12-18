@@ -26,6 +26,7 @@ import javax.persistence.Transient;
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
+ * @author Sebastian Seitz
  */
 @Entity
 public class Game {
@@ -48,10 +49,13 @@ public class Game {
 	@JoinColumn(nullable = false, unique = true)
 	private LiFoStack liFoStack;
 
-	// @OneToMany
-	// @JoinColumn(unique = true)
+	@OneToMany
+	@JoinColumn(unique = true)
 	@Transient
 	private List<DockPile> openPiles;
+	
+	@OneToMany(mappedBy="game")
+	private List<Spectator> spectator;
 
 	/**
 	 * 

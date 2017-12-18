@@ -9,12 +9,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
+ * @author Sebastian Seitz
  */
+@MappedSuperclass
 public abstract class DockPile extends Pile {
 	private static final long serialVersionUID = -4661422639855266071L;
 

@@ -17,6 +17,7 @@ import javax.persistence.Id;
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
+ * @author Sebastian Seitz
  */
 @Entity
 public class PlayerPile extends Pile {

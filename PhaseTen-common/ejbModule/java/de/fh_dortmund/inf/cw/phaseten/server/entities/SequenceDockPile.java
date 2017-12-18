@@ -6,13 +6,26 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
+ * @author Sebastian Seitz
  */
+
+@Entity
 public class SequenceDockPile extends DockPile {
-	private static final long serialVersionUID = -2641836374110431370L;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8478624573278422943L;
+	
 
 	/**
 	 * 

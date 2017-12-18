@@ -6,11 +6,15 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import javax.persistence.Entity;
+
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
+ * @author Sebastian Seitz
  */
+@Entity
 public class LiFoStack extends Stack {
 	private static final long serialVersionUID = -1006154816006779657L;
 
