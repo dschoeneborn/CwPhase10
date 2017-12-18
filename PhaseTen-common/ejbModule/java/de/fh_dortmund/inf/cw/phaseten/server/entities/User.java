@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 /**
  * @author Dennis Schöneborn
@@ -39,8 +40,12 @@ public class User {
 
 	@SuppressWarnings("unused")
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="PLAYER_ID", unique=true)
+	@JoinColumn(name = "PLAYER_ID", unique = true)
 	private Player player;
+	@SuppressWarnings("unused")
+	// TODO
+	@Transient
+	private Spectator spectator;
 
 	private User() {
 

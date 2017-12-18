@@ -15,17 +15,13 @@ import javax.persistence.Id;
  * @author Marc Mettke
  * @author Daniela Kaiser
  */
-//@Entity
 public abstract class DockPile extends Pile {
-	// @Id
-	// @GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
 	private static final long serialVersionUID = -4661422639855266071L;
 
-	protected DockPile(){
-		
+	protected DockPile() {
+
 	}
-	
+
 	public List<Card> getCards() {
 		return this.cards;
 	}

@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 /**
  * @author Dennis Schöneborn
@@ -44,9 +45,14 @@ public class Player {
 	@JoinColumn
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Lobby lobby;
+	
+	//TODO
+	@Transient
+	private Stage phase;
 
 	private Player() {
 		this.playerPile = new PlayerPile();
+		this.phase = Stage.TWO_TRIPLES;
 	}
 
 	/**
