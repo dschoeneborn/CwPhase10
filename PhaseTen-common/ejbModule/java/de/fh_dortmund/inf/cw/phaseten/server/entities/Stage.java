@@ -4,7 +4,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 /**
- * @author 012789
+ * @author Dennis Schöneborn
  *
  */
 public enum Stage {
