@@ -14,6 +14,7 @@ import java.util.Set;
  */
 public class Game {
 	private Set<Player> player;
+	private Set<Spectator> spectators;
 	private PullStack pullStack;
 	private LiFoStack liFoStack;
 	private List<DockPile> openPiles;
@@ -23,6 +24,7 @@ public class Game {
 	 */
 	private Game() {
 		this.player = new HashSet<>();
+		this.spectators = new HashSet<>();
 		this.pullStack = new PullStack();
 		this.liFoStack = new LiFoStack();
 		this.openPiles = new LinkedList<>();
@@ -84,10 +86,30 @@ public class Game {
 		this.addPlayer(p6);
 	}
 	
+	/**
+	 * Help method to add a Player including association
+	 * @param p
+	 */
 	private void addPlayer(Player p)
 	{
 		this.player.add(p);
 		p.setGame(this);
+	}
+	
+	/**
+	 * @param spectator
+	 */
+	public void addSpectator(Spectator spectator)
+	{
+		this.spectators.add(spectator);
+	}
+	
+	/**
+	 * @param spectator
+	 */
+	public void removeSpectator(Spectator spectator)
+	{
+		this.spectators.remove(spectator);
 	}
 
 	/**

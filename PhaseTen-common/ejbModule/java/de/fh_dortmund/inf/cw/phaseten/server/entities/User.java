@@ -14,6 +14,8 @@ public class User {
 	private Long coins;
 	@SuppressWarnings("unused")
 	private Player player;
+	@SuppressWarnings("unused")
+	private Spectator spectator;
 	
 	private User()
 	{
