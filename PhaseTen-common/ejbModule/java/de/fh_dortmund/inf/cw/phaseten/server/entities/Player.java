@@ -7,6 +7,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,8 +48,9 @@ public class Player {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Lobby lobby;
 	
-	//TODO
-	@Transient
+	@Enumerated(EnumType.ORDINAL)
+	@Column(nullable = false)
+	@Basic(optional = false)
 	private Stage phase;
 
 	private Player() {

@@ -42,9 +42,10 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "PLAYER_ID", unique = true)
 	private Player player;
+
 	@SuppressWarnings("unused")
-	// TODO
-	@Transient
+	@OneToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn
 	private Spectator spectator;
 
 	private User() {

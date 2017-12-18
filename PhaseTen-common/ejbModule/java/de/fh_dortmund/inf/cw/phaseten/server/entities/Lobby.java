@@ -36,6 +36,10 @@ public class Lobby {
 	@JoinColumn(nullable = false)
 	private Set<Player> players;
 
+	@OneToMany(cascade=CascadeType.PERSIST)
+	@JoinColumn
+	private Set<Spectator> spectators;
+
 	@SuppressWarnings("unused")
 	private Lobby() {
 
@@ -44,6 +48,7 @@ public class Lobby {
 	public Lobby(Player host) {
 		this.players = new HashSet<>();
 		this.players.add(host);
+		this.spectators = new HashSet<>();
 		host.setLobby(this);
 	}
 
@@ -65,6 +70,14 @@ public class Lobby {
 			player.setLobby(this);
 		}
 
+	}
+
+	public void addSpectator(Spectator spectator) {
+		this.spectators.add(spectator);
+	}
+
+	public void removeSpectator(Spectator spectator) {
+		this.spectators.remove(spectator);
 	}
 
 	public Set<Player> getPlayer() {

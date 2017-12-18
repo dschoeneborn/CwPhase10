@@ -3,6 +3,7 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToOne;
 /**
  * @author Dennis Schöneborn
  * @author Sebastian Seitz
+ * @author Daniela Kaiser
  *
  */
 @Entity
@@ -21,7 +23,7 @@ public class Spectator {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name="GAME_ID")
 	private Game game;
 	

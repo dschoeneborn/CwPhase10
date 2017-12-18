@@ -51,7 +51,6 @@ public class Game {
 
 	@OneToMany
 	@JoinColumn(unique = true)
-//	@Transient
 	private List<DockPile> openPiles;
 	
 	@OneToMany(mappedBy="game")
