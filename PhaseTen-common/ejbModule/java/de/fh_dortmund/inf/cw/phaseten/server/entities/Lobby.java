@@ -13,9 +13,12 @@ import java.util.Set;
 public class Lobby {
 	private static final int MAX_PLAYER = 6;
 	private Set<Player> player;
+	private Set<Spectator> spectators;
 
 	public Lobby(Player host) {
 		this.player = new HashSet<>();
+		this.spectators = new HashSet<>();
+		
 		this.player.add(host);
 		host.setLobby(this);
 	}
@@ -43,6 +46,16 @@ public class Lobby {
 	
 	public Set<Player> getPlayer() {
 		return player;
+	}
+	
+	public void addSpectator(Spectator spectator)
+	{
+		this.spectators.add(spectator);
+	}
+	
+	public void removeSpectator(Spectator spectator)
+	{
+		this.spectators.remove(spectator);
 	}
 
 	public Game startGame()
