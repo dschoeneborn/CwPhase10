@@ -37,7 +37,6 @@ public class User {
 	@Column
 	private long coins;
 
-	@Column
 	@SuppressWarnings("unused")
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="PLAYER_ID", unique=true)

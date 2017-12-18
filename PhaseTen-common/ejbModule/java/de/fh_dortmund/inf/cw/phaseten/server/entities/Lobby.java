@@ -24,18 +24,22 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class Lobby {
-	
+
 	private static final int MAX_PLAYER = 6;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
-	@OneToMany(cascade=CascadeType.PERSIST, mappedBy = "lobby")
-	@Column(nullable=false)
-	@Basic(optional=false)
-	@JoinColumn(name="PLAYERS_ID")
+
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "lobby")
+	@Basic(optional = false)
+	@JoinColumn(nullable = false)
 	private Set<Player> players;
+
+	@SuppressWarnings("unused")
+	private Lobby() {
+
+	}
 
 	public Lobby(Player host) {
 		this.players = new HashSet<>();
@@ -56,22 +60,20 @@ public class Lobby {
 	}
 
 	public void addPlayer(Player player) {
-		if (this.players.size() < MAX_PLAYER)
-		{
+		if (this.players.size() < MAX_PLAYER) {
 			this.players.add(player);
 			player.setLobby(this);
 		}
-			
+
 	}
-	
+
 	public Set<Player> getPlayer() {
 		return players;
 	}
 
-	public Game startGame()
-	{
-		//TODO Game erstellen
-		
+	public Game startGame() {
+		// TODO Game erstellen
+
 		return null;
 	}
 }

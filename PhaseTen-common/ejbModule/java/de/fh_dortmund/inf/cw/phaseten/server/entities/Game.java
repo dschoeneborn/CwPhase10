@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 /**
  * @author Dennis Schöneborn
@@ -32,28 +34,23 @@ public class Game {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@ManyToMany
-	@JoinTable(name = "GAME_PLAYERS", joinColumns = { @JoinColumn(name = "GAME_ID") }, inverseJoinColumns = {
-			@JoinColumn(name = "PLAYER_ID") })
-	@Column(nullable = false)
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "game")
 	@Basic(optional = false)
 	private Set<Player> players;
 
-	@Column(nullable = false)
 	@Basic(optional = false)
 	@OneToOne
-	@JoinColumn(name="PULLSTACK_ID", unique=true)
+	@JoinColumn(nullable = false, unique = true)
 	private PullStack pullStack;
-	
-	@Column(nullable = false)
+
 	@Basic(optional = false)
 	@OneToOne
-	@JoinColumn(name="LIFOSTACK_ID", unique=true)
+	@JoinColumn(nullable = false, unique = true)
 	private LiFoStack liFoStack;
-	
-	@Column
-	@OneToMany
-	@JoinColumn(name="OPENPILES_ID", unique=true)
+
+	// @OneToMany
+	// @JoinColumn(unique = true)
+	@Transient
 	private List<DockPile> openPiles;
 
 	/**

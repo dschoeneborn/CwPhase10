@@ -6,6 +6,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,27 +21,27 @@ import javax.persistence.OneToOne;
  * @author Marc Mettke
  * @author Daniela Kaiser
  */
+@Entity
 public class Player {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(nullable = false)
 	@OneToOne(cascade = CascadeType.ALL)
 	@Basic(optional = false)
-	@JoinColumn(name="PLAYERPILE_ID", unique=true)
+	@JoinColumn(nullable = false, unique=true)
 	private PlayerPile playerPile;
 
 	@Column(nullable = false, unique = true)
 	@Basic(optional = false)
 	private String name;
 
-	@Column
-	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "players")
+	@JoinColumn
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Game game;
 
-	@Column
+	@JoinColumn
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Lobby lobby;
 

@@ -3,11 +3,13 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Daniela Kaiser
  */
 public class SetDockPile extends DockPile {
 	private static final long serialVersionUID = -5890944285337742574L;
@@ -18,7 +20,7 @@ public class SetDockPile extends DockPile {
 	 * 
 	 */
 	private SetDockPile() {
-		this.cards = new LinkedList<>();
+		this.cards = new ArrayList<>();
 	}
 
 	/**

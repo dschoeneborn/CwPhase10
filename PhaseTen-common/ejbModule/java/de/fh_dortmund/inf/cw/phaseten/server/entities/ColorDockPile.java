@@ -3,11 +3,13 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Daniela Kaiser
  */
 public class ColorDockPile extends DockPile {
 	private static final long serialVersionUID = -8155115717024180700L;
@@ -15,7 +17,7 @@ public class ColorDockPile extends DockPile {
 	private Color color;
 
 	private ColorDockPile() {
-		this.cards = new LinkedList<>();
+		this.cards = new ArrayList<>();
 	}
 
 	public ColorDockPile(Color color) {
