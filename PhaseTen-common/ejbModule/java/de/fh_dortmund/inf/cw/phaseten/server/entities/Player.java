@@ -12,10 +12,12 @@ public class Player {
 	private String name;
 	private Game game;
 	private Lobby lobby;
+	private Stage phase;
 	
 	private Player()
 	{
 		this.playerPile = new PlayerPile();
+		this.phase = Stage.TWO_TRIPLES;
 	}
 	
 	public Player(String name)
