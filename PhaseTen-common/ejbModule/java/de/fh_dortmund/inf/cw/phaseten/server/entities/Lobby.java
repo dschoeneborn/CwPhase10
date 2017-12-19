@@ -21,6 +21,7 @@ import javax.persistence.OneToOne;
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
+ * @author Sebastian Seitz
  */
 @Entity
 public class Lobby {
@@ -80,7 +81,7 @@ public class Lobby {
 		this.spectators.remove(spectator);
 	}
 
-	public Set<Player> getPlayer() {
+	public Set<Player> getPlayers() {
 		return players;
 	}
 
