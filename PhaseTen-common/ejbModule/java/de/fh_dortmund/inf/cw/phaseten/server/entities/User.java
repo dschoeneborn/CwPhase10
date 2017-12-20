@@ -3,10 +3,20 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
 /**
  * @author Dennis Schöneborn
  *
  */
+
+/*@Entity
+@NamedQueries(value = {
+		@NamedQuery(name="User.findAll", query="select u from User u"),
+		@NamedQuery(name="User.findByName", query="select u from User u where u.name = :name")
+})*/
 public class User {
 	private String loginName;
 	@SuppressWarnings("unused")
