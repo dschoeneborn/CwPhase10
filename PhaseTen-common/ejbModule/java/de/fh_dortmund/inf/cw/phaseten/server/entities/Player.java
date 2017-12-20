@@ -6,6 +6,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
 public class Player {
 	private PlayerPile playerPile;
@@ -13,6 +14,8 @@ public class Player {
 	private Game game;
 	private Lobby lobby;
 	private Stage phase;
+	private long id;
+	private RoundStage roundStage;
 	
 	private Player()
 	{
@@ -52,6 +55,32 @@ public class Player {
 
 	public String getName() {
 		return name;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public RoundStage getRoundStage() {
+		return roundStage;
+	}
+
+	/***
+	 * @author Björn Merschmeier
+	 */
+	public void addRoundStage() {
+		this.roundStage = RoundStage.getRoundStageValue(this.roundStage.getValue()+1);
+	}
+
+	public Stage getPhase() {
+		return phase;
+	}
+
+	/***
+	 * @author Björn Merschmeier
+	 */
+	public void addPhase() {
+		this.phase = Stage.getStage(this.phase.getValue()+1);
 	}
 	
 }

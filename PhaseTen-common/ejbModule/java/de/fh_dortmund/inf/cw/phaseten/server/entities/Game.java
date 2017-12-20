@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
 public class Game {
 	private Set<Player> player;
@@ -18,6 +19,10 @@ public class Game {
 	private PullStack pullStack;
 	private LiFoStack liFoStack;
 	private List<DockPile> openPiles;
+	private Player currentPlayer;
+	
+	//TODO - BM - 20.12.2017 - Diese Variable soll verwendet werden oder es müssen getter und setter erstellt werden
+	private Player lastFirstPlayer;
 
 	/**
 	 * 
@@ -137,6 +142,14 @@ public class Game {
 
 	public LiFoStack getLiFoStack() {
 		return liFoStack;
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public void setCurrentPlayer(Player currentPlayer) {
+		this.currentPlayer = currentPlayer;
 	}
 	
 	

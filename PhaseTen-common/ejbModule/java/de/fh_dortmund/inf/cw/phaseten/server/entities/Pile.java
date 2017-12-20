@@ -9,10 +9,30 @@ import java.util.LinkedList;
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
 public abstract class Pile implements Serializable {
 	private static final long serialVersionUID = 8249906555853503950L;
 	
 	protected LinkedList<Card> cards;
 	
+	public Pile()
+	{
+		cards = new LinkedList<Card>();
+	}
+	
+	/**
+	 * @author Björn Merschmeier
+	 * @param card
+	 */
+	public abstract void addCard(Card card);
+	
+	/**
+	 * @author Björn Merschmeier
+	 * @return
+	 */
+	public int getSize()
+	{
+		return cards.size();
+	}
 }
