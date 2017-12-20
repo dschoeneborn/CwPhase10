@@ -1,0 +1,12 @@
+Stateless 
+- UserManagementBean
+- GameManagementBean
+- GameValidationBean
+- CoinManagementBean
+- AIManagementBean
+
+Stateful 
+- UserSessionBean
+
+Singleton:
+- LobbyManagement
