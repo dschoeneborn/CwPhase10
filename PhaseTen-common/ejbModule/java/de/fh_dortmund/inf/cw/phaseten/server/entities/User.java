@@ -13,13 +13,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * @author Dennis Schöneborn
  * @author Daniela Kaiser
  *
  */
+
 @Entity
+@NamedQueries(value = {
+		@NamedQuery(name="User.findAll", query="select u from User u"),
+		@NamedQuery(name="User.findByName", query="select u from User u where u.name = :name")
+})
 public class User {
 
 	@Id
