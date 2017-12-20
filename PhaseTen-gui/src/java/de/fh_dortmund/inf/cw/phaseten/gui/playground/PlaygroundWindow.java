@@ -24,6 +24,9 @@ public class PlaygroundWindow extends JFrame {
 		this.add(this.statusPanel);
 		this.setResizable(false);
 		this.pack();
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
 	}
 	
 	public void updateData() {
@@ -31,6 +34,7 @@ public class PlaygroundWindow extends JFrame {
 		this.publicCardStackPane.updateData();
 		this.playerCardsPane.updateData();
 		this.statusPanel.updateData();
+		this.pack();
 	}
 
 }
