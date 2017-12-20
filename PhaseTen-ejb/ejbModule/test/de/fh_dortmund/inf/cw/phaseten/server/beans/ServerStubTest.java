@@ -11,12 +11,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.fh_dortmund.inf.cw.phaseten.server.shared.entities.TestType;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.TestType;
 
 /**
- * 
- * @author Marc, Daniela
- *
+ * @author Marc Mettke
+ * @author Daniela
  */
 @RunWith(ApplicationComposer.class)
 public class ServerStubTest {
