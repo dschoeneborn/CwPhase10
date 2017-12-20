@@ -5,13 +5,12 @@
 <resources>
 	<jdbc-connection-pool name="PhaseTenDBPool"
 						  res-type="javax.sql.ConnectionPoolDataSource"
-						  datasource-classname="org.apache.derby.jdbc.ClientDataSource">
-		<property name="serverName" value="localhost" />
-		<property name="port" value="1527" />
+						  datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
+		<property name="serverName" value="mysql" />
+		<property name="port" value="3306" />
 		<property name="databaseName" value="phaseten" />
-		<property name="connectionAttributes" value=";create=true"></property>
-		<property name="user" value="APP" />
-		<property name="password" value="APP" />
+		<property name="user" value="root" />
+		<property name="password" value="root" />
 	</jdbc-connection-pool>
 
 	<jdbc-resource enabled="true"
