@@ -21,8 +21,10 @@ public class PlayerPile extends Pile {
 		return this.cards;
 	}
 
-	public void addCard(Card card) {
+	public boolean addCard(Card card) {
 		this.cards.addFirst(card);
+		
+		return true;
 	}
 
 	public void deleteCard(Card card) {

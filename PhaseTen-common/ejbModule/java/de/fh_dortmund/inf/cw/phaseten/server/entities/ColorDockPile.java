@@ -8,6 +8,7 @@ import java.util.LinkedList;
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
 public class ColorDockPile extends DockPile {
 	private static final long serialVersionUID = -8155115717024180700L;
@@ -34,8 +35,11 @@ public class ColorDockPile extends DockPile {
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile#dock(de.fh_dortmund.
 	 * inf.cw.phaseten.server.entities.Card)
 	 */
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
-	public boolean dock(Card card) {
+	public boolean addCard(Card card) {
 		if (card.getColor().equals(this.color)) {
 			this.cards.add(card);
 			return true;

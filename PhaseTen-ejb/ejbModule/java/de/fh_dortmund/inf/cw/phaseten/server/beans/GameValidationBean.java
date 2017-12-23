@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.RoundStage;
@@ -62,6 +63,13 @@ public class GameValidationBean
 		return pullCardAllowed;
 	}
 	
+	/**
+	 * @author Björn Merschmeier
+	 * @param g
+	 * @param p
+	 * @param piles
+	 * @return
+	 */
 	public boolean isValidLayStageToTable(Game g, Player p, ArrayList<Pile> piles)
 	{
 		boolean layStageDownAllowed = false;
@@ -69,7 +77,8 @@ public class GameValidationBean
 		Player currentPlayer = g.getCurrentPlayer();
 		
 		if(playerIsCurrentPlayer(g, p)
-			&& currentPlayer.getRoundStage() == RoundStage.PUT)
+			&& currentPlayer.getRoundStage() == RoundStage.PUT
+			&& !currentPlayer.playerLaidStage())
 		{
 			switch(currentPlayer.getPhase())
 			{
@@ -83,11 +92,63 @@ public class GameValidationBean
 				case SEVEN_OF_ONE_COLOR: layStageDownAllowed = areCardsReadyForPhase8(piles); break;
 				case QUINTUPLE_AND_TWIN: layStageDownAllowed = areCardsReadyForPhase9(piles); break;
 				case QUINTUPLE_AND_TRIPLE: layStageDownAllowed = areCardsReadyForPhase10(piles); break;
+				default: break;
 			}
 		}
 		
 		return layStageDownAllowed;
 	}
+	
+	public boolean isValidToAddCard(Game g, Player p, Pile pile, Card c)
+	{
+		boolean addCardAllowed = false;
+		
+		Player currentPlayer = g.getCurrentPlayer();
+		
+		if(playerIsCurrentPlayer(g, p)
+			&& currentPlayer.getRoundStage() == RoundStage.PUT
+			&& currentPlayer.getPlayerPile().getSize() >= 1
+			&& currentPlayer.playerLaidStage())
+		{
+			if(pile instanceof SetDockPile)
+			{
+				SetDockPile setDockPile = (SetDockPile) pile;
+				
+				if(setDockPile.getCardValue() == c.getCardValue())
+				{
+					addCardAllowed = true;
+				}
+			}
+			else if(pile instanceof SequenceDockPile)
+			{
+				SequenceDockPile sequenceDockPile = (SequenceDockPile) pile;
+			
+				if((sequenceDockPile.getMinimum().getValue() - 1 == c.getCardValue().getValue()
+						|| sequenceDockPile.getMaximum().getValue() + 1 == c.getCardValue().getValue()
+						|| c.getCardValue() == CardValue.JOKER)
+						&& !pileIsFull(sequenceDockPile))
+				{
+					addCardAllowed = true;
+				}
+			}
+			else if(pile instanceof ColorDockPile)
+			{
+				ColorDockPile colorDockPile = (ColorDockPile) pile;
+				
+				if(colorDockPile.getColor() == c.getColor())
+				{
+					addCardAllowed = true;
+				}
+			}
+		}
+			
+		return addCardAllowed;
+	}
+
+	private boolean pileIsFull(SequenceDockPile sequenceDockPile) {
+		return sequenceDockPile.getMinimum() == CardValue.ONE && sequenceDockPile.getMaximum() == CardValue.TWELVE;
+	}
+
 
 	/**
 	 * @author Björn Merschmeier

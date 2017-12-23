@@ -25,7 +25,7 @@ public abstract class Pile implements Serializable {
 	 * @author Björn Merschmeier
 	 * @param card
 	 */
-	public abstract void addCard(Card card);
+	public abstract boolean addCard(Card card);
 	
 	/**
 	 * @author Björn Merschmeier

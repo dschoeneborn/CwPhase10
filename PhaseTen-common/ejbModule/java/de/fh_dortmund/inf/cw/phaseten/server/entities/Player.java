@@ -16,6 +16,7 @@ public class Player {
 	private Stage phase;
 	private long id;
 	private RoundStage roundStage;
+	private boolean playerLaidStage;
 	
 	private Player()
 	{
@@ -81,6 +82,14 @@ public class Player {
 	 */
 	public void addPhase() {
 		this.phase = Stage.getStage(this.phase.getValue()+1);
+	}
+
+	public boolean playerLaidStage() {
+		return playerLaidStage;
+	}
+
+	public void setPlayerLaidStage(boolean playerLaidStage) {
+		this.playerLaidStage = playerLaidStage;
 	}
 	
 }
