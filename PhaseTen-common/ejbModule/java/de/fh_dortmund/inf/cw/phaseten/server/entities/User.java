@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
@@ -37,7 +36,6 @@ public class User {
 	@Basic(optional = false)
 	private String loginName;
 
-	@SuppressWarnings("unused")
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private String password;
@@ -45,12 +43,10 @@ public class User {
 	@Column
 	private int coins;
 
-	@SuppressWarnings("unused")
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "PLAYER_ID", unique = true)
 	private Player player;
 
-	@SuppressWarnings("unused")
 	@OneToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn
 	private Spectator spectator;
@@ -101,6 +97,22 @@ public class User {
 	public void setCoins(int coinsToSet)
 	{
 		coins = coinsToSet;
+	}
+	
+	/**
+	 * @return Player
+	 */
+	public Player getPlayer()
+	{
+		return player;
+	}
+	
+	/**
+	 * @return Spectator
+	 */
+	public Spectator getSpectator()
+	{
+		return spectator;
 	}
 	
 }
