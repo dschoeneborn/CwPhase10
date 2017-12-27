@@ -43,7 +43,7 @@ public class User {
 	private String password;
 
 	@Column
-	private long coins;
+	private int coins;
 
 	@SuppressWarnings("unused")
 	@OneToOne(cascade = CascadeType.ALL)
@@ -76,16 +76,31 @@ public class User {
 	/**
 	 * @return the coins
 	 */
-	public Long getCoins() {
+	public int getCoins() {
 		return coins;
 	}
 
 	/**
-	 * Add Coins.
+	 * Increase Coins.
 	 * 
 	 * @param coinsToAdd
 	 */
-	public void addCoins(long coinsToAdd) {
-		coins += coinsToAdd;
+	public void increaseCoins(int coins) {
+		this.coins += coins;
 	}
+	
+	public void decreaseCoins(int coins) {
+		this.coins -= coins;
+	}
+	
+	/**
+	 * Set Coins.
+	 * 
+	 * @param coinsToSet
+	 */
+	public void setCoins(int coinsToSet)
+	{
+		coins = coinsToSet;
+	}
+	
 }
