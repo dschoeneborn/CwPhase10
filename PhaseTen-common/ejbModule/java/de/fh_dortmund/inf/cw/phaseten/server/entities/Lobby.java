@@ -3,6 +3,7 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ import javax.persistence.OneToMany;
  * @author Sebastian Seitz
  */
 @Entity
-public class Lobby {
+public class Lobby implements Serializable{
 
 	private static final int MAX_PLAYER = 6;
 

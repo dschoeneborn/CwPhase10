@@ -3,6 +3,8 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +20,7 @@ import javax.persistence.ManyToOne;
  *
  */
 @Entity
-public class Spectator {
+public class Spectator implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;

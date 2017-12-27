@@ -3,6 +3,8 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,7 +25,12 @@ import javax.persistence.OneToOne;
  * @author Björn Merschmeier
  */
 @Entity
-public class Player {
+public class Player implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +38,7 @@ public class Player {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@Basic(optional = false)
-	@JoinColumn(nullable = false, unique=true)
+	@JoinColumn(nullable = false, unique = true)
 	private PlayerPile playerPile;
 
 	@Column(nullable = false, unique = true)
@@ -45,16 +52,17 @@ public class Player {
 	@JoinColumn
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Lobby lobby;
-	
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private Stage phase;
 
+	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private RoundStage roundStage;
-	
+
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private boolean playerLaidStage;
@@ -62,9 +70,8 @@ public class Player {
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private boolean playerHasSkipCard;
-	
-	private Player()
-	{
+
+	private Player() {
 		this.playerPile = new PlayerPile();
 		this.phase = Stage.TWO_TRIPLES;
 		playerLaidStage = false;
@@ -141,7 +148,7 @@ public class Player {
 	 * @author Björn Merschmeier
 	 */
 	public void addRoundStage() {
-		this.roundStage = RoundStage.getRoundStageValue(this.roundStage.getValue()+1);
+		this.roundStage = RoundStage.getRoundStageValue(this.roundStage.getValue() + 1);
 	}
 
 	public Stage getPhase() {
@@ -152,7 +159,7 @@ public class Player {
 	 * @author Björn Merschmeier
 	 */
 	public void addPhase() {
-		this.phase = Stage.getStage(this.phase.getValue()+1);
+		this.phase = Stage.getStage(this.phase.getValue() + 1);
 	}
 
 	public boolean playerLaidStage() {
@@ -170,5 +177,5 @@ public class Player {
 	public void givePlayerSkipCard() {
 		this.playerHasSkipCard = true;
 	}
-	
+
 }

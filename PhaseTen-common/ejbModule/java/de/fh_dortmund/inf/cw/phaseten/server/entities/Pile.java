@@ -4,7 +4,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -37,7 +37,7 @@ public abstract class Pile implements Serializable {
 
 	public Pile()
 	{
-		cards = new LinkedList<Card>();
+		cards = new ArrayList<Card>();
 	}
 	
 	/**

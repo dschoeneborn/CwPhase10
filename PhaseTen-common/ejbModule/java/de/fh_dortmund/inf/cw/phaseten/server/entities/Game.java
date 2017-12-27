@@ -3,10 +3,12 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +25,12 @@ import javax.persistence.OneToOne;
  * @author Björn Merschmeier
  */
 @Entity
-public class Game {
+public class Game implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,6 +39,15 @@ public class Game {
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "game")
 	@Basic(optional = false)
 	private List<Player> players;
+
+	@Column
+	private int currentPlayer;
+
+	// TODO - DK an BM - 27.12.2017 - Bitte keine mehrfachen Verweise auf Player
+	// (bei Verwendung bitte äquivalent zum currentPlayer nur den Index speichern)
+	// TODO - BM - 20.12.2017 - Diese Variable soll verwendet werden oder es müssen
+	// getter und setter erstellt werden
+	// private Player lastFirstPlayer;
 
 	@Basic(optional = false)
 	@OneToOne
@@ -46,12 +62,7 @@ public class Game {
 	@OneToMany
 	@JoinColumn(unique = true)
 	private List<DockPile> openPiles;
-	private Player currentPlayer;
-	
-	//TODO - BM - 20.12.2017 - Diese Variable soll verwendet werden oder es müssen getter und setter erstellt werden
-	private Player lastFirstPlayer;
-	
-	@OneToMany(mappedBy="game")
+	@OneToMany(mappedBy = "game")
 	private List<Spectator> spectators;
 
 	/**
@@ -143,7 +154,7 @@ public class Game {
 	public List<Player> getPlayers() {
 		return players;
 	}
-	
+
 	public List<Spectator> getSpectators() {
 		return spectators;
 	}
@@ -157,16 +168,16 @@ public class Game {
 	}
 
 	public Player getCurrentPlayer() {
-		return currentPlayer;
+		if (currentPlayer == -1) {
+			return null;
+		}
+		return players.get(currentPlayer);
 	}
 
-	public void setCurrentPlayer(Player currentPlayer) {
-		this.currentPlayer = currentPlayer;
+	public void setCurrentPlayer(Player player) {
+		this.currentPlayer = players.indexOf(player);
 	}
-	
-	
-	
-	
-	//TODO Fassadenmethoden für die eintelnen Stacks
-	
+
+	// TODO Fassadenmethoden für die eintelnen Stacks
+
 }
