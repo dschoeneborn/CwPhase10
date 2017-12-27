@@ -35,7 +35,7 @@ public class Lobby implements Serializable {
 					  int phase) {
 		// TODO: Add Spectators from lobby Object
 		return new Lobby(
-			Player.from(lobby.getPlayer(), phase),
+			Player.from(lobby.getPlayers(), phase),
 			spectator
 		);
 	}

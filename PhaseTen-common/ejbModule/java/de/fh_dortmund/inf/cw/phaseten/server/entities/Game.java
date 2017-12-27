@@ -3,33 +3,63 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Daniela Kaiser
+ * @author Sebastian Seitz
  * @author Björn Merschmeier
  */
+@Entity
 public class Game {
-	private Set<Player> player;
-	private Set<Spectator> spectators;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "game")
+	@Basic(optional = false)
+	private List<Player> players;
+
+	@Basic(optional = false)
+	@OneToOne
+	@JoinColumn(nullable = false, unique = true)
 	private PullStack pullStack;
+
+	@Basic(optional = false)
+	@OneToOne
+	@JoinColumn(nullable = false, unique = true)
 	private LiFoStack liFoStack;
+
+	@OneToMany
+	@JoinColumn(unique = true)
 	private List<DockPile> openPiles;
 	private Player currentPlayer;
 	
 	//TODO - BM - 20.12.2017 - Diese Variable soll verwendet werden oder es müssen getter und setter erstellt werden
 	private Player lastFirstPlayer;
+	
+	@OneToMany(mappedBy="game")
+	private List<Spectator> spectators;
 
 	/**
 	 * 
 	 */
 	private Game() {
-		this.player = new HashSet<>();
-		this.spectators = new HashSet<>();
+		this.players = new LinkedList<>();
+		this.spectators = new LinkedList<>();
 		this.pullStack = new PullStack();
 		this.liFoStack = new LiFoStack();
 		this.openPiles = new LinkedList<>();
@@ -90,31 +120,10 @@ public class Game {
 		this(p1, p2, p3, p4, p5);
 		this.addPlayer(p6);
 	}
-	
-	/**
-	 * Help method to add a Player including association
-	 * @param p
-	 */
-	private void addPlayer(Player p)
-	{
-		this.player.add(p);
+
+	private void addPlayer(Player p) {
+		this.players.add(p);
 		p.setGame(this);
-	}
-	
-	/**
-	 * @param spectator
-	 */
-	public void addSpectator(Spectator spectator)
-	{
-		this.spectators.add(spectator);
-	}
-	
-	/**
-	 * @param spectator
-	 */
-	public void removeSpectator(Spectator spectator)
-	{
-		this.spectators.remove(spectator);
 	}
 
 	/**
@@ -123,17 +132,20 @@ public class Game {
 	public List<DockPile> getOpenPiles() {
 		return openPiles;
 	}
-	
+
 	/**
 	 * @param pile
 	 */
-	public void addOpenPile(DockPile pile)
-	{
+	public void addOpenPile(DockPile pile) {
 		this.openPiles.add(pile);
 	}
 
-	public Set<Player> getPlayer() {
-		return player;
+	public List<Player> getPlayers() {
+		return players;
+	}
+	
+	public List<Spectator> getSpectators() {
+		return spectators;
 	}
 
 	public PullStack getPullStack() {

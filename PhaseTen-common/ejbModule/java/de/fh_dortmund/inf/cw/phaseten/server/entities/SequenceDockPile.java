@@ -3,15 +3,26 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import javax.persistence.Entity;
 
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
+ * @author Daniela Kaiser
+ * @author Sebastian Seitz
  * @author Björn Merschmeier
  */
+
+@Entity
 public class SequenceDockPile extends DockPile {
-	private static final long serialVersionUID = -2641836374110431370L;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8478624573278422943L;
+	
 	
 	private CardValue minimum;
 	private CardValue maximum;
@@ -20,7 +31,7 @@ public class SequenceDockPile extends DockPile {
 	 * 
 	 */
 	public SequenceDockPile() {
-		this.cards = new LinkedList<>();
+		this.cards = new ArrayList<>();
 	}
 
 	/* (non-Javadoc)
@@ -50,7 +61,9 @@ public class SequenceDockPile extends DockPile {
 				maximum = minimum;
 			}
 			
-			this.cards.addFirst(card);
+			LinkedList<Card> c = new LinkedList<Card>(this.cards);
+			c.addFirst(card);
+			this.cards = c;
 			
 			addedCard = true;
 		}
@@ -58,7 +71,9 @@ public class SequenceDockPile extends DockPile {
 		{
 			maximum = card.getCardValue();
 			
-			this.cards.addLast(card);
+			LinkedList<Card> c = new LinkedList<>(this.cards);
+			c.addLast(card);
+			this.cards = c;
 			
 			addedCard = true;
 		}
@@ -66,7 +81,9 @@ public class SequenceDockPile extends DockPile {
 		{
 			minimum = CardValue.getCardValue(minimum.getValue() - 1);
 			
-			this.cards.addFirst(card);
+			LinkedList<Card> c = new LinkedList<>(this.cards);
+			c.addFirst(card);
+			this.cards = c;
 			
 			addedCard = true;
 		}
@@ -74,7 +91,9 @@ public class SequenceDockPile extends DockPile {
 		{
 			maximum = CardValue.getCardValue(maximum.getValue() + 1);
 			
-			this.cards.addLast(card);
+			LinkedList<Card> c = new LinkedList<>(this.cards);
+			c.addLast(card);
+			this.cards = c;
 			
 			addedCard = true;
 		}
