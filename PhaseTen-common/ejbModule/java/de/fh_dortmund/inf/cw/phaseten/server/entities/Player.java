@@ -17,6 +17,7 @@ public class Player {
 	private long id;
 	private RoundStage roundStage;
 	private boolean playerLaidStage;
+	private boolean playerHasSkipCard;
 	
 	private Player()
 	{
@@ -90,6 +91,14 @@ public class Player {
 
 	public void setPlayerLaidStage(boolean playerLaidStage) {
 		this.playerLaidStage = playerLaidStage;
+	}
+
+	public boolean hasSkipCard() {
+		return playerHasSkipCard;
+	}
+
+	public void givePlayerSkipCard() {
+		this.playerHasSkipCard = true;
 	}
 	
 }

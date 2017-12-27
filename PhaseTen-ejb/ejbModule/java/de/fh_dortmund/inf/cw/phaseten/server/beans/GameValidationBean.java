@@ -1,16 +1,17 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.RoundStage;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Stage;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Pile;
 
 /**
@@ -29,16 +30,31 @@ public class GameValidationBean
 		boolean pullCardAllowed = true;
 		
 		Card cardOnTop = g.getLiFoStack().showCard();
-		Player currentPlayer = g.getCurrentPlayer();
 		
 		if(cardOnTop.getCardValue() == CardValue.SKIP 
 			|| !playerIsCurrentPlayer(g, player)
-			|| currentPlayer.getRoundStage() != RoundStage.PULL)
+			|| player.getRoundStage() != RoundStage.PULL)
 		{
 			pullCardAllowed = false;
 		}
 		
 		return pullCardAllowed;
+	}
+	
+	public boolean isValidPushCardToLiFoStack(Game g, Player player, Card c)
+	{
+		boolean pushCardToLiFoStackAllowed = false;
+		
+		if(playerIsCurrentPlayer(g, player)
+			&& player.getRoundStage() == RoundStage.PUSH
+			&& playerHasCard(c, player)
+			&& (!player.hasSkipCard()
+				|| (player.hasSkipCard() && c.getCardValue() == CardValue.SKIP)))
+		{
+			pushCardToLiFoStackAllowed = true;
+		}
+		
+		return pushCardToLiFoStackAllowed;
 	}
 	
 
@@ -74,13 +90,20 @@ public class GameValidationBean
 	{
 		boolean layStageDownAllowed = false;
 		
-		Player currentPlayer = g.getCurrentPlayer();
+		ArrayList<Card> cardsInPiles = new ArrayList<>();
+		
+		for(Pile pile: piles)
+		{
+			cardsInPiles.addAll(pile.getCards());
+		}
 		
 		if(playerIsCurrentPlayer(g, p)
-			&& currentPlayer.getRoundStage() == RoundStage.PUT
-			&& !currentPlayer.playerLaidStage())
+			&& !p.hasSkipCard()
+			&& p.getRoundStage() == RoundStage.PUT
+			&& !p.playerLaidStage()
+			&& playerHasCards(cardsInPiles, p))
 		{
-			switch(currentPlayer.getPhase())
+			switch(p.getPhase())
 			{
 				case TWO_TRIPLES: layStageDownAllowed = areCardsReadyForPhase1(piles); break;
 				case TRIPLE_AND_SEQUENCE_OF_FOUR: layStageDownAllowed = areCardsReadyForPhase2(piles); break;
@@ -103,12 +126,12 @@ public class GameValidationBean
 	{
 		boolean addCardAllowed = false;
 		
-		Player currentPlayer = g.getCurrentPlayer();
-		
 		if(playerIsCurrentPlayer(g, p)
-			&& currentPlayer.getRoundStage() == RoundStage.PUT
-			&& currentPlayer.getPlayerPile().getSize() >= 1
-			&& currentPlayer.playerLaidStage())
+			&& !p.hasSkipCard()
+			&& p.getRoundStage() == RoundStage.PUT
+			&& p.getPlayerPile().getSize() >= 1
+			&& p.playerLaidStage()
+			&& playerHasCard(c, p))
 		{
 			if(pile instanceof SetDockPile)
 			{
@@ -144,6 +167,56 @@ public class GameValidationBean
 			
 		return addCardAllowed;
 	}
+	
+	public boolean isValidLaySkipCard(Player currentPlayer, Player destinationPlayer, Game g)
+	{
+		boolean canLaySkipCard = false;
+		
+		Card skipCard = new Card(Color.NONE, CardValue.SKIP);
+		
+		if(playerHasCard(skipCard, currentPlayer)
+			&& currentPlayer.getRoundStage() == RoundStage.PUSH
+			&& playerIsCurrentPlayer(g, currentPlayer)
+			&& !currentPlayer.hasSkipCard()
+			&& !destinationPlayer.hasSkipCard())
+		{
+			canLaySkipCard = true;
+		}
+		
+		return canLaySkipCard;		
+	}
+	
+	private boolean playerHasCards(List<Card> cards, Player p)
+	{
+		boolean userHasCards = true;
+		
+		for(Card card : cards)
+		{
+			if(!playerHasCard(card, p))
+			{
+				userHasCards = false;
+			}
+		}
+		
+		return userHasCards;
+	}
+	
+	private boolean playerHasCard(Card card, Player p)
+	{
+		boolean playerHasCard = false;
+		
+		for(Card c : p.getPlayerPile().getCards())
+		{
+			if(c.getCardValue() == card.getCardValue()
+					&& c.getColor() == card.getColor())
+			{
+				playerHasCard = true;
+				break;
+			}
+		}
+		
+		return playerHasCard;
+	}
 
 	private boolean pileIsFull(SequenceDockPile sequenceDockPile) {
 		return sequenceDockPile.getMinimum() == CardValue.ONE && sequenceDockPile.getMaximum() == CardValue.TWELVE;
@@ -157,8 +230,8 @@ public class GameValidationBean
 	 */
 	private boolean areCardsReadyForPhase1(ArrayList<Pile> piles) {
 		return (piles.size() == 2
-			&& PileIsSet(piles.get(0), 3)
-			&& PileIsSet(piles.get(1), 3));
+			&& pileIsSet(piles.get(0), 3)
+			&& pileIsSet(piles.get(1), 3));
 	}
 
 	/**
@@ -169,10 +242,10 @@ public class GameValidationBean
 	private boolean areCardsReadyForPhase2(ArrayList<Pile> piles) {
 		return (piles.size() == 2
 			&& (
-					(PileIsSet(piles.get(0), 3)
-							&& PileIsSequence(piles.get(1), 4))
-					|| (PileIsSet(piles.get(1), 3)
-							&& PileIsSequence(piles.get(0), 4))
+					(pileIsSet(piles.get(0), 3)
+							&& pileIsSequence(piles.get(1), 4))
+					|| (pileIsSet(piles.get(1), 3)
+							&& pileIsSequence(piles.get(0), 4))
 			)
 		);
 	}
@@ -186,10 +259,10 @@ public class GameValidationBean
 	private boolean areCardsReadyForPhase3(ArrayList<Pile> piles) {
 		return (piles.size() == 2
 				&& (
-						(PileIsSet(piles.get(0), 4)
-								&& PileIsSequence(piles.get(1), 4))
-						|| (PileIsSet(piles.get(1), 4)
-								&& PileIsSequence(piles.get(0), 4))
+						(pileIsSet(piles.get(0), 4)
+								&& pileIsSequence(piles.get(1), 4))
+						|| (pileIsSet(piles.get(1), 4)
+								&& pileIsSequence(piles.get(0), 4))
 				)
 			);
 	}
@@ -201,7 +274,7 @@ public class GameValidationBean
 	 */
 	private boolean areCardsReadyForPhase4(ArrayList<Pile> piles) {
 		return (piles.size() == 1
-				&& PileIsSequence(piles.get(0), 7)
+				&& pileIsSequence(piles.get(0), 7)
 			);
 	}
 
@@ -212,7 +285,7 @@ public class GameValidationBean
 	 */
 	private boolean areCardsReadyForPhase5(ArrayList<Pile> piles) {
 		return (piles.size() == 1
-				&& PileIsSequence(piles.get(0), 8)
+				&& pileIsSequence(piles.get(0), 8)
 			);
 	}
 
@@ -223,7 +296,7 @@ public class GameValidationBean
 	 */
 	private boolean areCardsReadyForPhase6(ArrayList<Pile> piles) {
 		return (piles.size() == 1
-				&& PileIsSequence(piles.get(0), 9)
+				&& pileIsSequence(piles.get(0), 9)
 			);
 	}
 
@@ -234,8 +307,8 @@ public class GameValidationBean
 	 */
 	private boolean areCardsReadyForPhase7(ArrayList<Pile> piles) {
 		return (piles.size() == 2
-				&& PileIsSet(piles.get(0), 4)
-				&& PileIsSet(piles.get(1), 4));
+				&& pileIsSet(piles.get(0), 4)
+				&& pileIsSet(piles.get(1), 4));
 	}
 
 	/**
@@ -257,10 +330,10 @@ public class GameValidationBean
 	private boolean areCardsReadyForPhase9(ArrayList<Pile> piles) {
 		return (piles.size() == 2
 				&& (
-						(PileIsSet(piles.get(0), 2)
-								&& PileIsSet(piles.get(1), 5))
-						|| (PileIsSet(piles.get(1), 2)
-								&& PileIsSet(piles.get(0), 5))
+						(pileIsSet(piles.get(0), 2)
+								&& pileIsSet(piles.get(1), 5))
+						|| (pileIsSet(piles.get(1), 2)
+								&& pileIsSet(piles.get(0), 5))
 				)
 			);
 	}
@@ -274,10 +347,10 @@ public class GameValidationBean
 	private boolean areCardsReadyForPhase10(ArrayList<Pile> piles) {
 		return (piles.size() == 2
 				&& (
-						(PileIsSet(piles.get(0), 3)
-								&& PileIsSet(piles.get(1), 5))
-						|| (PileIsSet(piles.get(1), 3)
-								&& PileIsSet(piles.get(0), 5))
+						(pileIsSet(piles.get(0), 3)
+								&& pileIsSet(piles.get(1), 5))
+						|| (pileIsSet(piles.get(1), 3)
+								&& pileIsSet(piles.get(0), 5))
 				)
 			);
 	}
@@ -288,7 +361,7 @@ public class GameValidationBean
 	 * @param i
 	 * @return
 	 */
-	private boolean PileIsSet(Pile pile, int i) {
+	private boolean pileIsSet(Pile pile, int i) {
 		return (pile instanceof SetDockPile && pile.getSize() == i);
 	}
 	
@@ -299,7 +372,7 @@ public class GameValidationBean
 	 * @param i
 	 * @return
 	 */
-	private boolean PileIsSequence(Pile pile, int i) {
+	private boolean pileIsSequence(Pile pile, int i) {
 		return (pile instanceof SequenceDockPile && pile.getSize() == i);
 	}
 

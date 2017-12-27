@@ -5,6 +5,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Dennis Schöneborn
@@ -34,5 +35,10 @@ public abstract class Pile implements Serializable {
 	public int getSize()
 	{
 		return cards.size();
+	}
+	
+	public List<Card> getCards()
+	{
+		return cards;
 	}
 }
