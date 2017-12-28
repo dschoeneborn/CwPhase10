@@ -8,6 +8,10 @@ import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 
+/**
+ * @author Robin Harbecke
+ * @author Sven Krefeld 
+ */
 public class Card extends JPanel{
 
 	private CardValue cardValue;
