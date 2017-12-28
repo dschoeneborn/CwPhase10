@@ -8,10 +8,10 @@ import javax.swing.JPanel;
  */
 public class CardStackPane extends JPanel {
 	public CardStackPane() {
-		
+
 	}
-	
-	public void updateData() {//todo
+
+	public void updateData() {// todo
 		this.removeAll();
 		CardPane card = new CardPane();
 		this.add(card);

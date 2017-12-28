@@ -10,14 +10,15 @@ import javax.swing.ListCellRenderer;
  * @author Robin Harbecke
  *
  */
-public class UserListRenderer implements ListCellRenderer<User> {	  
-	  public Component getListCellRendererComponent(JList list, User value, int index,boolean isSelected, boolean cellHasFocus) {
-	    if(value instanceof Player) {
-	    	return (Player) value;
-	    }
-	    if(value instanceof Spectator) {
-	    	return (Spectator) value;
-	    }
-	    return new JLabel("Cant display value"); 
-	  }
+public class UserListRenderer implements ListCellRenderer<User> {
+	public Component getListCellRendererComponent(JList list, User value, int index, boolean isSelected,
+			boolean cellHasFocus) {
+		if (value instanceof Player) {
+			return (Player) value;
+		}
+		if (value instanceof Spectator) {
+			return (Spectator) value;
+		}
+		return new JLabel("Cant display value");
 	}
+}

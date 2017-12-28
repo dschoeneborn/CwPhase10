@@ -11,32 +11,32 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 
 /**
  * @author Robin Harbecke
- * @author Sven Krefeld 
+ * @author Sven Krefeld
  */
-public class CardPane extends JPanel{
+public class CardPane extends JPanel {
 
 	private CardValue cardValue;
 	private Color color;
-	
-	private Card baseCard; 
 
-	public CardPane() {				
+	private Card baseCard;
+
+	public CardPane() {
 		this.init();
 	}
-	
+
 	public CardPane(Card baseCard) {
-		this(CardValue.SIX,Color.RED);//todo call correct listener with values
-		this.baseCard = baseCard;		
+		this(CardValue.SIX, Color.RED);// todo call correct listener with values
+		this.baseCard = baseCard;
 	}
 
 	protected CardPane(CardValue cardValue, Color color) {
 		this();
 		this.cardValue = cardValue;
-		this.color = color;			
+		this.color = color;
 	}
-	
+
 	protected void init() {
-		this.setPreferredSize(new Dimension(80,130));
+		this.setPreferredSize(new Dimension(80, 130));
 		this.setMinimumSize(this.getPreferredSize());
 		this.setMaximumSize(this.getPreferredSize());
 	}
@@ -99,7 +99,7 @@ public class CardPane extends JPanel{
 			}
 		}
 	}
-	
+
 	public Card getBaseCard() {
 		return this.baseCard;
 	}

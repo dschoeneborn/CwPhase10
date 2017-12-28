@@ -13,13 +13,14 @@ import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
  */
 public class PlaygroundWindow extends GuiFrame{
 	protected TopRowPane topRowPane;
-	protected PublicCardStackPane publicCardStackPane = new PublicCardStackPane();
+	protected PublicCardStackPane publicCardStackPane;
 	protected PlayerCardsPane playerCardsPane = new PlayerCardsPane();
 	protected StatusPanel statusPanel = new StatusPanel();
 	
 	public PlaygroundWindow(ServiceHandler serviceHandler) {
 		super("Phaseten",serviceHandler);
-		this.topRowPane = new TopRowPane(serviceHandler);
+		this.publicCardStackPane = new PublicCardStackPane(this.serviceHandler);
+		this.topRowPane = new TopRowPane(this.serviceHandler);
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		this.add(this.topRowPane);
 		this.add(Box.createVerticalGlue());
