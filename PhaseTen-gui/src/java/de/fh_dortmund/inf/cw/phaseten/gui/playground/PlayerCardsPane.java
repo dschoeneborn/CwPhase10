@@ -6,6 +6,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
+
 /**
  * @author Robin Harbecke
  *
@@ -26,7 +30,7 @@ public class PlayerCardsPane extends JPanel{
 	public void updateData() {//todo
 		this.cardList.removeAll();		
 		for (int i = 0; i < 7; i++) {
-			CardPane card = new CardPane();
+			CardPane card = new DragableCardPane(new Card(Color.BLUE,CardValue.FIVE));
 			this.cardList.add(card);
 		}	
 	}
