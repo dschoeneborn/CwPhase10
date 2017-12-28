@@ -20,12 +20,9 @@ public class Card extends JPanel{
 	}
 
 	public Card(CardValue cardValue, Color color) {
+		this();
 		this.cardValue = cardValue;
-		this.color = color;
-
-		this.setPreferredSize(new Dimension(80,130));
-		this.setMinimumSize(this.getPreferredSize());
-		this.setMaximumSize(this.getPreferredSize());
+		this.color = color;			
 	}
 
 	public void paintComponent(java.awt.Graphics graphics) {
