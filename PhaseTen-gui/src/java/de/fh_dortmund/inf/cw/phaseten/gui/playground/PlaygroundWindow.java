@@ -4,18 +4,21 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
+import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
+
 /**
  * @author Robin Harbecke
  *
  */
-public class PlaygroundWindow extends JFrame {
+public class PlaygroundWindow extends GuiFrame{
 	protected TopRowPane topRowPane = new TopRowPane();
 	protected PublicCardStackPane publicCardStackPane = new PublicCardStackPane();
 	protected PlayerCardsPane playerCardsPane = new PlayerCardsPane();
 	protected StatusPanel statusPanel = new StatusPanel();
 	
-	public PlaygroundWindow() {
-		super("Phaseten");
+	public PlaygroundWindow(ServiceHandler serviceHandler) {
+		super("Phaseten",serviceHandler);
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		this.add(this.topRowPane);
 		this.add(Box.createVerticalGlue());
