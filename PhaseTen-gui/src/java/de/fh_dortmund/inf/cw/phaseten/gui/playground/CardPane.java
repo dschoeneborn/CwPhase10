@@ -21,20 +21,24 @@ public class CardPane extends JPanel{
 	private Card baseCard; 
 
 	public CardPane() {				
-		this.setPreferredSize(new Dimension(80,130));
-		this.setMinimumSize(this.getPreferredSize());
-		this.setMaximumSize(this.getPreferredSize());
+		this.init();
 	}
 	
 	public CardPane(Card baseCard) {
-		this();//todo call correct listener with values
-		this.baseCard = baseCard;
+		this(CardValue.SIX,Color.RED);//todo call correct listener with values
+		this.baseCard = baseCard;		
 	}
 
 	protected CardPane(CardValue cardValue, Color color) {
 		this();
 		this.cardValue = cardValue;
 		this.color = color;			
+	}
+	
+	protected void init() {
+		this.setPreferredSize(new Dimension(80,130));
+		this.setMinimumSize(this.getPreferredSize());
+		this.setMaximumSize(this.getPreferredSize());
 	}
 
 	public void paintComponent(java.awt.Graphics graphics) {
@@ -94,5 +98,9 @@ public class CardPane extends JPanel{
 				gr.drawString(cardValue.getWrittenValue(), x + 24, y + 80);
 			}
 		}
+	}
+	
+	public Card getBaseCard() {
+		return this.baseCard;
 	}
 }
