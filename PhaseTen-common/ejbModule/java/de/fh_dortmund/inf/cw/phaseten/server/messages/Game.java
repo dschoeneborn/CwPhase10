@@ -57,7 +57,7 @@ public class Game implements Serializable {
 						    int phase) {
 		// TODO: Get Spectators from Game
 		return new Game(
-			Player.from(game.getPlayer(), phase),  
+			Player.from(game.getPlayers(), phase),  
 			spectator, 
 			game.getPullStack(),
 			game.getLiFoStack(),

@@ -2,7 +2,11 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +26,14 @@ public class Card implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public int id;
 
+	@Enumerated(EnumType.ORDINAL)
+	@Column(nullable = false)
+	@Basic(optional = false)
 	private Color color;
+
+	@Column(nullable = false)
+	@Basic(optional = false)
+	@Enumerated(EnumType.ORDINAL)
 	private CardValue cardValue;
 
 	/**
@@ -35,9 +46,10 @@ public class Card implements Serializable {
 		this.cardValue = cardValue;
 	}
 
-	public Card() {
+	@SuppressWarnings("unused")
+	private Card() {
 
-        }
+	}
 
 	public int getId() {
 		return id;
