@@ -7,14 +7,14 @@ import javax.swing.JPanel;
  *
  */
 public class CardPile extends JPanel {
-	protected Card card;
+	protected CardPane card;
 	
 	public CardPile() {
-		this.card = new Card();
+		this.card = new CardPane();
 		this.add(this.card);
 	}
 	
-	public void updateData(Card card) {
+	public void updateData(CardPane card) {
 		this.removeAll();
 		this.card = card;
 		this.add(this.card);

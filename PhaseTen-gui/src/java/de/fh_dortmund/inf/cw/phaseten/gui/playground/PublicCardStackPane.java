@@ -31,7 +31,7 @@ public class PublicCardStackPane  extends JPanel{
 			cardStack.setLayout(new FlowLayout());
 			this.stackListPanel.add(cardStack);						
 			for(int y=0;y<i;y++){
-				Card card = new Card();
+				CardPane card = new CardPane();
 				cardStack.add(card);
 			}
 		}		

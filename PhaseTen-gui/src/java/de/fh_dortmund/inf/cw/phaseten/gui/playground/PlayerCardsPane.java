@@ -26,7 +26,7 @@ public class PlayerCardsPane extends JPanel{
 	public void updateData() {//todo
 		this.cardList.removeAll();		
 		for (int i = 0; i < 7; i++) {
-			Card card = new Card();
+			CardPane card = new CardPane();
 			this.cardList.add(card);
 		}	
 	}

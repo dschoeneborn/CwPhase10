@@ -13,7 +13,7 @@ public class CardStackPane extends JPanel {
 	
 	public void updateData() {//todo
 		this.removeAll();
-		Card card = new Card();
+		CardPane card = new CardPane();
 		this.add(card);
 	}
 }

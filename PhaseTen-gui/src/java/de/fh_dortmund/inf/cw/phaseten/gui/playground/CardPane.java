@@ -6,24 +6,32 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 
 /**
  * @author Robin Harbecke
  * @author Sven Krefeld 
  */
-public class Card extends JPanel{
+public class CardPane extends JPanel{
 
 	private CardValue cardValue;
 	private Color color;
+	
+	private Card baseCard; 
 
-	public Card() {				
+	public CardPane() {				
 		this.setPreferredSize(new Dimension(80,130));
 		this.setMinimumSize(this.getPreferredSize());
 		this.setMaximumSize(this.getPreferredSize());
 	}
+	
+	public CardPane(Card baseCard) {
+		this();//todo call correct listener with values
+		this.baseCard = baseCard;
+	}
 
-	public Card(CardValue cardValue, Color color) {
+	protected CardPane(CardValue cardValue, Color color) {
 		this();
 		this.cardValue = cardValue;
 		this.color = color;			
