@@ -8,3 +8,4 @@ target/
 /.gradle/
 PhaseTen-common/\.settings/org\.eclipse\.jdt\.core\.prefs
 PhaseTen-ejb/\.settings/org\.eclipse\.jdt\.core\.prefs
+PhaseTen-gui/\.settings/org\.eclipse\.jdt\.core\.prefs

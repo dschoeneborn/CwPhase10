@@ -1,8 +1,6 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground;
 
 import java.awt.FlowLayout;
-import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DropTarget;
@@ -12,9 +10,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.io.IOException;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.TransferHandler;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
@@ -28,9 +24,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedExcepti
 
 /**
  * @author Robin Harbecke
- *
+ * @author Marc Mettke
  */
 public class DockPilePane extends JPanel {
+	private static final long serialVersionUID = 7318654738136140956L;
+	
 	protected ServiceHandler serviceHandler;
 	protected DockPile dockPile;
 

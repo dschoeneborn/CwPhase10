@@ -7,9 +7,11 @@ import javax.swing.JPanel;
 
 /**
  * @author Robin Harbecke
- *
+ * @author Marc Mettke
  */
 public class StatusPanel extends JPanel{
+	private static final long serialVersionUID = 9162651354589609526L;
+	
 	protected JLabel statusLabel;
 	protected JLabel nameLabel;
 	protected JLabel coinsLabel;

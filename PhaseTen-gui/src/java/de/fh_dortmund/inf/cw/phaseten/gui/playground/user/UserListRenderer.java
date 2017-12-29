@@ -8,10 +8,10 @@ import javax.swing.ListCellRenderer;
 
 /**
  * @author Robin Harbecke
- *
+ * @author Marc Mettke
  */
 public class UserListRenderer implements ListCellRenderer<User> {
-	public Component getListCellRendererComponent(JList list, User value, int index, boolean isSelected,
+	public Component getListCellRendererComponent(JList<? extends User> list, User value, int index, boolean isSelected,
 			boolean cellHasFocus) {
 		if (value instanceof Player) {
 			return (Player) value;

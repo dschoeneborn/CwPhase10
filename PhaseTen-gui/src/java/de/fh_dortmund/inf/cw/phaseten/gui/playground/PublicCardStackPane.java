@@ -10,9 +10,11 @@ import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 
 /**
  * @author Robin Harbecke
- *
+ * @author Marc Mettke
  */
 public class PublicCardStackPane extends JPanel {
+	private static final long serialVersionUID = -4152706728493122866L;
+	
 	protected JScrollPane scrollPane;
 	protected JPanel stackListPanel = new JPanel();
 

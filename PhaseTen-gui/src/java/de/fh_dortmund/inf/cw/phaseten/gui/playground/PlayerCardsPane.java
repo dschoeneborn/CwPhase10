@@ -12,9 +12,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 
 /**
  * @author Robin Harbecke
- *
+ * @author Marc Mettke
  */
 public class PlayerCardsPane extends JPanel{	
+	private static final long serialVersionUID = -4081504045974992274L;
+	
 	protected JScrollPane scrollPane;
 	protected JPanel cardList = new JPanel();
 	

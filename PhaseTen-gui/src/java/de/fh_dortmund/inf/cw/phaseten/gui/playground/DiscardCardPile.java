@@ -10,18 +10,18 @@ import java.awt.dnd.DropTargetListener;
 import java.io.IOException;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.DockPilePane.CardDropTargetListener;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
 
 /**
  * @author Robin Harbecke
+ * @author Marc Mettke
  *
  */
 public class DiscardCardPile extends CardPile {
+	private static final long serialVersionUID = 7330764386204801790L;
+	
 	protected ServiceHandler serviceHandler;
 	
 	public DiscardCardPile(ServiceHandler serviceHandler) {

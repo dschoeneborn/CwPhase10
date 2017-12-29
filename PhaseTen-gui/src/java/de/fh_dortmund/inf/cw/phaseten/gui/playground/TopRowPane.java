@@ -3,7 +3,6 @@ package de.fh_dortmund.inf.cw.phaseten.gui.playground;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -15,9 +14,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
 
 /**
  * @author Robin Harbecke
- *
+ * @author Marc Mettke
  */
 public class TopRowPane extends JPanel{
+	private static final long serialVersionUID = -6210706602718026386L;
+	
 	protected CardPile drawPile = new CardPile();
 	protected CardPile discardPile = new CardPile();
 	

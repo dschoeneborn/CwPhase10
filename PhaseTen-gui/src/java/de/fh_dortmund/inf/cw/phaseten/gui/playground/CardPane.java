@@ -12,9 +12,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 /**
  * @author Robin Harbecke
  * @author Sven Krefeld
+ * @author Marc Mettke
  */
 public class CardPane extends JPanel {
-
+	private static final long serialVersionUID = 667877245670448219L;
+	
 	private CardValue cardValue;
 	private Color color;
 

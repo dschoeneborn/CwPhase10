@@ -15,9 +15,11 @@ import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.UserListRenderer;
 
 /**
  * @author Robin Harbecke
- *
+ * @author Marc Mettke
  */
 public class UserList extends JPanel{	
+	private static final long serialVersionUID = -7067128962658272765L;
+	
 	protected DefaultListModel<User> listModel = new DefaultListModel<User>();
 	protected JList<User> list;
 	protected JScrollPane listScroller;

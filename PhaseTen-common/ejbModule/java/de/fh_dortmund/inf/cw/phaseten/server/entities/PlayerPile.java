@@ -4,8 +4,6 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.Entity;

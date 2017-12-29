@@ -1,26 +1,19 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground;
 
 import java.awt.Cursor;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JComponent;
-import javax.swing.TransferHandler;
-
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 
 /**
  * @author Robin Harbecke
- *
+ * @author Marc Mettke
  */
 public class DragableCardPane extends CardPane implements DragGestureListener {
+	private static final long serialVersionUID = -8652026530502078151L;
+
 	public DragableCardPane(Card baseCard) {
 		super(baseCard);
 	}
