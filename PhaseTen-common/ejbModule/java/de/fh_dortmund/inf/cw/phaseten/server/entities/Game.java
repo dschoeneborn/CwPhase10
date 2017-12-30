@@ -76,8 +76,15 @@ public class Game {
 		if (players.size() > MAX_PLAYER)
 			throw new NoFreeSlotException();
 
-		players.forEach(player -> this.addPlayer(player));
-		spectators.forEach(spectator -> this.addSpectator(spectator));
+		for(Player player : players)
+		{
+			this.addPlayer(player);
+		}
+		
+		for(Spectator spectator : spectators)
+		{
+			this.addSpectator(spectator);
+		}
 	}
 
 	/**
