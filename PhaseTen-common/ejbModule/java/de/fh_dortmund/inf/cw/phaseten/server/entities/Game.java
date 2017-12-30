@@ -160,11 +160,11 @@ public class Game {
 		this.openPiles.add(pile);
 	}
 
-	public Set<Player> getPlayers() {
+	public List<Player> getPlayers() {
 		return players;
 	}
 
-	public Set<Spectator> getSpectators() {
+	public List<Spectator> getSpectators() {
 		return spectators;
 	}
 
