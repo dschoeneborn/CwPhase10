@@ -92,6 +92,9 @@ public class Player {
 		this.lobby = lobby;
 	}
 
+	/**
+	 * Delete Lobby from Player
+	 */
 	public void removeLobby() {
 		this.lobby = null;
 	}

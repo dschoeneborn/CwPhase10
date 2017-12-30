@@ -39,7 +39,7 @@ public class Game {
 
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "game")
 	@Basic(optional = false)
-	private List<Player> players;
+	private Set<Player> players;
 
 	@Basic(optional = false)
 	@OneToOne
@@ -56,14 +56,14 @@ public class Game {
 	private List<DockPile> openPiles;
 
 	@OneToMany(mappedBy = "game")
-	private List<Spectator> spectators;
+	private Set<Spectator> spectators;
 
 	/**
 	 * 
 	 */
 	private Game() {
-		this.players = new LinkedList<>();
-		this.spectators = new LinkedList<>();
+		this.players = new HashSet<>();
+		this.spectators = new HashSet<>();
 		this.pullStack = new PullStack();
 		this.liFoStack = new LiFoStack();
 		this.openPiles = new LinkedList<>();
@@ -160,11 +160,11 @@ public class Game {
 		this.openPiles.add(pile);
 	}
 
-	public List<Player> getPlayers() {
+	public Set<Player> getPlayers() {
 		return players;
 	}
 
-	public List<Spectator> getSpectators() {
+	public Set<Spectator> getSpectators() {
 		return spectators;
 	}
 
