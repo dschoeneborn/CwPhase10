@@ -8,14 +8,15 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 
 /**
  * @author Dennis Schöneborn
@@ -25,8 +26,6 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class Lobby {
-
-	private static final int MAX_PLAYER = 6;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,40 +40,40 @@ public class Lobby {
 	@JoinColumn
 	private Set<Spectator> spectators;
 
-	@SuppressWarnings("unused")
-	private Lobby() {
-
-	}
-
-	public Lobby(Player host) {
+	public Lobby() {
 		this.players = new HashSet<>();
-		this.players.add(host);
 		this.spectators = new HashSet<>();
-		host.setLobby(this);
 	}
 
 	public boolean isFull() {
-		if (this.players.size() < MAX_PLAYER)
+		if (this.players.size() < Game.MAX_PLAYER)
 			return false;
 
 		return true;
 
 	}
 
-	public int getNumberOfUsers() {
+	public int getNumberOfPlayers() {
 		return this.players.size();
 	}
-
+	
+	public int getNumberOfSpectators() {
+		return this.spectators.size();
+	}
+	
 	public void addPlayer(Player player) {
-		if (this.players.size() < MAX_PLAYER) {
+		if (this.players.size() < Game.MAX_PLAYER) {
 			this.players.add(player);
 			player.setLobby(this);
 		}
-
 	}
 
 	public void addSpectator(Spectator spectator) {
 		this.spectators.add(spectator);
+	}
+	
+	public void removePlayer(Player player) {
+		this.players.remove(player);
 	}
 
 	public void removeSpectator(Spectator spectator) {
@@ -84,10 +83,18 @@ public class Lobby {
 	public Set<Player> getPlayers() {
 		return players;
 	}
+	
+	public Set<Spectator> getSpectators()
+	{
+		return spectators;
+	}
 
-	public Game startGame() {
-		// TODO Game erstellen
-
-		return null;
+	public Game startGame() throws NotEnoughPlayerException, NoFreeSlotException{
+		Game game = new Game(this.players, this.spectators);
+		
+		players.clear();
+		spectators.clear();
+		
+		return game;
 	}
 }

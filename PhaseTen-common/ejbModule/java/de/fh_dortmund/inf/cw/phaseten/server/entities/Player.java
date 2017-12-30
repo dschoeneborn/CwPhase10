@@ -13,11 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 /**
  * @author Dennis Schöneborn
@@ -95,6 +92,9 @@ public class Player {
 		this.lobby = lobby;
 	}
 
+	/**
+	 * Delete Lobby from Player
+	 */
 	public void removeLobby() {
 		this.lobby = null;
 	}

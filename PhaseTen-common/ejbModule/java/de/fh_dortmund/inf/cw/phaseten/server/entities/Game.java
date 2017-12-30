@@ -10,17 +10,16 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 
 /**
  * @author Dennis Schöneborn
@@ -31,13 +30,16 @@ import javax.persistence.Transient;
 @Entity
 public class Game {
 
+	public static final int MAX_PLAYER = 6;
+	public static final int MIN_PLAYER = 3;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "game")
 	@Basic(optional = false)
-	private List<Player> players;
+	private Set<Player> players;
 
 	@Basic(optional = false)
 	@OneToOne
@@ -52,19 +54,37 @@ public class Game {
 	@OneToMany
 	@JoinColumn(unique = true)
 	private List<DockPile> openPiles;
-	
-	@OneToMany(mappedBy="game")
-	private List<Spectator> spectators;
+
+	@OneToMany(mappedBy = "game")
+	private Set<Spectator> spectators;
 
 	/**
 	 * 
 	 */
 	private Game() {
-		this.players = new LinkedList<>();
-		this.spectators = new LinkedList<>();
+		this.players = new HashSet<>();
+		this.spectators = new HashSet<>();
 		this.pullStack = new PullStack();
 		this.liFoStack = new LiFoStack();
 		this.openPiles = new LinkedList<>();
+	}
+
+	public Game(Set<Player> players, Set<Spectator> spectators) throws NotEnoughPlayerException, NoFreeSlotException {
+		this();
+		if (players.size() < MIN_PLAYER)
+			throw new NotEnoughPlayerException();
+		if (players.size() > MAX_PLAYER)
+			throw new NoFreeSlotException();
+
+		for(Player player : players)
+		{
+			this.addPlayer(player);
+		}
+		
+		for(Spectator spectator : spectators)
+		{
+			this.addSpectator(spectator);
+		}
 	}
 
 	/**
@@ -128,6 +148,11 @@ public class Game {
 		p.setGame(this);
 	}
 
+	public void addSpectator(Spectator s) {
+		this.spectators.add(s);
+		s.setGame(this);
+	}
+
 	/**
 	 * @return the openPiles
 	 */
@@ -142,11 +167,11 @@ public class Game {
 		this.openPiles.add(pile);
 	}
 
-	public List<Player> getPlayers() {
+	public Set<Player> getPlayers() {
 		return players;
 	}
-	
-	public List<Spectator> getSpectators() {
+
+	public Set<Spectator> getSpectators() {
 		return spectators;
 	}
 
