@@ -5,10 +5,14 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,7 +50,7 @@ public class Game implements Serializable {
 
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "game")
 	@Basic(optional = false)
-	private Set<Player> players;
+	private List<Player> players;
 
 	@Column
 	private int currentPlayer;
@@ -69,8 +73,6 @@ public class Game implements Serializable {
 	@OneToMany
 	@JoinColumn(unique = true)
 	private List<DockPile> openPiles;
-	@OneToMany(mappedBy = "game")
-	private List<Spectator> spectators;
 
 	@OneToMany(mappedBy = "game")
 	private Set<Spectator> spectators;
@@ -79,7 +81,7 @@ public class Game implements Serializable {
 	 * 
 	 */
 	private Game() {
-		this.players = new HashSet<>();
+		this.players = new ArrayList<>();
 		this.spectators = new HashSet<>();
 		this.pullStack = new PullStack();
 		this.liFoStack = new LiFoStack();
@@ -190,11 +192,11 @@ public class Game implements Serializable {
 		this.openPiles.add(pile);
 	}
 
-	public Set<Player> getPlayers() {
+	public List<Player> getPlayers() {
 		return players;
 	}
 
-	public List<Spectator> getSpectators() {
+	public Set<Spectator> getSpectators() {
 		return spectators;
 	}
 

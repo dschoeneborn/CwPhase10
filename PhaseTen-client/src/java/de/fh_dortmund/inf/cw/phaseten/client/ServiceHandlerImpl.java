@@ -15,6 +15,7 @@ import javax.naming.NamingException;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
@@ -126,27 +127,6 @@ public class ServiceHandlerImpl implements ServiceHandler {
 		this.lobbyManagmentRemote.startGame();
 	}
 
-	public void takeCardFromDrawPile() throws MoveNotValidException {
-		this.gameManagmentRemote.takeCardFromPullstack();
-	}
-
-	public void takeCardFromDiscardPile() throws MoveNotValidException {
-		this.gameManagmentRemote.takeCardFromPullstack();
-	}
-
-	public void addToOpenPile(Card card, DockPile dockPile)
-			throws MoveNotValidException {
-		this.gameManagmentRemote.addToPileOnTable(card, dockPile);
-	}
-
-	public void goOut(Collection<Card> cards) throws MoveNotValidException {
-		this.gameManagmentRemote.layPhaseToTable(cards);
-	}
-
-	public void discardCardToDiscardPile(Card card) throws MoveNotValidException {
-		this.gameManagmentRemote.layCardToLiFoStack(card);
-	}
-
 	public void onMessage(Message message) {
 		try {
 			if(message.getJMSDestination().equals(playerMessageTopic) && message instanceof ObjectMessage) {
@@ -168,32 +148,38 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void takeCardFromPullstack() throws MoveNotValidException {
+	public void takeCardFromPullstack(Player player) throws MoveNotValidException {
 		// TODO Auto-generated method stub
 		throw new NotImplementedException();
 	}
 
 	@Override
-	public void takeCardFromLiFoStack() throws MoveNotValidException {
+	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException {
 		// TODO Auto-generated method stub
 		throw new NotImplementedException();
 	}
 
 	@Override
-	public void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException {
+	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException {
 		// TODO Auto-generated method stub
 		throw new NotImplementedException();
 	}
 
 	@Override
-	public void layPhaseToTable(Collection<Card> cards) throws MoveNotValidException {
+	public void layPhaseToTable(Player player, Collection<DockPile> cards) throws MoveNotValidException {
 		// TODO Auto-generated method stub
 		throw new NotImplementedException();
 	}
 
 	@Override
-	public void layCardToLiFoStack(Card card) throws MoveNotValidException {
+	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException {
 		// TODO Auto-generated method stub
 		throw new NotImplementedException();
+	}
+	
+	@Override
+	public void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card)
+	{
+		
 	}
 }

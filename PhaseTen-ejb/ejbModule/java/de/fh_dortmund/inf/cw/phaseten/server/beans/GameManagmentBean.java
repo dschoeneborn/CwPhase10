@@ -27,6 +27,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
 @Stateless
 public class GameManagmentBean implements GameManagmentRemote, GameManagmentLocal {
@@ -62,8 +63,12 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 		throw new NotImplementedException();
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public void takeCardFromPullstack(Player p) throws MoveNotValidException {
+		//TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und nicht als Parameter übergeben lassen?
 		if(gameValidation.isValidDrawCardFromPullStack(game, p))
 		{
 			Card drawnCard = game.getPullStack().pullTopCard();
@@ -77,8 +82,12 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 		updateClient();
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException {
+		//TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und nicht als Parameter übergeben lassen?
 		if(gameValidation.isValidDrawCardFromLiFoStack(game, player))
 		{
 			Card drawnCard = game.getLiFoStack().pullTopCard();
@@ -92,8 +101,12 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 		updateClient();		
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException {
+		//TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und nicht als Parameter übergeben lassen?
 		if(gameValidation.isValidToAddCard(game, player, dockPile, card))
 		{
 			dockPile.addCard(card);
@@ -106,9 +119,13 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 		updateClient();			
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException
 	{
+		//TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und nicht als Parameter übergeben lassen?
 		if(gameValidation.isValidLayStageToTable(game, player, piles))
 		{
 			for(DockPile pile : piles)
@@ -131,8 +148,12 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 		updateClient();
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException {
+		//TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und nicht als Parameter übergeben lassen?
 		if(gameValidation.isValidPushCardToLiFoStack(game, player, card))
 		{
 			game.getLiFoStack().addCard(card);
@@ -146,10 +167,14 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 		
 		updateClient();				
 	}
-	
+
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card) throws MoveNotValidException
 	{
+		//TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und nicht als Parameter übergeben lassen?
 		if(card.getCardValue() == CardValue.SKIP
 			&& gameValidation.isValidLaySkipCard(currentPlayer, destinationPlayer, game))
 		{

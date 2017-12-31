@@ -19,8 +19,12 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Pile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Marc Mettke
@@ -70,9 +74,10 @@ public class GameManagmentTest {
 	public void testTakeCardFromDrawPile() throws Exception {
 		// throws NotYourTurnException, CardAlreadyTakenInThisTurnException;
 
+		//TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser Test funktioniert
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.takeCardFromPullstack();
+		this.serviceHandler.takeCardFromPullstack(new Player("test"));
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -86,9 +91,10 @@ public class GameManagmentTest {
 	public void testTakeCardFromDiscardPile() throws Exception {
 		// throws NotYourTurnException, CardAlreadyTakenInThisTurnException;
 
+		//TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser Test funktioniert
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.takeCardFromLiFoStack();
+		this.serviceHandler.takeCardFromLiFoStack(new Player("test"));
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -101,13 +107,14 @@ public class GameManagmentTest {
 	@Test
 	public void testAddToOpenPile() throws Exception {
 		// throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException;
-		
+
+		//TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser Test funktioniert
 		Card card = new Card(Color.BLUE, CardValue.ONE);
 		DockPile dockPile = new ColorDockPile(Color.BLUE);		
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.addToPileOnTable(card, dockPile);
+		this.serviceHandler.addToPileOnTable(new Player("test"), card, dockPile);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -120,15 +127,20 @@ public class GameManagmentTest {
 	@Test
 	public void testGoOut() throws Exception {
 		// throws NotYourTurnException, InvalidCardCompilationException;
+		//TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser Test funktioniert
 		
-		Collection<Card> cards = new ArrayList<Card>();
-		cards.add(new Card(Color.BLUE, CardValue.ONE));
-		cards.add(new Card(Color.BLUE, CardValue.ONE));
-		cards.add(new Card(Color.BLUE, CardValue.ONE));
+		Collection<DockPile> piles = new ArrayList<DockPile>();
+		
+		DockPile cards = new SetDockPile(CardValue.ONE);
+		cards.addCard(new Card(Color.BLUE, CardValue.ONE));
+		cards.addCard(new Card(Color.BLUE, CardValue.ONE));
+		cards.addCard(new Card(Color.BLUE, CardValue.ONE));
+		
+		piles.add(cards);
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.layPhaseToTable(cards);
+		this.serviceHandler.layPhaseToTable(new Player("test"), piles);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -141,12 +153,13 @@ public class GameManagmentTest {
 	@Test
 	public void testDiscardCardToDiscardPile() throws Exception {
 		// throws NotYourTurnException, TakeCardBeforeDiscardingException;
+		//TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser Test funktioniert
 		
 		Card card = new Card(Color.BLUE, CardValue.ONE);
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.layCardToLiFoStack(card);
+		this.serviceHandler.layCardToLiFoStack(new Player("test"), card);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -154,5 +167,12 @@ public class GameManagmentTest {
 		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
 		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof Game);
+	}
+	
+	@Test
+	public void testLaySkipCardInfrontOfPlayer()
+	{
+		//TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser Test funktioniert
+		throw new NotImplementedException();
 	}
 }
