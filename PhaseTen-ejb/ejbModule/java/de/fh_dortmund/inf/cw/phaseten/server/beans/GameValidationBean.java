@@ -1,7 +1,10 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import javax.ejb.Stateless;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
@@ -9,17 +12,22 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Pile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.RoundStage;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationRemote;
 
 /**
  * Bean that validates if a given turn is allowed in the given game condition
  *
  * @author Björn Merschmeier
+ * @author Tim Prange
  */
-public class GameValidationBean {
+@Stateless
+public class GameValidationBean implements GameValidationLocal, GameValidationRemote {
 	/**
 	 * Validates if its allowed to draw a card from the LiFo stack
 	 *
@@ -28,12 +36,14 @@ public class GameValidationBean {
 	 * @return pullCardAllowed
 	 * @author Björn Merschmeier
 	 */
+	@Override
 	public boolean isValidDrawCardFromLiFoStack(Game g, Player player) {
 		boolean pullCardAllowed = true;
 
 		Card cardOnTop = g.getLiFoStack().showCard();
 
-		if (cardOnTop.getCardValue() == CardValue.SKIP || !playerIsCurrentPlayer(g, player)
+		if (cardOnTop.getCardValue() == CardValue.SKIP 
+				|| !playerIsCurrentPlayer(g, player)
 				|| player.getRoundStage() != RoundStage.PULL) {
 			pullCardAllowed = false;
 		}
@@ -50,10 +60,14 @@ public class GameValidationBean {
 	 * @param c the Card the player wants to push
 	 * @return pushCardToLiFoStackAllowed
 	 */
+	@Override
 	public boolean isValidPushCardToLiFoStack(Game g, Player player, Card c) {
 		boolean pushCardToLiFoStackAllowed = false;
 
-		if (playerIsCurrentPlayer(g, player) && player.getRoundStage() == RoundStage.PUSH && playerHasCard(c, player)
+		if (playerIsCurrentPlayer(g, player) 
+				&& (player.getRoundStage() == RoundStage.PUT_AND_PUSH
+					|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP)) 
+				&& playerHasCard(c, player)
 				&& (!player.hasSkipCard() || (player.hasSkipCard() && c.getCardValue() == CardValue.SKIP))) {
 			pushCardToLiFoStackAllowed = true;
 		}
@@ -69,13 +83,17 @@ public class GameValidationBean {
 	 * @return pullCardAllowed
 	 * @author Björn Merschmeier
 	 */
+	@Override
 	public boolean isValidDrawCardFromPullStack(Game g, Player player) {
-		boolean pullCardAllowed = true;
+		boolean pullCardAllowed = false;
 
 		Player currentPlayer = g.getCurrentPlayer();
 
-		if (!playerIsCurrentPlayer(g, player) || currentPlayer.getRoundStage() != RoundStage.PULL) {
-			pullCardAllowed = false;
+		if (playerIsCurrentPlayer(g, player) 
+				&& currentPlayer.getRoundStage() == RoundStage.PULL
+				&& !currentPlayer.hasSkipCard())
+		{
+			pullCardAllowed = true;
 		}
 
 		return pullCardAllowed;
@@ -90,17 +108,23 @@ public class GameValidationBean {
 	 * @param piles The card the player wants to lay its stage with
 	 * @return layStageDownAllowed
 	 */
-	public boolean isValidLayStageToTable(Game g, Player p, ArrayList<Pile> piles) {
+	@Override
+	public boolean isValidLayStageToTable(Game g, Player p, Collection<DockPile> pilesInCollection) {
 		boolean layStageDownAllowed = false;
+		
+		ArrayList<DockPile> piles = new ArrayList<>(pilesInCollection);
 
 		ArrayList<Card> cardsInPiles = new ArrayList<>();
 
-		for (Pile pile : piles) {
+		for (DockPile pile : piles) {
 			cardsInPiles.addAll(pile.getCards());
 		}
 
-		if (playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT
-				&& !p.playerLaidStage() && playerHasCards(cardsInPiles, p)) {
+		if (playerIsCurrentPlayer(g, p)
+				&& !p.hasSkipCard()
+				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
+				&& !p.playerLaidStage()
+				&& playerHasCards(cardsInPiles, p)) {
 			switch (p.getPhase()) {
 			case TWO_TRIPLES:
 				layStageDownAllowed = areCardsReadyForPhase1(piles);
@@ -145,17 +169,23 @@ public class GameValidationBean {
 	 * pile
 	 *
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 * @param g the game to validated
 	 * @param p the player who wants to add a card
 	 * @param pile the pile the player wants to add the card
 	 * @param c the card the player wants to add
 	 * @return addCardAllowed
 	 */
+	@Override
 	public boolean isValidToAddCard(Game g, Player p, Pile pile, Card c) {
 		boolean addCardAllowed = false;
 
-		if (playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT
-				&& p.getPlayerPile().getSize() >= 1 && p.playerLaidStage() && playerHasCard(c, p)) {
+		if (playerIsCurrentPlayer(g, p)
+				&& !p.hasSkipCard() 
+				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
+				&& p.getPlayerPile().getSize() >= 1 
+				&& p.playerLaidStage() 
+				&& playerHasCard(c, p)) {
 			if (pile instanceof SetDockPile) {
 				SetDockPile setDockPile = (SetDockPile) pile;
 
@@ -188,18 +218,22 @@ public class GameValidationBean {
 	 * Validated if the given user is allowed to lay a skip card to a given user
 	 *
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 * @param currentPlayer the player that wants to lay a skip card
 	 * @param destinationPlayer the player that gets the skip card
 	 * @param g the game to check
 	 * @return canLaySkipCard
 	 */
+	@Override
 	public boolean isValidLaySkipCard(Player currentPlayer, Player destinationPlayer, Game g) {
 		boolean canLaySkipCard = false;
 
 		Card skipCard = new Card(Color.NONE, CardValue.SKIP);
 
-		if (playerHasCard(skipCard, currentPlayer) && currentPlayer.getRoundStage() == RoundStage.PUSH
-				&& playerIsCurrentPlayer(g, currentPlayer) && !currentPlayer.hasSkipCard()
+		if (playerHasCard(skipCard, currentPlayer) 
+				&& (currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH)
+				&& playerIsCurrentPlayer(g, currentPlayer) 
+				&& !currentPlayer.hasSkipCard()
 				&& !destinationPlayer.hasSkipCard()) {
 			canLaySkipCard = true;
 		}
@@ -211,6 +245,7 @@ public class GameValidationBean {
 	 * Validates if the given user has more cards
 	 *
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 * @param cards The cards the player should have
 	 * @param p the player
 	 * @return userHasCards
@@ -231,6 +266,7 @@ public class GameValidationBean {
 	 * Validated if a given user hat a given card
 	 *
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 * @param card the player should have
 	 * @param p the player that should have the card
 	 * @return playerHasCard
@@ -253,6 +289,7 @@ public class GameValidationBean {
 	 * are in that given pile
 	 *
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 * @param sequenceDockPile the pile to check
 	 * @return pileIsFull
 	 */
@@ -266,9 +303,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 1
-	 * @return cardReadeForPhase1
+	 * @return cardReadyForPhase1
 	 */
-	private boolean areCardsReadyForPhase1(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase1(List<DockPile> piles) {
 		return (piles.size() == 2 && pileIsSet(piles.get(0), 3) && pileIsSet(piles.get(1), 3));
 	}
 
@@ -277,9 +314,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 2
-	 * @return cardReadeForPhase2
+	 * @return cardReadyForPhase2
 	 */
-	private boolean areCardsReadyForPhase2(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase2(List<DockPile> piles) {
 		return (piles.size() == 2 && ((pileIsSet(piles.get(0), 3) && pileIsSequence(piles.get(1), 4))
 				|| (pileIsSet(piles.get(1), 3) && pileIsSequence(piles.get(0), 4))));
 	}
@@ -289,9 +326,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 3
-	 * @return cardReadeForPhase3
+	 * @return cardReadyForPhase3
 	 */
-	private boolean areCardsReadyForPhase3(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase3(List<DockPile> piles) {
 		return (piles.size() == 2 && ((pileIsSet(piles.get(0), 4) && pileIsSequence(piles.get(1), 4))
 				|| (pileIsSet(piles.get(1), 4) && pileIsSequence(piles.get(0), 4))));
 	}
@@ -301,9 +338,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 4
-	 * @return cardReadeForPhase4
+	 * @return cardReadyForPhase4
 	 */
-	private boolean areCardsReadyForPhase4(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase4(List<DockPile> piles) {
 		return (piles.size() == 1 && pileIsSequence(piles.get(0), 7));
 	}
 
@@ -312,9 +349,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 5
-	 * @return cardReadeForPhase5
+	 * @return cardReadyForPhase5
 	 */
-	private boolean areCardsReadyForPhase5(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase5(List<DockPile> piles) {
 		return (piles.size() == 1 && pileIsSequence(piles.get(0), 8));
 	}
 
@@ -323,9 +360,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 6
-	 * @return cardReadeForPhase6
+	 * @return cardReadyForPhase6
 	 */
-	private boolean areCardsReadyForPhase6(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase6(List<DockPile> piles) {
 		return (piles.size() == 1 && pileIsSequence(piles.get(0), 9));
 	}
 
@@ -334,9 +371,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 7
-	 * @return cardReadeForPhase7
+	 * @return cardReadyForPhase7
 	 */
-	private boolean areCardsReadyForPhase7(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase7(List<DockPile> piles) {
 		return (piles.size() == 2 && pileIsSet(piles.get(0), 4) && pileIsSet(piles.get(1), 4));
 	}
 
@@ -345,9 +382,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 8
-	 * @return cardReadeForPhase8
+	 * @return cardReadyorPhase8
 	 */
-	private boolean areCardsReadyForPhase8(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase8(List<DockPile> piles) {
 		return (piles.size() == 1 && piles.get(0) instanceof SetDockPile && piles.get(0).getSize() == 7);
 	}
 
@@ -356,9 +393,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 9
-	 * @return cardReadeForPhase9
+	 * @return cardReadyForPhase9
 	 */
-	private boolean areCardsReadyForPhase9(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase9(List<DockPile> piles) {
 		return (piles.size() == 2 && ((pileIsSet(piles.get(0), 2) && pileIsSet(piles.get(1), 5))
 				|| (pileIsSet(piles.get(1), 2) && pileIsSet(piles.get(0), 5))));
 	}
@@ -368,9 +405,9 @@ public class GameValidationBean {
 	 *
 	 * @author Björn Merschmeier
 	 * @param piles that should represent phase 10
-	 * @return cardReadeForPhase10
+	 * @return cardReadyForPhase10
 	 */
-	private boolean areCardsReadyForPhase10(ArrayList<Pile> piles) {
+	private boolean areCardsReadyForPhase10(List<DockPile> piles) {
 		return (piles.size() == 2 && ((pileIsSet(piles.get(0), 3) && pileIsSet(piles.get(1), 5))
 				|| (pileIsSet(piles.get(1), 3) && pileIsSet(piles.get(0), 5))));
 	}
@@ -383,7 +420,7 @@ public class GameValidationBean {
 	 * @param i the size of the pile
 	 * @return pileIsSet
 	 */
-	private boolean pileIsSet(Pile pile, int i) {
+	private boolean pileIsSet(DockPile pile, int i) {
 		return (pile instanceof SetDockPile && pile.getSize() == i);
 	}
 
@@ -395,7 +432,7 @@ public class GameValidationBean {
 	 * @param i the size of the pile
 	 * @return pileIsSequence
 	 */
-	private boolean pileIsSequence(Pile pile, int i) {
+	private boolean pileIsSequence(DockPile pile, int i) {
 		return (pile instanceof SequenceDockPile && pile.getSize() == i);
 	}
 
@@ -410,7 +447,6 @@ public class GameValidationBean {
 	private boolean playerIsCurrentPlayer(Game g, Player p) {
 		Player currentPlayer = g.getCurrentPlayer();
 
-		// XXX Maybe check if current user is not skiped
 		return (currentPlayer.getId() == p.getId());
 	}
 }

@@ -4,24 +4,23 @@ import java.util.Collection;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InvalidCardCompilationException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 
 /**
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
-public interface GameManagment {
-	void takeCardFromDrawPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException;
+public interface GameManagment {	
+	void takeCardFromLiFoStack(Player player) throws MoveNotValidException;
 	
-	void takeCardFromDiscardPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException;
+	void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException;
 	
-	void addToOpenPile(Card card, DockPile dockPile) throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException;
-	
-	void goOut(Collection<Card> cards) throws NotYourTurnException, InvalidCardCompilationException;
-	
-	void discardCardToDiscardPile(Card card) throws NotYourTurnException, TakeCardBeforeDiscardingException;
+	void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException;
+
+	void takeCardFromPullstack(Player player) throws MoveNotValidException;
+
+	void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException;
+
+	void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card) throws MoveNotValidException;
 }

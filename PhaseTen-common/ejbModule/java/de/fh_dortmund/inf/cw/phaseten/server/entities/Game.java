@@ -4,6 +4,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Basic;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Dennis Schöneborn
@@ -43,11 +46,10 @@ public class Game implements Serializable {
 	@Column
 	private int currentPlayer;
 
-	// TODO - DK an BM - 27.12.2017 - Bitte keine mehrfachen Verweise auf Player
-	// (bei Verwendung bitte äquivalent zum currentPlayer nur den Index speichern)
 	// TODO - BM - 20.12.2017 - Diese Variable soll verwendet werden oder es müssen
 	// getter und setter erstellt werden
-	// private Player lastFirstPlayer;
+	@Column
+	private int lastRoundBeginner;
 
 	@Basic(optional = false)
 	@OneToOne
@@ -132,6 +134,12 @@ public class Game implements Serializable {
 		this.addPlayer(p6);
 	}
 
+	public Game(ArrayList arrayList, ArrayList arrayList2, PullStack pullStack2, LiFoStack liFoStack2,
+			ArrayList arrayList3) {
+		// TODO Auto-generated constructor stub
+		throw new NotImplementedException();
+	}
+
 	private void addPlayer(Player p) {
 		this.players.add(p);
 		p.setGame(this);
@@ -176,6 +184,17 @@ public class Game implements Serializable {
 
 	public void setCurrentPlayer(Player player) {
 		this.currentPlayer = players.indexOf(player);
+	}
+
+	public void nextCurrentPlayer() {
+		if(players.size() > currentPlayer + 1)
+		{
+			currentPlayer++;
+		}
+		else
+		{
+			currentPlayer = 0;
+		}
 	}
 
 	// TODO Fassadenmethoden für die eintelnen Stacks

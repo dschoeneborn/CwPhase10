@@ -15,14 +15,9 @@ import javax.naming.NamingException;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InvalidCardCompilationException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
@@ -32,6 +27,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Marc Mettke
@@ -130,25 +126,25 @@ public class ServiceHandlerImpl implements ServiceHandler {
 		this.lobbyManagmentRemote.startGame();
 	}
 
-	public void takeCardFromDrawPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException {
-		this.gameManagmentRemote.takeCardFromDrawPile();
+	public void takeCardFromDrawPile() throws MoveNotValidException {
+		this.gameManagmentRemote.takeCardFromPullstack();
 	}
 
-	public void takeCardFromDiscardPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException {
-		this.gameManagmentRemote.takeCardFromDrawPile();
+	public void takeCardFromDiscardPile() throws MoveNotValidException {
+		this.gameManagmentRemote.takeCardFromPullstack();
 	}
 
 	public void addToOpenPile(Card card, DockPile dockPile)
-			throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException {
-		this.gameManagmentRemote.addToOpenPile(card, dockPile);
+			throws MoveNotValidException {
+		this.gameManagmentRemote.addToPileOnTable(card, dockPile);
 	}
 
-	public void goOut(Collection<Card> cards) throws NotYourTurnException, InvalidCardCompilationException {
-		this.gameManagmentRemote.goOut(cards);
+	public void goOut(Collection<Card> cards) throws MoveNotValidException {
+		this.gameManagmentRemote.layPhaseToTable(cards);
 	}
 
-	public void discardCardToDiscardPile(Card card) throws NotYourTurnException, TakeCardBeforeDiscardingException {
-		this.gameManagmentRemote.discardCardToDiscardPile(card);
+	public void discardCardToDiscardPile(Card card) throws MoveNotValidException {
+		this.gameManagmentRemote.layCardToLiFoStack(card);
 	}
 
 	public void onMessage(Message message) {
@@ -169,5 +165,35 @@ public class ServiceHandlerImpl implements ServiceHandler {
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void takeCardFromPullstack() throws MoveNotValidException {
+		// TODO Auto-generated method stub
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void takeCardFromLiFoStack() throws MoveNotValidException {
+		// TODO Auto-generated method stub
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException {
+		// TODO Auto-generated method stub
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void layPhaseToTable(Collection<Card> cards) throws MoveNotValidException {
+		// TODO Auto-generated method stub
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void layCardToLiFoStack(Card card) throws MoveNotValidException {
+		// TODO Auto-generated method stub
+		throw new NotImplementedException();
 	}
 }

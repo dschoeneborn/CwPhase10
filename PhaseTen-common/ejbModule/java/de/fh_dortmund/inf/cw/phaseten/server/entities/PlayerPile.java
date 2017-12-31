@@ -42,7 +42,7 @@ public class PlayerPile extends Pile {
 		return true;
 	}
 
-	public void deleteCard(Card card) {
+	public void removeCard(Card card) {
 		this.cards.remove(card);
 	}
 }

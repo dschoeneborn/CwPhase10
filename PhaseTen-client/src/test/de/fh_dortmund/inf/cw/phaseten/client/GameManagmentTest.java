@@ -72,7 +72,7 @@ public class GameManagmentTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.takeCardFromDrawPile();
+		this.serviceHandler.takeCardFromPullstack();
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -88,7 +88,7 @@ public class GameManagmentTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.takeCardFromDiscardPile();
+		this.serviceHandler.takeCardFromLiFoStack();
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -107,7 +107,7 @@ public class GameManagmentTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.addToOpenPile(card, dockPile);
+		this.serviceHandler.addToPileOnTable(card, dockPile);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -128,7 +128,7 @@ public class GameManagmentTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.goOut(cards);
+		this.serviceHandler.layPhaseToTable(cards);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -146,7 +146,7 @@ public class GameManagmentTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.discardCardToDiscardPile(card);
+		this.serviceHandler.layCardToLiFoStack(card);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 

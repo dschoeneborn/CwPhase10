@@ -127,6 +127,16 @@ public class Player implements Serializable {
 	public PlayerPile getPlayerPile() {
 		return playerPile;
 	}
+	
+	public void addCardToPlayerPile(Card c)
+	{
+		playerPile.addCard(c);
+	}
+	
+	public void removeCardFromPlayerPile(Card c)
+	{
+		playerPile.removeCard(c);
+	}
 
 	/**
 	 * 
@@ -176,6 +186,10 @@ public class Player implements Serializable {
 
 	public void givePlayerSkipCard() {
 		this.playerHasSkipCard = true;
+	}
+
+	public void resetRoundStage() {
+		this.roundStage = RoundStage.PULL;
 	}
 
 }
