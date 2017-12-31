@@ -43,7 +43,6 @@ public class User implements Serializable{
 	@Basic(optional = false)
 	private String loginName;
 
-	@SuppressWarnings("unused")
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private String password;
@@ -51,12 +50,10 @@ public class User implements Serializable{
 	@Column
 	private int coins;
 
-	@SuppressWarnings("unused")
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "PLAYER_ID", unique = true)
 	private Player player;
 
-	@SuppressWarnings("unused")
 	@OneToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn
 	private Spectator spectator;
@@ -107,6 +104,22 @@ public class User implements Serializable{
 	public void setCoins(int coinsToSet)
 	{
 		coins = coinsToSet;
+	}
+	
+	/**
+	 * @return Player
+	 */
+	public Player getPlayer()
+	{
+		return player;
+	}
+	
+	/**
+	 * @return Spectator
+	 */
+	public Spectator getSpectator()
+	{
+		return spectator;
 	}
 	
 }

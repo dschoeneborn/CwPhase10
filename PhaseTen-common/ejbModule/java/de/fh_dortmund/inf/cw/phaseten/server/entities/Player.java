@@ -116,6 +116,9 @@ public class Player implements Serializable {
 		this.lobby = lobby;
 	}
 
+	/**
+	 * Delete Lobby from Player
+	 */
 	public void removeLobby() {
 		this.lobby = null;
 	}

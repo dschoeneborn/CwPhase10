@@ -39,4 +39,18 @@ public class Spectator implements Serializable{
 		this();
 		this.game = game;
 	}
+
+	/**
+	 * @return the game
+	 */
+	public Game getGame() {
+		return game;
+	}
+
+	/**
+	 * @param game the game to set
+	 */
+	public void setGame(Game game) {
+		this.game = game;
+	}
 }
