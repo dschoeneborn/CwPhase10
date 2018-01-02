@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
@@ -21,10 +21,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Dennis Schöneborn
@@ -32,17 +31,19 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException
  * @author Daniela Kaiser
  * @author Sebastian Seitz
  * @author Björn Merschmeier
+ * @author Tim Prange
  */
 @Entity
 public class Game implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	public static final int MAX_PLAYER = 6;
 	public static final int MIN_PLAYER = 3;
+	public static final int NUMBERS_OF_CARDS = 108;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -78,7 +79,7 @@ public class Game implements Serializable {
 	private Set<Spectator> spectators;
 
 	/**
-	 * 
+	 *
 	 */
 	private Game() {
 		this.players = new ArrayList<>();
@@ -90,18 +91,18 @@ public class Game implements Serializable {
 
 	public Game(Set<Player> players, Set<Spectator> spectators) throws NotEnoughPlayerException, NoFreeSlotException {
 		this();
-		if (players.size() < MIN_PLAYER)
+		if (players.size() < MIN_PLAYER) {
 			throw new NotEnoughPlayerException();
-		if (players.size() > MAX_PLAYER)
+		}
+		if (players.size() > MAX_PLAYER) {
 			throw new NoFreeSlotException();
+		}
 
-		for(Player player : players)
-		{
+		for (Player player : players) {
 			this.addPlayer(player);
 		}
-		
-		for(Spectator spectator : spectators)
-		{
+
+		for (Spectator spectator : spectators) {
 			this.addSpectator(spectator);
 		}
 	}
@@ -220,12 +221,10 @@ public class Game implements Serializable {
 	}
 
 	public void nextCurrentPlayer() {
-		if(players.size() > currentPlayer + 1)
-		{
+		if (players.size() > currentPlayer + 1) {
 			currentPlayer++;
 		}
-		else
-		{
+		else {
 			currentPlayer = 0;
 		}
 	}

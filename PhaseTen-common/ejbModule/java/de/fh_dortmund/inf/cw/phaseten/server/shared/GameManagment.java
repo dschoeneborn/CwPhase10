@@ -10,12 +10,13 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 /**
  * @author Marc Mettke
  * @author Björn Merschmeier
+ * @author Tim Prange
  */
-public interface GameManagment {	
+public interface GameManagment {
 	void takeCardFromLiFoStack(Player player) throws MoveNotValidException;
-	
+
 	void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException;
-	
+
 	void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException;
 
 	void takeCardFromPullstack(Player player) throws MoveNotValidException;
@@ -23,4 +24,5 @@ public interface GameManagment {
 	void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException;
 
 	void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card) throws MoveNotValidException;
+
 }

@@ -3,6 +3,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 
@@ -10,9 +11,9 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Pile;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.RoundStage;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
@@ -28,13 +29,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationRemote;
  */
 @Stateless
 public class GameValidationBean implements GameValidationLocal, GameValidationRemote {
-	/**
-	 * Validates if its allowed to draw a card from the LiFo stack
-	 *
-	 * @param g The game to check
-	 * @param player The player who wants to draw a card
-	 * @return pullCardAllowed
-	 * @author Björn Merschmeier
+	/*
+	 * (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
+	 * isValidDrawCardFromLiFoStack(de.fh_dortmund.inf.cw.phaseten.server.entities.
+	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
 	 */
 	@Override
 	public boolean isValidDrawCardFromLiFoStack(Game g, Player player) {
@@ -42,8 +41,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Card cardOnTop = g.getLiFoStack().showCard();
 
-		if (cardOnTop.getCardValue() == CardValue.SKIP 
-				|| !playerIsCurrentPlayer(g, player)
+		if (cardOnTop.getCardValue() == CardValue.SKIP || !playerIsCurrentPlayer(g, player)
 				|| player.getRoundStage() != RoundStage.PULL) {
 			pullCardAllowed = false;
 		}
@@ -51,22 +49,20 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		return pullCardAllowed;
 	}
 
-	/**
-	 * Validates if its allowed to push a card to the LiFo stack
-	 *
-	 * @author Björn Merschmeier
-	 * @param g The game to check
-	 * @param player The player who wants to push a card
-	 * @param c the Card the player wants to push
-	 * @return pushCardToLiFoStackAllowed
+	/*
+	 * (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
+	 * isValidPushCardToLiFoStack(de.fh_dortmund.inf.cw.phaseten.server.entities.
+	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player,
+	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Card)
 	 */
 	@Override
 	public boolean isValidPushCardToLiFoStack(Game g, Player player, Card c) {
 		boolean pushCardToLiFoStackAllowed = false;
 
-		if (playerIsCurrentPlayer(g, player) 
+		if (playerIsCurrentPlayer(g, player)
 				&& (player.getRoundStage() == RoundStage.PUT_AND_PUSH
-					|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP)) 
+						|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP))
 				&& playerHasCard(c, player)
 				&& (!player.hasSkipCard() || (player.hasSkipCard() && c.getCardValue() == CardValue.SKIP))) {
 			pushCardToLiFoStackAllowed = true;
@@ -75,13 +71,11 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		return pushCardToLiFoStackAllowed;
 	}
 
-	/**
-	 * Validates if its allowed to draw a card from the pull stack
-	 *
-	 * @param g The game to check
-	 * @param player The player who wants to draw a card
-	 * @return pullCardAllowed
-	 * @author Björn Merschmeier
+	/*
+	 * (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
+	 * isValidDrawCardFromPullStack(de.fh_dortmund.inf.cw.phaseten.server.entities.
+	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
 	 */
 	@Override
 	public boolean isValidDrawCardFromPullStack(Game g, Player player) {
@@ -89,29 +83,24 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Player currentPlayer = g.getCurrentPlayer();
 
-		if (playerIsCurrentPlayer(g, player) 
-				&& currentPlayer.getRoundStage() == RoundStage.PULL
-				&& !currentPlayer.hasSkipCard())
-		{
+		if (playerIsCurrentPlayer(g, player) && currentPlayer.getRoundStage() == RoundStage.PULL
+				&& !currentPlayer.hasSkipCard()) {
 			pullCardAllowed = true;
 		}
 
 		return pullCardAllowed;
 	}
 
-	/**
-	 * Validates if the given player is allowed to lay the stage he wants to
-	 *
-	 * @author Björn Merschmeier
-	 * @param g the game to check
-	 * @param p the player who wants to lay the stage
-	 * @param piles The card the player wants to lay its stage with
-	 * @return layStageDownAllowed
+	/*
+	 * (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
+	 * isValidLayStageToTable(de.fh_dortmund.inf.cw.phaseten.server.entities.Game,
+	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Player, java.util.Collection)
 	 */
 	@Override
 	public boolean isValidLayStageToTable(Game g, Player p, Collection<DockPile> pilesInCollection) {
 		boolean layStageDownAllowed = false;
-		
+
 		ArrayList<DockPile> piles = new ArrayList<>(pilesInCollection);
 
 		ArrayList<Card> cardsInPiles = new ArrayList<>();
@@ -120,11 +109,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 			cardsInPiles.addAll(pile.getCards());
 		}
 
-		if (playerIsCurrentPlayer(g, p)
-				&& !p.hasSkipCard()
-				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& !p.playerLaidStage()
-				&& playerHasCards(cardsInPiles, p)) {
+		if (playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
+				&& !p.playerLaidStage() && playerHasCards(cardsInPiles, p)) {
 			switch (p.getPhase()) {
 			case TWO_TRIPLES:
 				layStageDownAllowed = areCardsReadyForPhase1(piles);
@@ -164,28 +150,21 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		return layStageDownAllowed;
 	}
 
-	/**
-	 * Validates if the given Player is allowed to add the given card to the given
-	 * pile
-	 *
-	 * @author Tim Prange
-	 * @author Björn Merschmeier
-	 * @param g the game to validated
-	 * @param p the player who wants to add a card
-	 * @param pile the pile the player wants to add the card
-	 * @param c the card the player wants to add
-	 * @return addCardAllowed
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#isValidToAddCard(
+	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Game,
+	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Player,
+	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Pile,
+	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Card)
 	 */
 	@Override
 	public boolean isValidToAddCard(Game g, Player p, Pile pile, Card c) {
 		boolean addCardAllowed = false;
 
-		if (playerIsCurrentPlayer(g, p)
-				&& !p.hasSkipCard() 
-				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& p.getPlayerPile().getSize() >= 1 
-				&& p.playerLaidStage() 
-				&& playerHasCard(c, p)) {
+		if (playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
+				&& p.getPlayerPile().getSize() >= 1 && p.playerLaidStage() && playerHasCard(c, p)) {
 			if (pile instanceof SetDockPile) {
 				SetDockPile setDockPile = (SetDockPile) pile;
 
@@ -214,15 +193,16 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		return addCardAllowed;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
+	 * isValidLaySkipCard(de.fh_dortmund.inf.cw.phaseten.server.entities.Player,
+	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Player,
+	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Game)
+	 */
 	/**
-	 * Validated if the given user is allowed to lay a skip card to a given user
-	 *
 	 * @author Tim Prange
 	 * @author Björn Merschmeier
-	 * @param currentPlayer the player that wants to lay a skip card
-	 * @param destinationPlayer the player that gets the skip card
-	 * @param g the game to check
-	 * @return canLaySkipCard
 	 */
 	@Override
 	public boolean isValidLaySkipCard(Player currentPlayer, Player destinationPlayer, Game g) {
@@ -230,15 +210,40 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Card skipCard = new Card(Color.NONE, CardValue.SKIP);
 
-		if (playerHasCard(skipCard, currentPlayer) 
-				&& (currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH)
-				&& playerIsCurrentPlayer(g, currentPlayer) 
-				&& !currentPlayer.hasSkipCard()
+		if (playerHasCard(skipCard, currentPlayer) && (currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH)
+				&& playerIsCurrentPlayer(g, currentPlayer) && !currentPlayer.hasSkipCard()
 				&& !destinationPlayer.hasSkipCard()) {
 			canLaySkipCard = true;
 		}
 
 		return canLaySkipCard;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#hasEnoughPlayers(
+	 * java.util.List)
+	 */
+	/**
+	 * @author Tim Prange
+	 */
+	@Override
+	public boolean hasEnoughPlayers(Set<Player> players) {
+		return players.size() >= Game.MIN_PLAYER;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
+	 * cantHaveMorePlayers(java.util.List)
+	 */
+	/**
+	 * @author Tim Prange
+	 */
+	@Override
+	public boolean cantHaveMorePlayers(Set<Player> players) {
+		return players.size() >= Game.MAX_PLAYER;
 	}
 
 	/**
