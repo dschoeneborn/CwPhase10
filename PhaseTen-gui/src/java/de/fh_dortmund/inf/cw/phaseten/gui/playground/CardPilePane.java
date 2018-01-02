@@ -6,12 +6,12 @@ import javax.swing.JPanel;
  * @author Robin Harbecke
  * @author Marc Mettke
  */
-public class CardPile extends JPanel {
+public class CardPilePane extends JPanel {
 	private static final long serialVersionUID = -6744980761177786388L;
 	
 	protected CardPane card;
 	
-	public CardPile() {
+	public CardPilePane() {
 		this.card = new CardPane();
 		this.add(this.card);
 	}
