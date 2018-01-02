@@ -21,6 +21,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InvalidCardCompilationEx
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PasswordIncorrectException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
@@ -30,7 +31,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
 
 /**
  * @author Marc Mettke
@@ -39,7 +40,7 @@ public class ServiceHandlerImpl extends ServiceHandler {
 	private static ServiceHandlerImpl instance;
 	
 	private Context context;
-	private PlayerManagmentRemote playerManagmentRemote;
+	private UserSessionRemote userSessionRemote;
 	private LobbyManagmentRemote lobbyManagmentRemote;
 	private GameManagmentRemote gameManagmentRemote;
 	
@@ -54,8 +55,8 @@ public class ServiceHandlerImpl extends ServiceHandler {
 	private ServiceHandlerImpl() {
 		try {
 			context = new InitialContext();
-			playerManagmentRemote = (PlayerManagmentRemote) context.lookup(
-				"java:global/PhaseTen-ear/PhaseTen-ejb/PlayerManagment!de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote"
+			userSessionRemote = (UserSessionRemote) context.lookup(
+				"java:global/PhaseTen-ear/PhaseTen-ejb/UserSessionBean!de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote"
 			);
 			lobbyManagmentRemote = (LobbyManagmentRemote) context.lookup(
 				"java:global/PhaseTen-ear/PhaseTen-ejb/LobbyManagment!de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote"
@@ -90,7 +91,7 @@ public class ServiceHandlerImpl extends ServiceHandler {
 	}
 
 	public void requestPlayerMessage() {
-		this.playerManagmentRemote.requestPlayerMessage();
+		this.userSessionRemote.requestPlayerMessage();
 	}
 
 	public void requestLobbyMessage() {
@@ -102,11 +103,11 @@ public class ServiceHandlerImpl extends ServiceHandler {
 	}
 
 	public void register(String username, String password) throws UsernameAlreadyTakenException {
-		this.playerManagmentRemote.register(username, password);
+		this.userSessionRemote.register(username, password);
 	}
 
-	public void login(String username, String password) throws UserDoesNotExistException {
-		this.playerManagmentRemote.login(username, password);
+	public void login(String username, String password) throws UserDoesNotExistException, PasswordIncorrectException {
+		this.userSessionRemote.login(username, password);
 	}
 
 	public void enterAsPlayer() throws NoFreeSlotException {
@@ -162,5 +163,9 @@ public class ServiceHandlerImpl extends ServiceHandler {
 	private void notify(Object object) {
 		setChanged();
 		notifyObservers(object);
+	}
+
+	public void logout() {
+		this.userSessionRemote.logout();
 	}
 }

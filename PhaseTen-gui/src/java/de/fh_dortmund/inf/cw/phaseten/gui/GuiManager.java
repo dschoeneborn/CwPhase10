@@ -21,7 +21,7 @@ public class GuiManager implements Observer {
 
 	public GuiManager(ServiceHandler serviceHandler) {
 		this.serviceHandler = serviceHandler;
-		this.showPlaygoundGui();
+		this.showLoginGui();
 		this.serviceHandler.addObserver(this);
 	}
 	

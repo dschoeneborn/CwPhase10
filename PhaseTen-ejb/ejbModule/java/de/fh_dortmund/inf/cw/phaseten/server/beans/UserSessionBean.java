@@ -6,6 +6,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PasswordIncorrectException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentLocal;
@@ -14,9 +15,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
 
 /**
  * @author Dennis Schöneborn
- *
+ * @author Marc Mettke
  */
-
 @Stateful
 public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	private String currentUserName = null;
@@ -24,7 +24,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	private PlayerManagmentLocal userManagement;
 	
 	@Override
-	public void login(String userName, String password) throws UserDoesNotExistException {
+	public void login(String userName, String password) throws UserDoesNotExistException, PasswordIncorrectException {
 		userManagement.login(userName, password);
 		currentUserName = userName;
 	}
@@ -37,6 +37,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	@Override
 	public void logout() {
 		currentUserName = null;
+	}
+
+	@Override
+	public void requestPlayerMessage() {
+		userManagement.requestPlayerMessage();
 	}
 	
 }

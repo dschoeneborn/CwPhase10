@@ -49,16 +49,16 @@ public class PlaygroundWindow extends GuiFrame {
 
 	@Override
 	public void gameDataUpdated(Game game) {
-		
+		updateData();
 	}
 
 	@Override
 	public void currentPlayerDataUpdated(CurrentPlayer currentPlayer) {
-		
+		updateData();
 	}
 
 	@Override
 	public void lobbyDataUpdated(Lobby lobby) {
-		
+		updateData();
 	}
 }

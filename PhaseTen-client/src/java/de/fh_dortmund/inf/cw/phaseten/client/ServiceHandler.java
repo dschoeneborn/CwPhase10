@@ -6,13 +6,13 @@ import javax.jms.MessageListener;
 
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
 
 /**
  * @author Marc Mettke
  */
 public abstract class ServiceHandler extends Observable 
-									 implements PlayerManagmentRemote, 
+									 implements UserSessionRemote, 
 												LobbyManagmentRemote,
 												GameManagmentRemote,
 												MessageListener {

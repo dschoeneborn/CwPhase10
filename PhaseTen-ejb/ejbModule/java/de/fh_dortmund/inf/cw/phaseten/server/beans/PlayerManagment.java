@@ -20,19 +20,19 @@ import javax.xml.bind.DatatypeConverter;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PasswordIncorrectException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote;
 
 /**
  * @author Marc Mettke
  * @author Dennis Schöneborn
  */
 @Stateless
-public class PlayerManagment implements PlayerManagmentRemote, PlayerManagmentLocal {
+public class PlayerManagment implements PlayerManagmentLocal {
 	@Inject
 	private JMSContext jmsContext;
 	
@@ -78,7 +78,7 @@ public class PlayerManagment implements PlayerManagmentRemote, PlayerManagmentLo
 	}
 
 	@Override
-	public void login(String username, String password) throws UserDoesNotExistException {
+	public void login(String username, String password) throws UserDoesNotExistException, PasswordIncorrectException {
 		// TODO: WIP: login if username exists - toggle comment till entities are availible
 		/*User user = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
 		
