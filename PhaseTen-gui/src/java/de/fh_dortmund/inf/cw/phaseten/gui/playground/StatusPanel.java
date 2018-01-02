@@ -5,9 +5,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
+
 /**
  * @author Robin Harbecke
- * @author Marc Mettke
  */
 public class StatusPanel extends JPanel{
 	private static final long serialVersionUID = 9162651354589609526L;
@@ -36,9 +37,9 @@ public class StatusPanel extends JPanel{
 		this.add(Box.createHorizontalGlue());		
 	}
 	
-	public void updateData() {
-		this.statusLabel.setText("Teststatus");
-		this.nameLabel.setText("Name");
-		this.coinsLabel.setText("Coins");
+	public void updateData(CurrentPlayer currentPlayer) {
+		this.statusLabel.setText("Teststatus");//todo
+		this.nameLabel.setText(currentPlayer.getName());
+		this.coinsLabel.setText("Coins");//todo
 	}
 }

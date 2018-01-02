@@ -36,29 +36,24 @@ public class PlaygroundWindow extends GuiFrame {
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-	}
-	
-	@Deprecated
-	public void updateData() {
-		this.topRowPane.updateData();
-		this.publicCardStackPane.updateData();
-		this.playerCardsPane.updateData();
-		this.statusPanel.updateData();
+	}	
+
+	@Override
+	public void gameDataUpdated(Game game) {
+		this.topRowPane.gameDataUpdated(game);
+		this.publicCardStackPane.gameDataUpdated(game);
 		this.pack();
 	}
 
 	@Override
-	public void gameDataUpdated(Game game) {
-		updateData();
-	}
-
-	@Override
 	public void currentPlayerDataUpdated(CurrentPlayer currentPlayer) {
-		updateData();
+		this.playerCardsPane.updateData(currentPlayer.getPlayerPile());
+		this.statusPanel.updateData(currentPlayer);
+		this.pack();
 	}
 
 	@Override
 	public void lobbyDataUpdated(Lobby lobby) {
-		updateData();
+		
 	}
 }

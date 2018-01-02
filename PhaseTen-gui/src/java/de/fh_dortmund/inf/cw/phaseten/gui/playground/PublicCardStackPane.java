@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 
 /**
  * @author Robin Harbecke
@@ -30,13 +32,12 @@ public class PublicCardStackPane extends JPanel {
 		// this.setMaximumSize(new Dimension(500,200));
 		this.add(this.scrollPane);
 	}
-
-	public void updateData() {// todo
+	
+	public void gameDataUpdated(Game game) {
 		this.stackListPanel.removeAll();
-		for (int i = 4; i > 0; i--) {// only for test data
-			DockPilePane dockPilePane = new DockPilePane(this.serviceHandler, null);
-			dockPilePane.updateData(i);
+		for (DockPile pile: game.getOpenPiles()) {
+			DockPilePane dockPilePane = new DockPilePane(this.serviceHandler, pile);			
 			this.stackListPanel.add(dockPilePane);
 		}
-	}
+	}	
 }

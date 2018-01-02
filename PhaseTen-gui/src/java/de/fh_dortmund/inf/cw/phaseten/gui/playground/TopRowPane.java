@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 
 /**
  * @author Robin Harbecke
@@ -19,8 +20,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
 public class TopRowPane extends JPanel{
 	private static final long serialVersionUID = -6210706602718026386L;
 	
-	protected CardPile drawPile = new CardPile();
-	protected CardPile discardPile = new CardPile();
+	protected CardPilePane drawPile = new CardPilePane();
+	protected CardPilePane discardPile = new CardPilePane();
 	
 	protected PhaseCard phaseCard = new PhaseCard();
 	protected UserList userList = new UserList();
@@ -60,9 +61,10 @@ public class TopRowPane extends JPanel{
 		});
 	}
 	
-	public void updateData() {		
-		this.userList.updateData();
-	}
+	
+	public void gameDataUpdated(Game game) {
+		this.userList.updateData(game.getPlayers(),game.getSpectators());
+	}	
 	
 	private static Component topJustify( JPanel panel )  {
 	    Box  b = Box.createVerticalBox();

@@ -15,8 +15,6 @@ import javax.swing.TransferHandler;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
@@ -38,14 +36,16 @@ public class DockPilePane extends JPanel {
 		this.setLayout(new FlowLayout());
 		this.setTransferHandler(new TransferHandler("baseCard"));
 		this.setDropTarget(new DropTarget(this, new CardDropTargetListener()));
+		
+		this.updateData();
 	}
 
-	public void updateData(int count) {
+	protected void updateData() {
 		this.removeAll();
-		for (int i = 0; i < count; i++) {
-			CardPane card = new CardPane(new Card(Color.RED, CardValue.SIX));
-			this.add(card);
-		}
+		for (Card card : this.dockPile.getCards()) {
+			CardPane cardGui = new CardPane(card);
+			this.add(cardGui);
+		}		
 	}
 
 	class CardDropTargetListener implements DropTargetListener {

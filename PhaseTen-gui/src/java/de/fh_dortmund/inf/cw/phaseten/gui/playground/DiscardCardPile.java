@@ -19,7 +19,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscarding
  * @author Marc Mettke
  *
  */
-public class DiscardCardPile extends CardPile {
+public class DiscardCardPile extends CardPilePane {
 	private static final long serialVersionUID = 7330764386204801790L;
 	
 	protected ServiceHandler serviceHandler;

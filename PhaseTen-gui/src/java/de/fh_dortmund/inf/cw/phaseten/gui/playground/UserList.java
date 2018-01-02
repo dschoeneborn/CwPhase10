@@ -1,6 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground;
 
 import java.awt.Dimension;
+import java.util.Collection;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -8,10 +9,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.Player;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.Spectator;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.User;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.PlayerListEntryGUI;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.SpectatorListEntryGui;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.UserListEntry;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.UserListRenderer;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Spectator;
 
 /**
  * @author Robin Harbecke
@@ -20,13 +23,13 @@ import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.UserListRenderer;
 public class UserList extends JPanel{	
 	private static final long serialVersionUID = -7067128962658272765L;
 	
-	protected DefaultListModel<User> listModel = new DefaultListModel<User>();
-	protected JList<User> list;
+	protected DefaultListModel<UserListEntry> listModel = new DefaultListModel<UserListEntry>();
+	protected JList<UserListEntry> list;
 	protected JScrollPane listScroller;
 	
 	public UserList() {
 		super();		
-		this.list = new JList<User>(this.listModel);
+		this.list = new JList<UserListEntry>(this.listModel);
 		this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.list.setCellRenderer(new UserListRenderer());
 		this.listScroller = new JScrollPane(this.list);
@@ -35,12 +38,15 @@ public class UserList extends JPanel{
 		this.setPreferredSize(this.listScroller.getPreferredSize());		
 		this.add(this.listScroller);		
 	}
+		
 	
-	public void updateData() {
+	public void updateData(Collection<Player> players,Collection<Spectator> spectators) {
 		this.listModel.removeAllElements();
-		this.listModel.addElement(new Player());
-		this.listModel.addElement(new Player());
-		this.listModel.addElement(new Player());
-		this.listModel.addElement(new Spectator());
+		for (Player player : players) {
+			this.listModel.addElement(new PlayerListEntryGUI(player));
+		}
+		for (Spectator spectator : spectators) {
+			this.listModel.addElement(new SpectatorListEntryGui(spectator));
+		}		
 	}
 }

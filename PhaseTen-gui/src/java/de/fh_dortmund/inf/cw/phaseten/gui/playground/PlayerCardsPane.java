@@ -7,12 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 
 /**
  * @author Robin Harbecke
- * @author Marc Mettke
  */
 public class PlayerCardsPane extends JPanel{	
 	private static final long serialVersionUID = -4081504045974992274L;
@@ -29,11 +27,12 @@ public class PlayerCardsPane extends JPanel{
 		this.add(this.scrollPane);			
 	}	
 	
-	public void updateData() {//todo
-		this.cardList.removeAll();		
-		for (int i = 0; i < 7; i++) {
-			CardPane card = new DragableCardPane(new Card(Color.BLUE,CardValue.FIVE));
-			this.cardList.add(card);
-		}	
-	}
+	public void updateData(PlayerPile pile) {
+		this.cardList.removeAll();
+		for (Card card : pile.getCards()) {
+			CardPane cardPane = new DragableCardPane(card);
+			this.cardList.add(cardPane);
+		}
+	}	
+
 }

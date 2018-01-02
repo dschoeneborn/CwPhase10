@@ -4,19 +4,17 @@ import java.awt.Color;
 
 import javax.swing.JLabel;
 
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Spectator;
+
 /**
  * @author Robin Harbecke
  * @author Marc Mettke
  */
-public class Spectator extends JLabel implements User {
+public class SpectatorListEntryGui extends JLabel implements UserListEntry{
 	private static final long serialVersionUID = -8061718977257724045L;
 
-	public Spectator() {
+	public SpectatorListEntryGui(Spectator spectator) {
 		this.setForeground(Color.LIGHT_GRAY);
-		this.update();
-	}
-	
-	public void update() {
-		this.setText("Spectator");
-	}
+		this.setText("{{Spectator name}}");		
+	}	
 }
