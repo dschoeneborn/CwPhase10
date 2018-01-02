@@ -4,15 +4,16 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
-import de.fh_dortmund.inf.cw.phaseten.gui.SpringUtilities;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
@@ -20,11 +21,16 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 
 /**
  * @author Marc Mettke
+ * @author Sven Krefeld
  */
 public class LobbyWindow extends GuiFrame {
 	private static final long serialVersionUID = -3411026015858719190L;
-	
+
 	private ServiceHandler serviceHandler;
+
+	protected ButtonPane buttonPane = new ButtonPane();
+	protected UserList userList = new UserList();
+	protected StatusPanel statusPanel = new StatusPanel();
 
 	public LobbyWindow(ServiceHandler serviceHandler) {
 		super("Phaseten | Lobby", serviceHandler);
@@ -35,44 +41,93 @@ public class LobbyWindow extends GuiFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
-	
+
 	private Container setUI() {
-        JPanel panel = new JPanel(new SpringLayout());
-        
-        JButton startGame = new JButton("Login");
-        startGame.addActionListener(new ActionListener() {
+		JPanel panel = new JPanel();
+		GroupLayout layout = new GroupLayout(panel);
+		panel.setLayout(layout);
+
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		this.userList.updateData();
+		
+		JButton spectatorButton = new JButton("Zuschauen");
+		JButton startGameButton = new JButton("Beitreten");
+		
+		spectatorButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				serviceHandler.enterAsSpectator();
+				userList.updateData();
+				spectatorButton.setEnabled(false);
+				startGameButton.setEnabled(false);
+			}
+		});
+
+		startGameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					serviceHandler.startGame();
-				} catch (NotEnoughPlayerException exception) {
+					serviceHandler.enterAsPlayer();
+					userList.updateData();
+					
+					startGameButton.setText("Starten");
+					startGameButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							try {
+								serviceHandler.startGame();
+							} catch (NotEnoughPlayerException exception) {
+								exception.printStackTrace();
+							}
+						}
+			    	});
+				} catch (NoFreeSlotException exception) {
 					exception.printStackTrace();
+					startGameButton.setEnabled(false);
 				}
 			}
-    	});
-        
-        panel.add(new JLabel("Lobby Stub"));
-        panel.add(startGame);
- 
-        SpringUtilities.makeCompactGrid(panel,
-                1, 2,
-                6, 6,       
-                6, 6);  
-       return panel;	        
-	}
+		});
 
+		JLabel label = new JLabel("Some text");
+
+		layout.setHorizontalGroup(layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+					.addComponent(this.statusPanel)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+							.addComponent(spectatorButton)
+							.addComponent(startGameButton)
+							)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+							.addComponent(label)
+							.addComponent(this.userList)
+							)					
+					)				
+				);
+
+		layout.linkSize(SwingConstants.HORIZONTAL, userList, statusPanel);
+
+		layout.setVerticalGroup(layout.createSequentialGroup()
+				.addComponent(this.userList)
+				.addComponent(label)
+				.addComponent(spectatorButton)
+				.addComponent(startGameButton)
+				.addComponent(this.statusPanel)
+				);
+		
+		return panel;
+	}
 
 	@Override
 	public void gameDataUpdated(Game game) {
-		
+
 	}
 
 	@Override
 	public void currentPlayerDataUpdated(CurrentPlayer currentPlayer) {
-		
+
 	}
 
 	@Override
 	public void lobbyDataUpdated(Lobby lobby) {
-		
+
 	}
 }
