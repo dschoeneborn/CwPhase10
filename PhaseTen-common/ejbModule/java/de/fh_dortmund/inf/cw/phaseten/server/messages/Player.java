@@ -7,8 +7,9 @@ import java.util.function.Consumer;
 
 /**
  * @author Marc Mettke
+ * @author Robin Harbecke
  */
-public class Player implements Serializable {
+public class Player extends User implements Serializable {
 	private static final long serialVersionUID = -2947823309554723821L;
 	
 	private String playerName;
@@ -18,6 +19,10 @@ public class Player implements Serializable {
 		super();
 		this.playerName = playerName;
 		this.phase = phase;
+	}
+	
+	public String getName() {
+		return this.getPlayerName();
 	}
 	
 	public String getPlayerName() {

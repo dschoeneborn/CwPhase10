@@ -1,6 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.messages;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
@@ -9,18 +10,19 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 
 /**
  * @author Marc Mettke
+ * @author Robin Harbecke
  */
 public class Game implements Serializable {
 	private static final long serialVersionUID = -8803043695255479666L;
 
 	private Collection<Player> players;
-	private Collection<Player> spectator;
+	private Collection<Spectator> spectator;
 	private PullStack pullStack;
 	private LiFoStack liFoStack;
 	private Collection<DockPile> openPiles;
 	
 	public Game(Collection<Player> players, 
-			    Collection<Player> spectator, 
+			    Collection<Spectator> spectator, 
 			    PullStack pullStack, 
 			    LiFoStack liFoStack, 
 			    Collection<DockPile> openPiles) {
@@ -36,10 +38,10 @@ public class Game implements Serializable {
 		return players;
 	}
 	
-	public Collection<Player> getSpectator() {
+	public Collection<Spectator> getSpectators() {
 		return spectator;
-	}
-
+	}	
+	
 	public PullStack getPullStack() {
 		return pullStack;
 	}
@@ -63,5 +65,5 @@ public class Game implements Serializable {
 			game.getLiFoStack(),
 			game.getOpenPiles()
 		);	
-	}
+	}	
 }
