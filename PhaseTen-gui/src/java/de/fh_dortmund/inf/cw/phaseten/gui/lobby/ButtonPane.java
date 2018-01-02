@@ -2,7 +2,6 @@ package de.fh_dortmund.inf.cw.phaseten.gui.lobby;
 
 import java.awt.Component;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;

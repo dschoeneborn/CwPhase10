@@ -18,6 +18,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.xml.bind.DatatypeConverter;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PasswordIncorrectException;
@@ -54,7 +57,11 @@ public class PlayerManagment implements PlayerManagmentLocal {
 
 	@Override
 	public void sendPlayerMessage() {
-		sendPlayerMessage(new CurrentPlayer("testPlayer", 0, new PlayerPile(), "Waiting", 500));
+		PlayerPile playerPile = new PlayerPile();
+		playerPile.addCard(new Card(Color.GREEN, CardValue.SEVEN));
+		playerPile.addCard(new Card(Color.RED, CardValue.FIVE));
+		playerPile.addCard(new Card(Color.BLUE, CardValue.ONE));
+		sendPlayerMessage(new CurrentPlayer("testCurrentPlayer", 0, playerPile, "Waiting", 500));
 	}
 
 	@Override

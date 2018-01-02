@@ -1,7 +1,6 @@
 package de.fh_dortmund.inf.cw.phaseten.server.messages;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
@@ -55,7 +54,7 @@ public class Game implements Serializable {
 	}
 	
 	public static Game from(de.fh_dortmund.inf.cw.phaseten.server.entities.Game game,
-						    Collection<Player> spectator,
+						    Collection<Spectator> spectator,
 						    int phase) {
 		// TODO: Get Spectators from Game
 		return new Game(

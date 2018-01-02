@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author Robin Harbecke
  *
  */
-public class Spectator extends User implements Serializable {
+public class Spectator implements Serializable {
 	private static final long serialVersionUID = -5990383948259655714L;
 	
 	private String name;

@@ -9,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
+import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;

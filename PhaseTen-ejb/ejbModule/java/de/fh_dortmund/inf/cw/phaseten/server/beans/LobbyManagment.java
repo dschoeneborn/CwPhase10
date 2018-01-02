@@ -1,6 +1,6 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -13,6 +13,8 @@ import javax.jms.Topic;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote;
@@ -38,8 +40,8 @@ public class LobbyManagment implements LobbyManagmentRemote, LobbyManagmentLocal
 	@Override
 	public void sendLobbyMessage() {
 		sendLobbyMessage(new Lobby(
-			new ArrayList<>(),
-			new ArrayList<>()
+			Arrays.asList(new Player("lobbyPlayerTest1", 1), new Player("lobbyPlayerTest2", 2)),
+			Arrays.asList(new Spectator("lobbySpectatorTest1"), new Spectator("lobbySpectatorTest2"))
 		));
 	}
 

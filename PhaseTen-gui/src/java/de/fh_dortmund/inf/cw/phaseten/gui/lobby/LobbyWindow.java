@@ -13,6 +13,8 @@ import javax.swing.SwingConstants;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
+import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
+import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
@@ -50,15 +52,12 @@ public class LobbyWindow extends GuiFrame {
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		
-		this.userList.updateData();
-		
-		JButton spectatorButton = new JButton("Zuschauen");
-		JButton startGameButton = new JButton("Beitreten");
+		final JButton spectatorButton = new JButton("Zuschauen");
+		final JButton startGameButton = new JButton("Beitreten");
 		
 		spectatorButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				serviceHandler.enterAsSpectator();
-				userList.updateData();
 				spectatorButton.setEnabled(false);
 				startGameButton.setEnabled(false);
 			}
@@ -68,7 +67,7 @@ public class LobbyWindow extends GuiFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					serviceHandler.enterAsPlayer();
-					userList.updateData();
+					spectatorButton.setEnabled(false);
 					
 					startGameButton.setText("Starten");
 					startGameButton.addActionListener(new ActionListener() {
@@ -123,11 +122,11 @@ public class LobbyWindow extends GuiFrame {
 
 	@Override
 	public void currentPlayerDataUpdated(CurrentPlayer currentPlayer) {
-
+		statusPanel.updateData(currentPlayer);
 	}
 
 	@Override
 	public void lobbyDataUpdated(Lobby lobby) {
-
+		userList.updateData(lobby.getPlayers(), lobby.getSpectator());
 	}
 }

@@ -1,6 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.annotation.Resource;
@@ -12,9 +13,13 @@ import javax.jms.Message;
 import javax.jms.Topic;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InvalidCardCompilationException;
@@ -22,6 +27,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentLocal;
@@ -46,12 +53,23 @@ public class GameManagment implements GameManagmentRemote, GameManagmentLocal {
 
 	@Override
 	public void sendGameMessage() {
+		LiFoStack drawStack = new LiFoStack();
+		drawStack.pushCard(new Card(Color.BLUE, CardValue.EIGHT));
+		
+		ColorDockPile colorDockPile = new ColorDockPile(Color.RED);
+		colorDockPile.dock(new Card(Color.RED, CardValue.SEVEN));
+		colorDockPile.dock(new Card(Color.RED, CardValue.SIX));
+		SequenceDockPile sequenceDockPile = new SequenceDockPile(); 
+		sequenceDockPile.dock(new Card(Color.GREEN, CardValue.ONE));
+		sequenceDockPile.dock(new Card(Color.GREEN, CardValue.TWO));
+		sequenceDockPile.dock(new Card(Color.GREEN, CardValue.THREE));
+		
 		sendGameMessage(new Game(
-			new ArrayList<>(), 
-			new ArrayList<>(), 
+			Arrays.asList(new Player("gamePlayerTest1", 1), new Player("gamePlayerTest2", 2)),
+			Arrays.asList(new Spectator("gameSpectatorTest1"), new Spectator("gameSpectatorTest2")),
 			new PullStack(), 
-			new LiFoStack(), 
-			new ArrayList<>()
+			drawStack, 
+			Arrays.asList(colorDockPile, sequenceDockPile)
 		));
 	}
 

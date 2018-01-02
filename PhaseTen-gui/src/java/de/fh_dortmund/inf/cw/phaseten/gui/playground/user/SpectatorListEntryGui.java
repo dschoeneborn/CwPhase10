@@ -15,6 +15,6 @@ public class SpectatorListEntryGui extends JLabel implements UserListEntry{
 
 	public SpectatorListEntryGui(Spectator spectator) {
 		this.setForeground(Color.LIGHT_GRAY);
-		this.setText("{{Spectator name}}");		
+		this.setText(spectator.getName());		
 	}	
 }

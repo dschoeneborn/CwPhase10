@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
+import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;

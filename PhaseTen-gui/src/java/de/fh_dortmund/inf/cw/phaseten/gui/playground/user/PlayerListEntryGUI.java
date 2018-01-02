@@ -15,6 +15,6 @@ public class PlayerListEntryGUI extends JLabel implements UserListEntry{
 
 	public PlayerListEntryGUI(Player player) {
 		this.setForeground(Color.green);
-		this.setText(player.getName() + "(Phase " + player.getPhase() + " - 0 Coins)");//todo coins	
+		this.setText(player.getName() + "(Phase " + player.getPhase() + ")");
 	}	
 }

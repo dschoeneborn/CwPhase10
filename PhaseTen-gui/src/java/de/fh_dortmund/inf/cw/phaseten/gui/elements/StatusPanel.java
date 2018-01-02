@@ -1,13 +1,14 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.lobby;
+package de.fh_dortmund.inf.cw.phaseten.gui.elements;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
+
 /**
  * @author Robin Harbecke
- * @author Marc Mettke
  */
 public class StatusPanel extends JPanel{
 	private static final long serialVersionUID = 9162651354589609526L;
@@ -33,13 +34,12 @@ public class StatusPanel extends JPanel{
 			this.coinsLabel = new JLabel();			
 			this.add(this.coinsLabel);
 		}
-		this.updateData();
 		this.add(Box.createHorizontalGlue());		
 	}
 	
-	public void updateData() {
-		this.statusLabel.setText("Teststatus");
-		this.nameLabel.setText("Name");
-		this.coinsLabel.setText("Coins");
+	public void updateData(CurrentPlayer currentPlayer) {
+		this.statusLabel.setText(currentPlayer.getStatus());
+		this.nameLabel.setText(currentPlayer.getName());
+		this.coinsLabel.setText(String.valueOf(currentPlayer.getCoins()));
 	}
 }

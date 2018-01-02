@@ -9,25 +9,16 @@ import java.util.function.Consumer;
  * @author Marc Mettke
  * @author Robin Harbecke
  */
-public class Player extends User implements Serializable {
+public class Player extends Spectator implements Serializable {
 	private static final long serialVersionUID = -2947823309554723821L;
 	
-	private String playerName;
 	private int phase;
 	
 	public Player(String playerName, int phase) {
-		super();
-		this.playerName = playerName;
+		super(playerName);
 		this.phase = phase;
 	}
 	
-	public String getName() {
-		return this.getPlayerName();
-	}
-	
-	public String getPlayerName() {
-		return playerName;
-	}
 	public int getPhase() {
 		return phase;
 	}
