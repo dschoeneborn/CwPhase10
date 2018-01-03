@@ -3,6 +3,8 @@ package de.fh_dortmund.inf.cw.phaseten.server.messages;
 import java.io.Serializable;
 import java.util.Collection;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+
 /**
  * @author Marc Mettke
  */
@@ -10,12 +12,12 @@ public class Lobby implements Serializable {
 	private static final long serialVersionUID = -8449426368470253288L;
 	
 	private Collection<Player> players;
-	private Collection<Player> spectator;
+	private Collection<Spectator> spectators;
 	
-	public Lobby(Collection<Player> players, Collection<Player> spectator) {
+	public Lobby(Collection<Player> players, Collection<Spectator> spectators) {
 		super();
 		this.players = players;
-		this.spectator = spectator;
+		this.spectators = spectators;
 	}
 	
 	public static long getSerialversionuid() {
@@ -26,17 +28,15 @@ public class Lobby implements Serializable {
 		return players;
 	}
 	
-	public Collection<Player> getSpectator() {
-		return spectator;
+	public Collection<Spectator> getSpectators() {
+		return spectators;
 	}
 	
-	public static Lobby from(de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby lobby,
-					  Collection<Player> spectator,
-					  int phase) {
+	public static Lobby from(de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby lobby) {
 		// TODO: Add Spectators from lobby Object
 		return new Lobby(
-			Player.from(lobby.getPlayers(), phase),
-			spectator
+			Player.from(lobby.getPlayers()),
+			lobby.getSpectators()
 		);
 	}
 }

@@ -113,6 +113,10 @@ public class User implements Serializable{
 	{
 		return player;
 	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 	
 	/**
 	 * @return Spectator
@@ -121,5 +125,8 @@ public class User implements Serializable{
 	{
 		return spectator;
 	}
-	
+
+	public String getPassword() {
+		return password;
+	}	
 }

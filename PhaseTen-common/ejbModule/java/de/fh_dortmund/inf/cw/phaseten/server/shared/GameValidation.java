@@ -1,7 +1,6 @@
 package de.fh_dortmund.inf.cw.phaseten.server.shared;
 
 import java.util.Collection;
-import java.util.Set;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
@@ -82,22 +81,4 @@ public interface GameValidation {
 	 * @return canLaySkipCard
 	 */
 	boolean isValidLaySkipCard(Player currentPlayer, Player destinationPlayer, Game g);
-
-	/**
-	 * Validates if the given amount of players is enough to play
-	 *
-	 * @author Tim Prange
-	 * @param set The Players participating in that game
-	 * @return hasEnoughPlayers
-	 */
-	boolean hasEnoughPlayers(Set<Player> set);
-
-	/**
-	 * Validates if the given amount of players is already the maximum to play
-	 *
-	 * @author Tim Prange
-	 * @param set The Players participating in that game
-	 * @return cantHaveMorePlayers
-	 */
-	boolean cantHaveMorePlayers(Set<Player> set);
 }

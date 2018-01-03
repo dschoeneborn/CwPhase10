@@ -17,6 +17,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 
 /**
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
 public class LobbyManagementTest {
 	private ServiceHandlerImpl serviceHandler;
@@ -83,7 +84,6 @@ public class LobbyManagementTest {
 
 	@Test
 	public void testStartGame() throws Exception {
-		// throws NotEnoughPlayerException;
 		
 		this.latchGame = new CountDownLatch(1);
 		this.serviceHandler.startGame();

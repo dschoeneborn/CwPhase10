@@ -22,7 +22,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentLocal;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
 
 /**
  * @author Marc Mettke
@@ -30,7 +30,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentLocal;
  * @author Tim Prange
  */
 @Stateless
-public class GameManagmentBean implements GameManagmentRemote, GameManagmentLocal {
+public class GameManagementBean implements GameManagmentRemote, GameManagmentLocal {
 	@Inject
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Game")
@@ -40,7 +40,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 	private EntityManager entityManager;
 
 	@EJB
-	PlayerManagmentLocal playerManagment;
+	UserManagementLocal playerManagment;
 
 	@EJB
 	GameValidationLocal gameValidation;

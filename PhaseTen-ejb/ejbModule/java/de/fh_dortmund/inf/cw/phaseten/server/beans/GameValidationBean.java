@@ -3,7 +3,6 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 
@@ -13,6 +12,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Pile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.RoundStage;
@@ -227,10 +227,11 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 */
 	/**
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 */
 	@Override
-	public boolean hasEnoughPlayers(Set<Player> players) {
-		return players.size() >= Game.MIN_PLAYER;
+	public boolean hasEnoughPlayers(Lobby lobby) {
+		return lobby.getPlayers().size() >= Game.MIN_PLAYER;
 	}
 
 	/*
@@ -240,10 +241,11 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 */
 	/**
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 */
 	@Override
-	public boolean cantHaveMorePlayers(Set<Player> players) {
-		return players.size() >= Game.MAX_PLAYER;
+	public boolean isLobbyFull(Lobby lobby) {
+		return lobby.getPlayers().size() >= Game.MAX_PLAYER;
 	}
 
 	/**

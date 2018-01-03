@@ -34,7 +34,7 @@ public class Spectator implements Serializable{
 	@JoinColumn(name="GAME_ID")
 	private Game game;
 	
-	private Spectator()
+	public Spectator()
 	{
 		
 	}
@@ -57,5 +57,9 @@ public class Spectator implements Serializable{
 	 */
 	public void setGame(Game game) {
 		this.game = game;
+	}
+
+	public long getId() {
+		return id;
 	}
 }

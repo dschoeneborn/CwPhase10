@@ -14,7 +14,9 @@ import javax.inject.Inject;
 import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.Topic;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.xml.bind.DatatypeConverter;
 
@@ -24,15 +26,15 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistExceptio
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
 
 /**
  * @author Marc Mettke
  * @author Dennis Schöneborn
  */
 @Stateless
-public class PlayerManagment implements PlayerManagmentRemote, PlayerManagmentLocal {
+public class UserManagement implements UserManagementRemote, UserManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
 	
@@ -48,49 +50,63 @@ public class PlayerManagment implements PlayerManagmentRemote, PlayerManagmentLo
 	private List<String> onlineUsers = synchronizedList(new LinkedList<>());
 
 	@Override
-	public void requestPlayerMessage() {
-		sendPlayerMessage();
+	public void requestPlayerMessage(Player p) {
+		sendPlayerMessage(p);
 	}
 
 	@Override
-	public void sendPlayerMessage() {
-		sendPlayerMessage(new CurrentPlayer("testPlayer", 0, new PlayerPile(), "Waiting", 500));
-	}
-
-	@Override
-	public void register(String username, String password) throws UsernameAlreadyTakenException {
+	public User register(String username, String password) throws UsernameAlreadyTakenException {
+		User foundUser = null;
 		User user = new User(username, this.computeHash(password));
-		//TODO toggle comment till entities are availible
-		/*try {
-			em.persist(user);
-		} catch (EntityExistsException e) {
+		
+		try 
+		{
+			try
+			{
+				foundUser = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
+				throw new EntityExistsException();
+			}
+			catch(NoResultException e)
+			{
+				em.persist(user);
+			}
+		}
+		catch (EntityExistsException e)
+		{
 			throw new UsernameAlreadyTakenException();
 		}
 
-		try {
-			this.login(username, password);
-		} catch (UserDoesNotExistException e) {
+		try
+		{
+			foundUser = this.login(username, password);
+		}
+		catch (UserDoesNotExistException e)
+		{
 			e.printStackTrace();
-		}*/
+		}
 
 		sendPlayerMessage();
 		this.lobbyManagment.sendLobbyMessage();
+		
+		return foundUser;
 	}
 
 	@Override
-	public void login(String username, String password) throws UserDoesNotExistException {
-		// TODO: WIP: login if username exists - toggle comment till entities are availible
-		/*User user = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
+	public User login(String username, String password) throws UserDoesNotExistException
+	{
+		User user = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
 		
-		if(user == null)
+		if(user == null || !user.getPassword().equals(password))
 		{
 			throw new UserDoesNotExistException();
 		}
 		
-		onlineUsers.add(user.getLoginName());*/
+		onlineUsers.add(user.getLoginName());
 		
 		sendPlayerMessage();
 		this.lobbyManagment.sendLobbyMessage();
+		
+		return user;
 	}
 
 	private void sendPlayerMessage(CurrentPlayer player) {

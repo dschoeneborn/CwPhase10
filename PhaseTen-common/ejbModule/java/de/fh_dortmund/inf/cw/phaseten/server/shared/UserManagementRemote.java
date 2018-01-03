@@ -6,6 +6,6 @@ import javax.ejb.Remote;
  * @author Marc Mettke
  */
 @Remote
-public interface PlayerManagmentRemote extends PlayerManagment {
+public interface UserManagementRemote extends UserManagement {
 	void requestPlayerMessage();
 }

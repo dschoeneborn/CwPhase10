@@ -23,8 +23,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -96,14 +94,8 @@ public class Game implements Serializable {
 		this.openPiles = new LinkedList<>();
 	}
 
-	public Game(Set<Player> players, Set<Spectator> spectators) throws NotEnoughPlayerException, NoFreeSlotException {
+	public Game(Set<Player> players, Set<Spectator> spectators) {
 		this();
-		if (players.size() < MIN_PLAYER) {
-			throw new NotEnoughPlayerException();
-		}
-		if (players.size() > MAX_PLAYER) {
-			throw new NoFreeSlotException();
-		}
 
 		for (Player player : players) {
 			this.addPlayer(player);
@@ -234,6 +226,10 @@ public class Game implements Serializable {
 		else {
 			currentPlayer = 0;
 		}
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	// TODO Fassadenmethoden für die eintelnen Stacks

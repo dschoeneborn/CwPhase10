@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
@@ -24,7 +26,17 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
  */
+@NamedQueries({
+		@NamedQuery(name="lobby.selectLobbyByUserId", query="SELECT l FROM Lobby l "
+				+ "JOIN Player p "
+				+ "WHERE p.id = :playerId"),
+		@NamedQuery(name="lobby.selectLatest", query="SELECT l FROM Lobby l LIMIT 1"),
+		@NamedQuery(name="selectLobbyBySpectatorId", query="SELECT l FROM Lobby l " + 
+				"JOIN Spectator s " + 
+				"WHERE s.id = :spectatorId")
+})
 @Entity
 public class Lobby implements Serializable{
 
@@ -102,5 +114,9 @@ public class Lobby implements Serializable{
 		spectators.clear();
 		
 		return game;
+	}
+
+	public long getId() {
+		return id;
 	}
 }
