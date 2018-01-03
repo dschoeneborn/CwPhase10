@@ -36,7 +36,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * @author Tim Prange
  */
 @NamedQueries({
-	@NamedQuery(name="selectByUserId", query="SELECT Game FROM Game g"
+	@NamedQuery(name="selectByUserId", query="SELECT g FROM Game g "
 											+ "JOIN Player p "
 											+ "WHERE p.id = :playerId")
 })
