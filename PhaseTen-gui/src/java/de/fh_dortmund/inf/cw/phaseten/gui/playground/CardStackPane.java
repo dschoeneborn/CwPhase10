@@ -4,7 +4,6 @@ import javax.swing.JPanel;
 
 /**
  * @author Robin Harbecke
- * @author Marc Mettke
  */
 public class CardStackPane extends JPanel {
 	private static final long serialVersionUID = -8769364924558066517L;

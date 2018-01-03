@@ -14,7 +14,7 @@ public class SpectatorListEntryGui extends JLabel implements UserListEntry{
 	private static final long serialVersionUID = -8061718977257724045L;
 
 	public SpectatorListEntryGui(Spectator spectator) {
-		this.setForeground(Color.LIGHT_GRAY);
+		this.setForeground(new Color(89,89,89));
 		this.setText(spectator.getName());		
 	}	
 }

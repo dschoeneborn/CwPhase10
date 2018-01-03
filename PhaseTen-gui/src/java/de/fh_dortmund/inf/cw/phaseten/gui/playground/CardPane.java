@@ -26,8 +26,8 @@ public class CardPane extends JPanel {
 		this.init();
 	}
 
-	public CardPane(Card baseCard) {
-		this(CardValue.SIX, Color.RED);// todo call correct listener with values
+	public CardPane(Card baseCard) {				
+		this(baseCard.getCardValue(),CardPane.getColor(baseCard));
 		this.baseCard = baseCard;
 	}
 
@@ -104,5 +104,14 @@ public class CardPane extends JPanel {
 
 	public Card getBaseCard() {
 		return this.baseCard;
+	}
+	
+	private static Color getColor(Card card) {
+		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.BLUE) return Color.BLUE;
+		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.RED) return Color.RED;
+		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.GREEN) return Color.GREEN;
+		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.YELLOW) return Color.YELLOW;
+		return Color.BLACK;
+		
 	}
 }

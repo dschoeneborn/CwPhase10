@@ -21,8 +21,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 public class TopRowPane extends JPanel{
 	private static final long serialVersionUID = -6210706602718026386L;
 	
-	protected CardPilePane drawPile = new CardPilePane();
-	protected CardPilePane discardPile = new CardPilePane();
+	protected DrawCardPilePane drawPile;
+	protected DiscardCardPile discardPile;
 	
 	protected PhaseCard phaseCard = new PhaseCard();
 	protected UserList userList = new UserList();
@@ -31,6 +31,8 @@ public class TopRowPane extends JPanel{
 	
 	public TopRowPane(ServiceHandler serviceHandler) {
 		this.serviceHandler = serviceHandler;
+		this.drawPile = new DrawCardPilePane(this.serviceHandler);
+		this.discardPile =  new DiscardCardPile(this.serviceHandler);
 		this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
 		this.add(topJustify(this.drawPile));	
 		this.add(Box.createHorizontalStrut(10));
@@ -65,6 +67,7 @@ public class TopRowPane extends JPanel{
 	
 	public void gameDataUpdated(Game game) {
 		this.userList.updateData(game.getPlayers(),game.getSpectators());
+		this.discardPile.updateData(game.getLiFoStack().showCard());		
 	}	
 	
 	private static Component topJustify( JPanel panel )  {
