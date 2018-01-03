@@ -52,6 +52,11 @@ public class GameManagment implements GameManagmentRemote, GameManagmentLocal {
 	}
 
 	@Override
+	public void createGame() {
+		updateClient();		
+	}
+
+	@Override
 	public void sendGameMessage() {
 		LiFoStack drawStack = new LiFoStack();
 		drawStack.pushCard(new Card(Color.BLUE, CardValue.EIGHT));

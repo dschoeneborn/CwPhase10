@@ -60,9 +60,7 @@ public class LobbyManagment implements LobbyManagmentRemote, LobbyManagmentLocal
 	@Override
 	public void startGame() throws NotEnoughPlayerException {
 		// TODO: Check if game can be started.
-		// The following must be substituted with a sendGameMessage call
-		// inside of GameManagment after the Game has been created
-		this.gameManagment.sendGameMessage();		
+		this.gameManagment.createGame();		
 	}
 
 	private void sendLobbyMessage(Lobby lobby) {
