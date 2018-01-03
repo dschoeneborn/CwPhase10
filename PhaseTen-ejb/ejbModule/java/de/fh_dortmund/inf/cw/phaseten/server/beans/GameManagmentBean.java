@@ -9,6 +9,9 @@ import javax.inject.Inject;
 import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.Topic;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
@@ -32,6 +35,9 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Game")
 	private Topic gameMessageTopic;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@EJB
 	PlayerManagmentLocal playerManagment;
@@ -40,38 +46,46 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 	GameValidationLocal gameValidation;
 
 	@Override
-	public void requestGameMessage() {
-		sendGameMessage();
+	public void requestGameMessage(Player p) {
+		sendGameMessage(p);
 	}
 
 	@Override
-	public void sendGameMessage() {
+	public void sendGameMessage(Player p) {
 		// TODO: needs to get the acutal phase. should be done in the message-objects
 		sendGameMessage(
 				de.fh_dortmund.inf.cw.phaseten.server.messages.Game
-						.from(getActualPlayedGame(),
+						.from(getActualPlayedGame(p),
 								de.fh_dortmund.inf.cw.phaseten.server.messages.Player.from(
-										(Collection<Player>) (Collection<?>) getActualPlayedGame().getSpectators(), 1),
+										(Collection<Player>) (Collection<?>) getActualPlayedGame(p).getSpectators(), 1),
 								1));
+	}
+
+	@Override
+	public void sendGameMessage(Game game) {
+		for(Player p: game.getPlayers())
+		{
+			sendGameMessage(p);
+		}
 	}
 
 	/**
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void takeCardFromPullstack(Player p) throws MoveNotValidException {
+	public void takeCardFromPullstack(Player player) throws MoveNotValidException {
 		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
 		// nicht als Parameter übergeben lassen?
-		Game game = getActualPlayedGame();
-		if (gameValidation.isValidDrawCardFromPullStack(game, p)) {
+		Game game = getActualPlayedGame(player);
+		if (gameValidation.isValidDrawCardFromPullStack(game, player)) {
 			Card drawnCard = game.getPullStack().pullTopCard();
-			p.addCardToPlayerPile(drawnCard);
-			p.addRoundStage();
+			player.addCardToPlayerPile(drawnCard);
+			player.addRoundStage();
 		}
 		else {
 			throw new MoveNotValidException();
 		}
-		updateClient();
+		updateClient(player);
 	}
 
 	/**
@@ -81,7 +95,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException {
 		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
 		// nicht als Parameter übergeben lassen?
-		Game game = getActualPlayedGame();
+		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidDrawCardFromLiFoStack(game, player)) {
 			Card drawnCard = game.getLiFoStack().pullTopCard();
 			player.addCardToPlayerPile(drawnCard);
@@ -90,7 +104,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 		else {
 			throw new MoveNotValidException();
 		}
-		updateClient();
+		updateClient(player);
 	}
 
 	/**
@@ -100,7 +114,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException {
 		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
 		// nicht als Parameter übergeben lassen?
-		Game game = getActualPlayedGame();
+		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidToAddCard(game, player, dockPile, card)) {
 			dockPile.addCard(card);
 			player.removeCardFromPlayerPile(card);
@@ -108,7 +122,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 		else {
 			throw new MoveNotValidException();
 		}
-		updateClient();
+		updateClient(player);
 	}
 
 	/**
@@ -118,7 +132,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 	public void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException {
 		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
 		// nicht als Parameter übergeben lassen?
-		Game game = getActualPlayedGame();
+		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidLayStageToTable(game, player, piles)) {
 			for (DockPile pile : piles) {
 				game.addOpenPile(pile);
@@ -134,7 +148,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 			throw new MoveNotValidException();
 		}
 
-		updateClient();
+		updateClient(player);
 	}
 
 	/**
@@ -144,7 +158,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException {
 		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
 		// nicht als Parameter übergeben lassen?
-		Game game = getActualPlayedGame();
+		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
 			game.getLiFoStack().addCard(card);
 			player.resetRoundStage();
@@ -154,7 +168,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 			throw new MoveNotValidException();
 		}
 
-		updateClient();
+		updateClient(player);
 	}
 
 	/**
@@ -165,7 +179,7 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 			throws MoveNotValidException {
 		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
 		// nicht als Parameter übergeben lassen?
-		Game game = getActualPlayedGame();
+		Game game = getActualPlayedGame(currentPlayer);
 		if (card.getCardValue() == CardValue.SKIP
 				&& gameValidation.isValidLaySkipCard(currentPlayer, destinationPlayer, game)) {
 			currentPlayer.removeCardFromPlayerPile(card);
@@ -177,21 +191,37 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 			throw new MoveNotValidException();
 		}
 
-		updateClient();
+		updateClient(currentPlayer);
 	}
 
-	private void updateClient() {
+	private void updateClient(Player p) {
 		// Send updated Game to Client
-		this.sendGameMessage();
+		sendGameMessage(p);
 		// Send updated Player Cards to Client
-		this.playerManagment.sendPlayerMessage();
+		playerManagment.sendPlayerMessage();
 	}
 
+	@SuppressWarnings("unused")
 	private void sendGameMessage(de.fh_dortmund.inf.cw.phaseten.server.messages.Game game) {
 		Message message = jmsContext.createObjectMessage(game);
 		jmsContext.createProducer().send(gameMessageTopic, message);
 	}
 
+	/**
+	 * Gets the latest game persist
+	 *
+	 * @author Tim Prange
+	 * @author Björn Merschmeier
+	 * @param Player p
+	 * @return game
+	 */
+	private Game getActualPlayedGame(Player p) {
+		Query query = entityManager.createNamedQuery("selectByUserId");
+		query.setParameter("playerId", p.getId());
+		
+		return (Game)query.getSingleResult();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagment#initGame(de.
@@ -199,21 +229,12 @@ public class GameManagmentBean implements GameManagmentRemote, GameManagmentLoca
 	 */
 	/**
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 */
 	@Override
 	public void startGame(Game game) {
-		// TODO persist a game here
-		sendGameMessage();
-	}
-
-	/**
-	 * Gets the latest game persist
-	 *
-	 * @author Tim Prange
-	 * @return game
-	 */
-	private Game getActualPlayedGame() {
-		// TODO get the latest game from DB
-		return null;
+		entityManager.persist(game);
+		entityManager.flush();
+		sendGameMessage(game);
 	}
 }

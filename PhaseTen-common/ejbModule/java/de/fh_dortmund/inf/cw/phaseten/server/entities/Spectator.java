@@ -21,6 +21,11 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 public class Spectator implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3498449127463809540L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;

@@ -105,8 +105,8 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void requestGameMessage() {
-		this.gameManagmentRemote.requestGameMessage();
+	public void requestGameMessage(Player p) {
+		this.gameManagmentRemote.requestGameMessage(p);
 	}
 
 	@Override

@@ -6,7 +6,6 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

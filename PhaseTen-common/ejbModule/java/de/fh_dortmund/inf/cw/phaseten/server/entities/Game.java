@@ -18,6 +18,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -33,6 +35,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * @author Björn Merschmeier
  * @author Tim Prange
  */
+@NamedQueries({
+	@NamedQuery(name="selectByUserId", query="SELECT Game FROM Game g"
+											+ "JOIN Player p "
+											+ "WHERE p.id = :playerId")
+})
 @Entity
 public class Game implements Serializable {
 
@@ -163,8 +170,8 @@ public class Game implements Serializable {
 		this.addPlayer(p6);
 	}
 
-	public Game(ArrayList arrayList, ArrayList arrayList2, PullStack pullStack2, LiFoStack liFoStack2,
-			ArrayList arrayList3) {
+	public Game(ArrayList<?> arrayList, ArrayList<?> arrayList2, PullStack pullStack2, LiFoStack liFoStack2,
+			ArrayList<?> arrayList3) {
 		// TODO Auto-generated constructor stub
 		throw new NotImplementedException();
 	}

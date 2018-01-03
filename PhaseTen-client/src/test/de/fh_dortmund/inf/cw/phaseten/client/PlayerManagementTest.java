@@ -18,7 +18,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 /**
  * @author Marc Mettke
  */
-public class PlayerManagmentTest {
+public class PlayerManagementTest {
 	private ServiceHandlerImpl serviceHandler;
 
 	private CountDownLatch latchPlayer;

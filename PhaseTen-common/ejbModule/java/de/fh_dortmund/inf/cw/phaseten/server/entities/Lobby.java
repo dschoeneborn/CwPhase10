@@ -28,6 +28,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException
 @Entity
 public class Lobby implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5336567507324327686L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;

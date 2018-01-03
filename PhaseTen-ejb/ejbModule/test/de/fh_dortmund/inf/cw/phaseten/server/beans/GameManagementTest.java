@@ -16,7 +16,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.TestType;
  * @author Marc Mettke
  */
 @RunWith(ApplicationComposer.class)
-public class GameManagmentTest {
+public class GameManagementTest {
 	@EJB
 	GameManagmentBean gameManagment;
 
