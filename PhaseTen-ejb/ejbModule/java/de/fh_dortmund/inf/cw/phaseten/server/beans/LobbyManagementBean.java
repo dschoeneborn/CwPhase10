@@ -18,7 +18,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentLocal;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote;
@@ -39,7 +39,7 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	private EntityManager entityManager;
 
 	@EJB
-	GameManagmentLocal gameManagment;
+	GameManagementLocal gameManagment;
 	@EJB
 	GameValidationLocal gameValidation;
 

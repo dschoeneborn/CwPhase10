@@ -13,7 +13,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsExcep
  * @author Björn Merschmeier
  * @author Tim Prange
  */
-public interface GameManagment {
+public interface GameManagement {
 	void takeCardFromLiFoStack(Player player) throws MoveNotValidException;
 
 	void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException;

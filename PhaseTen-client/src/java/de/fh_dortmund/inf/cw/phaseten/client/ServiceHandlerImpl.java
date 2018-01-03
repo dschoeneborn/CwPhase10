@@ -29,7 +29,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenExce
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
@@ -46,7 +46,7 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	private StubRemote stubRemote;
 	private UserManagementRemote playerManagmentRemote;
 	private LobbyManagementRemote lobbyManagmentRemote;
-	private GameManagmentRemote gameManagmentRemote;
+	private GameManagementRemote gameManagmentRemote;
 	private UserSessionRemote userSessionRemote;
 
 	private JMSContext jmsContext;
@@ -63,10 +63,10 @@ public class ServiceHandlerImpl implements ServiceHandler {
 			stubRemote = (StubRemote) context.lookup(
 					"java:global/PhaseTen-ear/PhaseTen-ejb/ServerStub!de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote");
 			playerManagmentRemote = (UserManagementRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/UserManagement!de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote");
+					"java:global/PhaseTen-ear/PhaseTen-ejb/UserManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote");
 			lobbyManagmentRemote = (LobbyManagementRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/LobbyManagement!de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote");
-			gameManagmentRemote = (GameManagmentRemote) context.lookup(
+					"java:global/PhaseTen-ear/PhaseTen-ejb/LobbyManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote");
+			gameManagmentRemote = (GameManagementRemote) context.lookup(
 					"java:global/PhaseTen-ear/PhaseTen-ejb/GameManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote");
 			userSessionRemote = (UserSessionRemote) context.lookup(
 					"java:global/PhaseTen-ear/PhaseTen-ejb/UserSessionBean!de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote");

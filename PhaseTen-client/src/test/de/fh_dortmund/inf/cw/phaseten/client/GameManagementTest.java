@@ -59,7 +59,7 @@ public class GameManagementTest {
 		this.serviceHandler.getGameConsumer().setMessageListener(null);	
 	}
 
-	@Test
+	//@Test
 	public void testRequestGameMessage() throws Exception {		
 		this.latchGame = new CountDownLatch(1);
 		this.serviceHandler.requestGameMessage();

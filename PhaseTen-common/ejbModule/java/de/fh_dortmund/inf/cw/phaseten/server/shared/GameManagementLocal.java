@@ -10,7 +10,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
  * @author Tim Prange
  */
 @Local
-public interface GameManagmentLocal extends GameManagment {
+public interface GameManagementLocal extends GameManagement {
 	public void sendGameMessage(Player p);
 
 	/**

@@ -20,8 +20,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
 
@@ -31,7 +31,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
  * @author Tim Prange
  */
 @Stateless
-public class GameManagementBean implements GameManagmentRemote, GameManagmentLocal {
+public class GameManagementBean implements GameManagementRemote, GameManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Game")

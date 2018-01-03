@@ -34,7 +34,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
  * @author Björn Merschmeier
  */
 @Stateless
-public class UserManagement implements UserManagementRemote, UserManagementLocal {
+public class UserManagementBean implements UserManagementRemote, UserManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
 	
