@@ -16,17 +16,23 @@ import javax.naming.NamingException;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerAlreadyExistentException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote;
 
 /**
@@ -38,30 +44,34 @@ public class ServiceHandlerImpl implements ServiceHandler {
 
 	private Context context;
 	private StubRemote stubRemote;
-	private PlayerManagmentRemote playerManagmentRemote;
-	private LobbyManagmentRemote lobbyManagmentRemote;
+	private UserManagementRemote playerManagmentRemote;
+	private LobbyManagementRemote lobbyManagmentRemote;
 	private GameManagmentRemote gameManagmentRemote;
+	private UserSessionRemote userSessionRemote;
 
 	private JMSContext jmsContext;
 	private Topic playerMessageTopic;
 	private Topic lobbyMessageTopic;
 	private Topic gameMessageTopic;
-	JMSConsumer playerConsumer;
-	JMSConsumer lobbyConsumer;
-	JMSConsumer gameConsumer;
+	private JMSConsumer playerConsumer;
+	private JMSConsumer lobbyConsumer;
+	private JMSConsumer gameConsumer;
 
 	private ServiceHandlerImpl() {
 		try {
 			context = new InitialContext();
 			stubRemote = (StubRemote) context.lookup(
 					"java:global/PhaseTen-ear/PhaseTen-ejb/ServerStub!de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote");
-			playerManagmentRemote = (PlayerManagmentRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/PlayerManagment!de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote");
-			lobbyManagmentRemote = (LobbyManagmentRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/LobbyManagment!de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote");
+			playerManagmentRemote = (UserManagementRemote) context.lookup(
+					"java:global/PhaseTen-ear/PhaseTen-ejb/UserManagement!de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote");
+			lobbyManagmentRemote = (LobbyManagementRemote) context.lookup(
+					"java:global/PhaseTen-ear/PhaseTen-ejb/LobbyManagement!de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote");
 			gameManagmentRemote = (GameManagmentRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/GameManagmentBean!de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote");
-
+					"java:global/PhaseTen-ear/PhaseTen-ejb/GameManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote");
+			userSessionRemote = (UserSessionRemote) context.lookup(
+					"java:global/PhaseTen-ear/PhaseTen-ejb/UserSessionBean!de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote");
+					
+			
 			ConnectionFactory connectionFactory = (ConnectionFactory) context
 					.lookup("java:comp/DefaultJMSConnectionFactory");
 			jmsContext = connectionFactory.createContext();
@@ -95,8 +105,8 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void requestPlayerMessage() {
-		this.playerManagmentRemote.requestPlayerMessage();
+	public void requestPlayerMessage() throws PlayerDoesNotExistsException {		
+		this.playerManagmentRemote.requestPlayerMessage(getCurrentPlayer());
 	}
 
 	@Override
@@ -105,8 +115,8 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void requestGameMessage(Player p) {
-		this.gameManagmentRemote.requestGameMessage(p);
+	public void requestGameMessage() throws PlayerDoesNotExistsException {
+		this.gameManagmentRemote.requestGameMessage(getCurrentPlayer());
 	}
 
 	@Override
@@ -120,18 +130,39 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void enterAsPlayer() throws NoFreeSlotException {
-		this.lobbyManagmentRemote.enterAsPlayer();
+	public void enterAnyLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException
+	{
+		this.lobbyManagmentRemote.enterOrCreateNewLobby(getCurrentPlayer());
+	}
+	
+	@Override
+	public void enterAnyLobbyAsNewPlayer(String playername) throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, PlayerAlreadyExistentException
+	{
+		createNewPlayer(playername);
+		this.lobbyManagmentRemote.enterOrCreateNewLobby(getCurrentPlayer());
+	}
+	
+	@Override
+	public void enterLobbyAsSpectator(long lobbyId) throws NotLoggedInException
+	{
+		this.lobbyManagmentRemote.enterLobby(lobbyId, getOrCreateCurrentSpectator());
+	}
+	
+	@Override
+	public void enterLobbyAsPlayer(long lobbyId) throws NoFreeSlotException, PlayerDoesNotExistsException
+	{
+		this.lobbyManagmentRemote.enterLobby(lobbyId, getCurrentPlayer());
+	}
+	
+	@Override
+	public void enterLobbyAsNewPlayer(long lobbyId, String playerName) throws NoFreeSlotException, NotLoggedInException, PlayerAlreadyExistentException
+	{
+		this.lobbyManagmentRemote.enterLobby(lobbyId, createNewPlayer(playerName));
 	}
 
 	@Override
-	public void enterAsSpectator() {
-		this.lobbyManagmentRemote.enterAsSpectator();
-	}
-
-	@Override
-	public void startGame() throws NotEnoughPlayerException {
-		this.lobbyManagmentRemote.startGame();
+	public void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException {
+		this.lobbyManagmentRemote.startGame(getCurrentPlayer());
 	}
 
 	@Override
@@ -159,34 +190,71 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void takeCardFromPullstack(Player player) throws MoveNotValidException {
-		gameManagmentRemote.takeCardFromPullstack(player);
+	public void takeCardFromPullstack() throws MoveNotValidException, PlayerDoesNotExistsException {
+		gameManagmentRemote.takeCardFromPullstack(getCurrentPlayer());
 	}
 
 	@Override
-	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException {
-		gameManagmentRemote.takeCardFromLiFoStack(player);
+	public void takeCardFromLiFoStack() throws MoveNotValidException, PlayerDoesNotExistsException {
+		gameManagmentRemote.takeCardFromLiFoStack(getCurrentPlayer());
 	}
 
 	@Override
-	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException {
-		gameManagmentRemote.addToPileOnTable(player, card, dockPile);
+	public void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, PlayerDoesNotExistsException {
+		gameManagmentRemote.addToPileOnTable(getCurrentPlayer(), card, dockPile);
 	}
 
 	@Override
-	public void layPhaseToTable(Player player, Collection<DockPile> cards) throws MoveNotValidException {
-		gameManagmentRemote.layPhaseToTable(player, cards);
+	public void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, PlayerDoesNotExistsException {
+		gameManagmentRemote.layPhaseToTable(getCurrentPlayer(), cards);
 	}
 
 	@Override
-	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException {
-		gameManagmentRemote.layCardToLiFoStack(player, card);
+	public void layCardToLiFoStack(Card card) throws MoveNotValidException, PlayerDoesNotExistsException {
+		gameManagmentRemote.layCardToLiFoStack(getCurrentPlayer(), card);
 	}
 
 	@Override
-	public void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card)
-			throws MoveNotValidException {
-		gameManagmentRemote.laySkipCardForPlayer(currentPlayer, destinationPlayer, card);
+	public void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, PlayerDoesNotExistsException {
+		gameManagmentRemote.laySkipCardForPlayerById(getCurrentPlayer(), destinationPlayerId, card);
+	}
+	
+	public JMSConsumer getPlayerConsumer()
+	{
+		return playerConsumer;
+	}
+	
+	public JMSConsumer getLobbyConsumer()
+	{
+		return lobbyConsumer;
+	}
+	
+	public JMSConsumer getGameConsumer()
+	{
+		return gameConsumer;
+	}
+	
+	private Player createNewPlayer(String playername) throws NotLoggedInException, PlayerAlreadyExistentException
+	{
+		return userSessionRemote.getOrCreatePlayer(playername);
+	}
+	
+	private Spectator getOrCreateCurrentSpectator() throws NotLoggedInException
+	{
+		return userSessionRemote.getOrCreateSpectator();
 	}
 
+	private Player getCurrentPlayer() throws PlayerDoesNotExistsException
+	{
+		User u = userSessionRemote.getUser();
+		
+		if(u != null && u.getPlayer() != null)
+		{
+			return u.getPlayer();
+		}
+		else
+		{
+			throw new PlayerDoesNotExistsException();
+		}
+	}
 }

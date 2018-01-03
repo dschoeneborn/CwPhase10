@@ -32,10 +32,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException
 		@NamedQuery(name="lobby.selectLobbyByUserId", query="SELECT l FROM Lobby l "
 				+ "JOIN Player p "
 				+ "WHERE p.id = :playerId"),
-		@NamedQuery(name="lobby.selectLatest", query="SELECT l FROM Lobby l LIMIT 1"),
+		@NamedQuery(name="lobby.selectLatest", query="SELECT l FROM Lobby l"),
 		@NamedQuery(name="selectLobbyBySpectatorId", query="SELECT l FROM Lobby l " + 
 				"JOIN Spectator s " + 
-				"WHERE s.id = :spectatorId")
+				"WHERE s.id = :spectatorId"),
+		@NamedQuery(name="lobby.findById", query="SELECT l FROM Lobby l WHERE l.id = :lobbyId")
 })
 @Entity
 public class Lobby implements Serializable{

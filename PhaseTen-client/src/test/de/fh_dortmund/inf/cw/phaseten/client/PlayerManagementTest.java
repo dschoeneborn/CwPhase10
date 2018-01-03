@@ -29,13 +29,13 @@ public class PlayerManagementTest {
 	@Before
 	public void setUp() throws Exception {
 		this.serviceHandler = ServiceHandlerImpl.getInstance();
-		this.serviceHandler.playerConsumer.setMessageListener(new MessageListener() {
+		this.serviceHandler.getPlayerConsumer().setMessageListener(new MessageListener() {
 			public void onMessage(Message message) {
 				messagePlayer = message;
 				latchPlayer.countDown();
 			}
 		});
-		this.serviceHandler.lobbyConsumer.setMessageListener(new MessageListener() {
+		this.serviceHandler.getLobbyConsumer().setMessageListener(new MessageListener() {
 			public void onMessage(Message message) {
 				messageLobby = message;
 				latchLobby.countDown();
@@ -45,8 +45,8 @@ public class PlayerManagementTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		this.serviceHandler.playerConsumer.setMessageListener(null);
-		this.serviceHandler.lobbyConsumer.setMessageListener(null);		
+		this.serviceHandler.getPlayerConsumer().setMessageListener(null);
+		this.serviceHandler.getLobbyConsumer().setMessageListener(null);		
 	}
 
 	@Test

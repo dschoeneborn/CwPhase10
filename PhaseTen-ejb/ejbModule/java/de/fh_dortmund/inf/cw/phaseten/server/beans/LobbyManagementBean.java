@@ -20,8 +20,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote;
 
 /**
  * @author Marc Mettke
@@ -29,7 +29,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote;
  * @author Björn Merschmeier
  */
 @Stateless
-public class LobbyManagementBean implements LobbyManagmentRemote, LobbyManagmentLocal {
+public class LobbyManagementBean implements LobbyManagementRemote, LobbyManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Lobby")
@@ -107,7 +107,19 @@ public class LobbyManagementBean implements LobbyManagmentRemote, LobbyManagment
 		getManagedLobby(lobby).addSpectator(spectator);
 		sendLobbyMessage();
 	}
-	
+
+	@Override
+	public void enterLobby(long lobbyId, Player player) throws NoFreeSlotException {
+		Lobby l = getManagedLobby(lobbyId);
+		enterLobby(l, player);
+	}
+
+	@Override
+	public void enterLobby(long lobbyId, Spectator spectator) {
+		Lobby l = getManagedLobby(lobbyId);
+		enterLobby(l, spectator);
+	}
+
 	@Override
 	public void leaveLobby(Player player)
 	{
@@ -239,5 +251,17 @@ public class LobbyManagementBean implements LobbyManagmentRemote, LobbyManagment
 		entityManager.flush();
 		
 		return l;
+	}
+	
+	/**
+	 * @author Björn Merschmeier
+	 * @param lobbyId
+	 * @return
+	 */
+	private Lobby getManagedLobby(long lobbyId) {
+		Query namedQuery = entityManager.createNamedQuery("lobby.findById");
+		namedQuery.setParameter("lobbyId", lobbyId);
+		
+		return (Lobby)namedQuery.getSingleResult();
 	}
 }

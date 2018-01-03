@@ -19,7 +19,6 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
@@ -40,13 +39,13 @@ public class GameManagementTest {
 	@Before
 	public void setUp() throws Exception {
 		this.serviceHandler = ServiceHandlerImpl.getInstance();
-		this.serviceHandler.playerConsumer.setMessageListener(new MessageListener() {
+		this.serviceHandler.getPlayerConsumer().setMessageListener(new MessageListener() {
 			public void onMessage(Message message) {
 				messagePlayer = message;
 				latchPlayer.countDown();
 			}
 		});
-		this.serviceHandler.gameConsumer.setMessageListener(new MessageListener() {
+		this.serviceHandler.getGameConsumer().setMessageListener(new MessageListener() {
 			public void onMessage(Message message) {
 				messageGame  = message;
 				latchGame.countDown();
@@ -56,16 +55,14 @@ public class GameManagementTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		this.serviceHandler.playerConsumer.setMessageListener(null);	
-		this.serviceHandler.gameConsumer.setMessageListener(null);	
+		this.serviceHandler.getPlayerConsumer().setMessageListener(null);	
+		this.serviceHandler.getGameConsumer().setMessageListener(null);	
 	}
 
 	@Test
-	public void testRequestGameMessage() throws Exception {
-		Player p = new Player("test");
-		
+	public void testRequestGameMessage() throws Exception {		
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.requestGameMessage(p);
+		this.serviceHandler.requestGameMessage();
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
@@ -79,7 +76,7 @@ public class GameManagementTest {
 		//TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser Test funktioniert
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.takeCardFromPullstack(new Player("test"));
+		this.serviceHandler.takeCardFromPullstack();
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -96,7 +93,7 @@ public class GameManagementTest {
 		//TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser Test funktioniert
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.takeCardFromLiFoStack(new Player("test"));
+		this.serviceHandler.takeCardFromLiFoStack();
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -116,7 +113,7 @@ public class GameManagementTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.addToPileOnTable(new Player("test"), card, dockPile);
+		this.serviceHandler.addToPileOnTable(card, dockPile);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -142,7 +139,7 @@ public class GameManagementTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.layPhaseToTable(new Player("test"), piles);
+		this.serviceHandler.layPhaseToTable(piles);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -161,7 +158,7 @@ public class GameManagementTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.layCardToLiFoStack(new Player("test"), card);
+		this.serviceHandler.layCardToLiFoStack(card);
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 

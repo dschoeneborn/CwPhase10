@@ -8,7 +8,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException
  * @author Marc Mettke
  * @author Björn Merschmeier
  */
-public interface LobbyManagment {
+public interface LobbyManagement {
 	void leaveLobby(Player player);
 	void leaveLobby(Spectator spectator);
 	void startGame(Player player) throws NotEnoughPlayerException;

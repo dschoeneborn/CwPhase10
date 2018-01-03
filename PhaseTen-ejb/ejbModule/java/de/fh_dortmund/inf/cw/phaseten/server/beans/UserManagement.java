@@ -20,18 +20,18 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.xml.bind.DatatypeConverter;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentLocal;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
 
 /**
  * @author Marc Mettke
  * @author Dennis Schöneborn
+ * @author Björn Merschmeier
  */
 @Stateless
 public class UserManagement implements UserManagementRemote, UserManagementLocal {
@@ -42,7 +42,7 @@ public class UserManagement implements UserManagementRemote, UserManagementLocal
 	private Topic playerMessageTopic;
 
 	@EJB
-	LobbyManagmentLocal lobbyManagment;
+	LobbyManagementLocal lobbyManagment;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -85,7 +85,6 @@ public class UserManagement implements UserManagementRemote, UserManagementLocal
 			e.printStackTrace();
 		}
 
-		sendPlayerMessage();
 		this.lobbyManagment.sendLobbyMessage();
 		
 		return foundUser;
@@ -94,6 +93,8 @@ public class UserManagement implements UserManagementRemote, UserManagementLocal
 	@Override
 	public User login(String username, String password) throws UserDoesNotExistException
 	{
+		password = computeHash(password);
+		
 		User user = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
 		
 		if(user == null || !user.getPassword().equals(password))
@@ -103,15 +104,30 @@ public class UserManagement implements UserManagementRemote, UserManagementLocal
 		
 		onlineUsers.add(user.getLoginName());
 		
-		sendPlayerMessage();
 		this.lobbyManagment.sendLobbyMessage();
 		
 		return user;
 	}
 
-	private void sendPlayerMessage(CurrentPlayer player) {
-		Message message = jmsContext.createObjectMessage(player);
+	@Override
+	public void sendPlayerMessage(Player p) {
+		Message message = jmsContext.createObjectMessage(p);
 		jmsContext.createProducer().send(playerMessageTopic, message);
+	}
+
+	@Override
+	public void logout(User currentUser) {
+		if(currentUser.getPlayer() != null)
+		{
+			lobbyManagment.leaveLobby(currentUser.getPlayer());
+		}
+		
+		if(currentUser.getSpectator() != null)
+		{
+			lobbyManagment.leaveLobby(currentUser.getSpectator());
+		}
+		
+		onlineUsers.remove(currentUser.getLoginName());
 	}
 
 	private String computeHash(String pw) {

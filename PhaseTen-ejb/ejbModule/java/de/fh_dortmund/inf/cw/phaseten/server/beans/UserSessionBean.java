@@ -39,6 +39,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 		currentUser = userManagement.register(userName, password);
 	}
 	
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public Player getOrCreatePlayer(String name) throws NotLoggedInException, PlayerAlreadyExistentException
 	{
@@ -68,7 +71,10 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 		
 		return foundPlayer;
 	}
-	
+
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public Spectator getOrCreateSpectator() throws NotLoggedInException
 	{
@@ -93,11 +99,17 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 		return foundSpectator;
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public void logout() {
-		currentUser = userManagement.logout(currentUser);
+		userManagement.logout(currentUser);
 	}
-	
+
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public User getUser() {
 		return currentUser;

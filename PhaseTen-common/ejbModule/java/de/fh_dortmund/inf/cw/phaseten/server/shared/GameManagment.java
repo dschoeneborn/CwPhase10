@@ -6,6 +6,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 
 /**
  * @author Marc Mettke
@@ -23,6 +24,8 @@ public interface GameManagment {
 
 	void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException;
 
-	void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card) throws MoveNotValidException;
+	void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card) throws MoveNotValidException, PlayerDoesNotExistsException;
+
+	void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, Card card) throws MoveNotValidException, PlayerDoesNotExistsException;
 
 }

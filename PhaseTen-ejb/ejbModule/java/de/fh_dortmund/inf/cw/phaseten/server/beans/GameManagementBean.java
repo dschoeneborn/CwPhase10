@@ -19,6 +19,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
@@ -52,13 +53,9 @@ public class GameManagementBean implements GameManagmentRemote, GameManagmentLoc
 
 	@Override
 	public void sendGameMessage(Player p) {
-		// TODO: needs to get the acutal phase. should be done in the message-objects
 		sendGameMessage(
 				de.fh_dortmund.inf.cw.phaseten.server.messages.Game
-						.from(getActualPlayedGame(p),
-								de.fh_dortmund.inf.cw.phaseten.server.messages.Player.from(
-										(Collection<Player>) (Collection<?>) getActualPlayedGame(p).getSpectators(), 1),
-								1));
+						.from(getActualPlayedGame(p)));
 	}
 
 	@Override
@@ -173,13 +170,34 @@ public class GameManagementBean implements GameManagmentRemote, GameManagmentLoc
 
 	/**
 	 * @author Björn Merschmeier
+	 * @throws PlayerDoesNotExistsException 
 	 */
 	@Override
 	public void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card)
-			throws MoveNotValidException {
-		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
-		// nicht als Parameter übergeben lassen?
+			throws MoveNotValidException, PlayerDoesNotExistsException {
+		laySkipCardForPlayerById(currentPlayer, destinationPlayer.getId(), card);
+	}
+
+	@Override
+	public void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, Card card)
+			throws MoveNotValidException, PlayerDoesNotExistsException {
 		Game game = getActualPlayedGame(currentPlayer);
+		Player destinationPlayer = null;
+		
+		for(Player p : game.getPlayers())
+		{
+			if(p.getId() == destinationPlayerId)
+			{
+				destinationPlayer = p;
+				break;
+			}
+		}
+		
+		if(destinationPlayer == null)
+		{
+			throw new PlayerDoesNotExistsException();
+		}
+		
 		if (card.getCardValue() == CardValue.SKIP
 				&& gameValidation.isValidLaySkipCard(currentPlayer, destinationPlayer, game)) {
 			currentPlayer.removeCardFromPlayerPile(card);
@@ -193,12 +211,28 @@ public class GameManagementBean implements GameManagmentRemote, GameManagmentLoc
 
 		updateClient(currentPlayer);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagment#initGame(de.
+	 * fh_dortmund.inf.cw.phaseten.server.entities.Game)
+	 */
+	/**
+	 * @author Tim Prange
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public void startGame(Game game) {
+		entityManager.persist(game);
+		entityManager.flush();
+		sendGameMessage(game);
+	}
 
 	private void updateClient(Player p) {
 		// Send updated Game to Client
 		sendGameMessage(p);
 		// Send updated Player Cards to Client
-		playerManagment.sendPlayerMessage();
+		playerManagment.sendPlayerMessage(p);
 	}
 
 	@SuppressWarnings("unused")
@@ -220,21 +254,5 @@ public class GameManagementBean implements GameManagmentRemote, GameManagmentLoc
 		query.setParameter("playerId", p.getId());
 		
 		return (Game)query.getSingleResult();
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagment#initGame(de.
-	 * fh_dortmund.inf.cw.phaseten.server.entities.Game)
-	 */
-	/**
-	 * @author Tim Prange
-	 * @author Björn Merschmeier
-	 */
-	@Override
-	public void startGame(Game game) {
-		entityManager.persist(game);
-		entityManager.flush();
-		sendGameMessage(game);
 	}
 }
