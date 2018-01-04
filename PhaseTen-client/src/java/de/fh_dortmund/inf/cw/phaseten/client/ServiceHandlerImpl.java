@@ -152,18 +152,21 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 			if (message.getJMSDestination().equals(playerMessageTopic) && message instanceof ObjectMessage)
 			{
 				CurrentPlayer currentPlayer = (CurrentPlayer) ((ObjectMessage) message).getObject();
+				setChanged();
 				notifyObservers(currentPlayer);
 				System.out.println("Received CurrentPlayer Object: " + currentPlayer);
 			}
 			else if (message.getJMSDestination().equals(lobbyMessageTopic) && message instanceof ObjectMessage)
 			{
 				Lobby lobby = (Lobby) ((ObjectMessage) message).getObject();
+				setChanged();
 				notifyObservers(lobby);
 				System.out.println("Received Lobby Object: " + lobby);
 			}
 			else if (message.getJMSDestination().equals(gameMessageTopic) && message instanceof ObjectMessage)
 			{
 				Game game = (Game) ((ObjectMessage) message).getObject();
+				setChanged();
 				notifyObservers(game);
 				System.out.println("Received Game Object: " + game);
 			}
