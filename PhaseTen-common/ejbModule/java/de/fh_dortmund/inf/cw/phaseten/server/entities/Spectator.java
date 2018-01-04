@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
  * @author Dennis Schöneborn
  * @author Sebastian Seitz
  * @author Daniela Kaiser
- *	@author Björn Merschmeier
+ * @author Björn Merschmeier
  */
 @Entity
 public class Spectator implements Serializable{
@@ -36,6 +36,7 @@ public class Spectator implements Serializable{
 	
 	private String name;
 	
+	@SuppressWarnings("unused")
 	private Spectator()
 	{
 		
