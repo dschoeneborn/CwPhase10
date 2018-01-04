@@ -10,7 +10,6 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerAlreadyExistentException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
@@ -43,7 +42,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public Player getOrCreatePlayer(String name) throws NotLoggedInException, PlayerAlreadyExistentException
+	public Player getOrCreatePlayer() throws NotLoggedInException
 	{
 		Player foundPlayer = null;
 		
@@ -52,15 +51,10 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 			if(currentUser.getPlayer() != null)
 			{
 				foundPlayer = currentUser.getPlayer();
-				
-				if(!foundPlayer.getName().equals(name))
-				{
-					throw new PlayerAlreadyExistentException();
-				}
 			}
 			else
 			{
-				foundPlayer = new Player(name);
+				foundPlayer = new Player(currentUser.getLoginName());
 				currentUser.setPlayer(foundPlayer);
 			}
 		}

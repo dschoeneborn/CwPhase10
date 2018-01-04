@@ -10,8 +10,4 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 @Local
 public interface LobbyManagementLocal extends LobbyManagement {
 	public void sendLobbyMessage();
-
-	void sendLobbyMessage(Lobby lobby);
-
-	void deleteEmptyLobbies();
 }

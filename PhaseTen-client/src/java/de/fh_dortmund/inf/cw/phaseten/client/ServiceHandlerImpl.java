@@ -17,12 +17,10 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerAlreadyExistentException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
@@ -105,8 +103,8 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void requestPlayerMessage() throws PlayerDoesNotExistsException {		
-		this.playerManagmentRemote.requestPlayerMessage(getCurrentPlayer());
+	public void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException {		
+		this.playerManagmentRemote.requestPlayerMessage(getOrCreateCurrentPlayer());
 	}
 
 	@Override
@@ -115,8 +113,8 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void requestGameMessage() throws PlayerDoesNotExistsException {
-		this.gameManagmentRemote.requestGameMessage(getCurrentPlayer());
+	public void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException {
+		this.gameManagmentRemote.requestGameMessage(getOrCreateCurrentPlayer());
 	}
 
 	@Override
@@ -130,39 +128,21 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void enterAnyLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException
+	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException
 	{
-		this.lobbyManagmentRemote.enterOrCreateNewLobby(getCurrentPlayer());
+		this.lobbyManagmentRemote.enterLobby(getOrCreateCurrentPlayer());
 	}
 	
 	@Override
-	public void enterAnyLobbyAsNewPlayer(String playername) throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, PlayerAlreadyExistentException
+	public void enterLobbyAsSpectator() throws NotLoggedInException
 	{
-		createNewPlayer(playername);
-		this.lobbyManagmentRemote.enterOrCreateNewLobby(getCurrentPlayer());
-	}
-	
-	@Override
-	public void enterLobbyAsSpectator(long lobbyId) throws NotLoggedInException
-	{
-		this.lobbyManagmentRemote.enterLobby(lobbyId, getOrCreateCurrentSpectator());
-	}
-	
-	@Override
-	public void enterLobbyAsPlayer(long lobbyId) throws NoFreeSlotException, PlayerDoesNotExistsException
-	{
-		this.lobbyManagmentRemote.enterLobby(lobbyId, getCurrentPlayer());
-	}
-	
-	@Override
-	public void enterLobbyAsNewPlayer(long lobbyId, String playerName) throws NoFreeSlotException, NotLoggedInException, PlayerAlreadyExistentException
-	{
-		this.lobbyManagmentRemote.enterLobby(lobbyId, createNewPlayer(playerName));
+		this.lobbyManagmentRemote.enterLobby(getOrCreateCurrentSpectator());
 	}
 
 	@Override
-	public void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException {
-		this.lobbyManagmentRemote.startGame(getCurrentPlayer());
+	public void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException
+	{
+		this.lobbyManagmentRemote.startGame(getOrCreateCurrentPlayer());
 	}
 
 	@Override
@@ -190,33 +170,33 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	}
 
 	@Override
-	public void takeCardFromPullstack() throws MoveNotValidException, PlayerDoesNotExistsException {
-		gameManagmentRemote.takeCardFromPullstack(getCurrentPlayer());
+	public void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.takeCardFromPullstack(getOrCreateCurrentPlayer());
 	}
 
 	@Override
-	public void takeCardFromLiFoStack() throws MoveNotValidException, PlayerDoesNotExistsException {
-		gameManagmentRemote.takeCardFromLiFoStack(getCurrentPlayer());
+	public void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.takeCardFromLiFoStack(getOrCreateCurrentPlayer());
 	}
 
 	@Override
-	public void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, PlayerDoesNotExistsException {
-		gameManagmentRemote.addToPileOnTable(getCurrentPlayer(), card, dockPile);
+	public void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.addToPileOnTable(getOrCreateCurrentPlayer(), card, dockPile);
 	}
 
 	@Override
-	public void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, PlayerDoesNotExistsException {
-		gameManagmentRemote.layPhaseToTable(getCurrentPlayer(), cards);
+	public void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.layPhaseToTable(getOrCreateCurrentPlayer(), cards);
 	}
 
 	@Override
-	public void layCardToLiFoStack(Card card) throws MoveNotValidException, PlayerDoesNotExistsException {
-		gameManagmentRemote.layCardToLiFoStack(getCurrentPlayer(), card);
+	public void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.layCardToLiFoStack(getOrCreateCurrentPlayer(), card);
 	}
 
 	@Override
-	public void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, PlayerDoesNotExistsException {
-		gameManagmentRemote.laySkipCardForPlayerById(getCurrentPlayer(), destinationPlayerId, card);
+	public void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException, PlayerDoesNotExistsException {
+		gameManagmentRemote.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, card);
 	}
 	
 	public JMSConsumer getPlayerConsumer()
@@ -234,27 +214,13 @@ public class ServiceHandlerImpl implements ServiceHandler {
 		return gameConsumer;
 	}
 	
-	private Player createNewPlayer(String playername) throws NotLoggedInException, PlayerAlreadyExistentException
-	{
-		return userSessionRemote.getOrCreatePlayer(playername);
-	}
-	
 	private Spectator getOrCreateCurrentSpectator() throws NotLoggedInException
 	{
 		return userSessionRemote.getOrCreateSpectator();
 	}
 
-	private Player getCurrentPlayer() throws PlayerDoesNotExistsException
+	private Player getOrCreateCurrentPlayer() throws NotLoggedInException
 	{
-		User u = userSessionRemote.getUser();
-		
-		if(u != null && u.getPlayer() != null)
-		{
-			return u.getPlayer();
-		}
-		else
-		{
-			throw new PlayerDoesNotExistsException();
-		}
+		return userSessionRemote.getOrCreatePlayer();
 	}
 }

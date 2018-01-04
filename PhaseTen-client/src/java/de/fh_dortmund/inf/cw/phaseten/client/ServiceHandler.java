@@ -10,7 +10,6 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerAlreadyExistentException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
@@ -23,35 +22,29 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote;
 public interface ServiceHandler extends StubRemote,
 										MessageListener {
 
-	void requestPlayerMessage() throws PlayerDoesNotExistsException;
+	void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException;
 
 	void requestLobbyMessage();
 
-	void enterAnyLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException;
+	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException;
 	
-	void enterLobbyAsPlayer(long lobbyId) throws NoFreeSlotException, PlayerDoesNotExistsException;
+	void enterLobbyAsSpectator() throws NotLoggedInException;
 
-	void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException;
+	void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException;
 
-	void requestGameMessage() throws PlayerDoesNotExistsException;
+	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException;
+	
+	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException;
 
-	void enterAnyLobbyAsNewPlayer(String playername) throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, PlayerAlreadyExistentException;
+	void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException;
 
-	void enterLobbyAsSpectator(long lobbyId) throws NotLoggedInException, NoFreeSlotException;
+	void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, NotLoggedInException;
 
-	void enterLobbyAsNewPlayer(long lobbyId, String playerName) throws NoFreeSlotException, NotLoggedInException, PlayerAlreadyExistentException;
+	void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, NotLoggedInException;
 
-	void takeCardFromPullstack() throws MoveNotValidException, PlayerDoesNotExistsException;
+	void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException;
 
-	void takeCardFromLiFoStack() throws MoveNotValidException, PlayerDoesNotExistsException;
-
-	void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, PlayerDoesNotExistsException;
-
-	void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, PlayerDoesNotExistsException;
-
-	void layCardToLiFoStack(Card card) throws MoveNotValidException, PlayerDoesNotExistsException;
-
-	void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, PlayerDoesNotExistsException;
+	void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException, PlayerDoesNotExistsException;
 
 	void register(String username, String password) throws UsernameAlreadyTakenException;
 

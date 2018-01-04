@@ -47,77 +47,35 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	public void requestLobbyMessage() {
 		sendLobbyMessage();
 	}
-
-	/**
-	 *TODO - BM - 03.01.2018 - mir ist nicht ganz klar, was diese Methode machen soll!
-	 */
-	@Override
-	public void sendLobbyMessage() {
-		de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby messageLobby = 
-				de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby.from(getLatestLobby());
-		
-		sendLobbyMessage(messageLobby);
-	}
 	
-	/*
-	 *TODO - BM - 03.01.2018 - mir ist nicht ganz klar, was diese Methode machen soll!
-	 */
 	/**
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void sendLobbyMessage(Lobby lobby) {
+	public void sendLobbyMessage() {
 		de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby messageLobby = 
-				de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby.from(getManagedLobby(lobby));
+				de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby.from(getOrCreateLobby());
 		
 		sendLobbyMessage(messageLobby);
 	}
-
+	
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
-	public void enterLobby(Lobby lobby, Player player) throws NoFreeSlotException {
-		if (gameValidation.isLobbyFull(lobby)) {
+	public void enterLobby(Player player) throws NoFreeSlotException
+	{
+		Lobby l = getOrCreateLobby();
+		
+		if(l.isFull())
+		{
 			throw new NoFreeSlotException();
 		}
-		else
-		{
-			lobby.addPlayer(player);
-			sendLobbyMessage();
-		}
-	}
-	
-	@Override
-	public void enterOrCreateNewLobby(Player player) {
-		Lobby lobby = getLatestLobby();
 		
-		if(lobby == null || gameValidation.isLobbyFull(lobby))
-		{
-			lobby = startNewLobby(player);
-			sendLobbyMessage(lobby);
-		}
-		else
-		{
-			lobby.addPlayer(player);
-		}
+		l.addPlayer(player);
 		
-		sendLobbyMessage(lobby);
-	}
-
-	@Override
-	public void enterLobby(Lobby lobby, Spectator spectator) {
-		getManagedLobby(lobby).addSpectator(spectator);
+		entityManager.flush();
 		sendLobbyMessage();
-	}
-
-	@Override
-	public void enterLobby(long lobbyId, Player player) throws NoFreeSlotException {
-		Lobby l = getManagedLobby(lobbyId);
-		enterLobby(l, player);
-	}
-
-	@Override
-	public void enterLobby(long lobbyId, Spectator spectator) {
-		Lobby l = getManagedLobby(lobbyId);
-		enterLobby(l, spectator);
 	}
 
 	@Override
@@ -132,6 +90,20 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 			entityManager.remove(lobby);
 			entityManager.flush();
 		}
+	}
+	
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public void enterLobby(Spectator spectator)
+	{
+		Lobby l = getOrCreateLobby();
+		
+		l.addSpectator(spectator);
+		
+		entityManager.flush();
+		sendLobbyMessage();
 	}
 	
 	/**
@@ -165,17 +137,6 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 		entityManager.flush();
 		
 		entityManager.remove(lobby);
-	}
-
-	/**
-	 * Deletes empty lobbies which are left or no longer used
-	 * @author Björn Merschmeier
-	 */
-	@Override
-	public void deleteEmptyLobbies()
-	{
-		//TODO - BM - 03.01.2018 - Hier müssen noch die "waisen" entfernt werden, d.h. die Lobbies, die verlassen wurden,
-		//aber aus irgendwelchen Gründen noch nicht gelöscht wurden
 	}
 
 	private void sendLobbyMessage(de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby lobby) {
@@ -212,7 +173,7 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	 * Returns the latest lobby from the database
 	 * @author Björn Merschmeier
 	 */
-	private Lobby getLatestLobby()
+	private Lobby getOrCreateLobby()
 	{
 		Query namedQuery = entityManager.createNamedQuery("lobby.selectLatest");
 		
@@ -222,46 +183,11 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 		}
 		catch(NoResultException e)
 		{
-			return null;
+			Lobby l = new Lobby();
+			entityManager.persist(l);
+			entityManager.flush();
+			
+			return l;
 		}
-	}
-
-	/**
-	 * Returns the Managed Entity to the given Lobby
-	 * TODO - NOT SURE IF NEEDED
-	 * @author Björn Merschmeier
-	 */
-	private Lobby getManagedLobby(Lobby lobby)
-	{
-		Lobby managedLobby = entityManager.find(Lobby.class, lobby.getId());
-		
-		return managedLobby;
-	}
-
-	/**
-	 * Starts a new Lobby
-	 * @author Björn Merschmeier
-	 */
-	private Lobby startNewLobby(Player player) {
-		Lobby l = new Lobby();
-		
-		l.addPlayer(player);
-		
-		entityManager.persist(l);
-		entityManager.flush();
-		
-		return l;
-	}
-	
-	/**
-	 * @author Björn Merschmeier
-	 * @param lobbyId
-	 * @return
-	 */
-	private Lobby getManagedLobby(long lobbyId) {
-		Query namedQuery = entityManager.createNamedQuery("lobby.findById");
-		namedQuery.setParameter("lobbyId", lobbyId);
-		
-		return (Lobby)namedQuery.getSingleResult();
 	}
 }
