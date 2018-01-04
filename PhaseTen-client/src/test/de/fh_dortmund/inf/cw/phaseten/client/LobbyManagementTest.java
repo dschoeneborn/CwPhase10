@@ -65,7 +65,7 @@ public class LobbyManagementTest {
 		// throws NoFreeSlotException;
 		
 		this.latchLobby = new CountDownLatch(1);
-		this.serviceHandler.enterAnyLobbyAsPlayer();
+		this.serviceHandler.enterLobbyAsPlayer();
 		this.latchLobby.await(30, TimeUnit.SECONDS);
 		
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
@@ -76,7 +76,7 @@ public class LobbyManagementTest {
 	public void testEnterAsSpectator() throws Exception {
 		//TODO - BM - 03.01.2018 - Dieser Test funktioniert hier nicht
 		this.latchLobby = new CountDownLatch(1);
-		this.serviceHandler.enterLobbyAsPlayer(1);
+		this.serviceHandler.enterLobbyAsPlayer();
 		this.latchLobby.await(30, TimeUnit.SECONDS);
 		
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
