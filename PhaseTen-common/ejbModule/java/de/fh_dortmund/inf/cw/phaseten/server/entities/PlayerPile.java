@@ -32,12 +32,7 @@ public class PlayerPile extends Pile {
 	}
 
 	public boolean addCard(Card card) {
-		ArrayList<Card> temp = new ArrayList<>();
-		temp.addAll(cards);
-		for (int i = 0; i < temp.size(); i++) {
-			cards.set(i + 1, temp.get(i));
-		}
-		this.cards.set(0, card);
+		this.cards.add(0, card);
 		
 		return true;
 	}

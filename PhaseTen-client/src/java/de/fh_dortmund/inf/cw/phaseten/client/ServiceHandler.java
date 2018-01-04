@@ -1,6 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.client;
 
 import java.util.Collection;
+import java.util.Observer;
 
 import javax.jms.MessageListener;
 
@@ -49,4 +50,8 @@ public interface ServiceHandler extends StubRemote,
 	void register(String username, String password) throws UsernameAlreadyTakenException;
 
 	void login(String username, String password) throws UserDoesNotExistException;
+	
+	void addObserver(Observer observer);
+	
+	void deleteObserver(Observer observer);
 }

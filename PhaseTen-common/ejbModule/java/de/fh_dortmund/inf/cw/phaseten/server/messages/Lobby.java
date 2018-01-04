@@ -3,8 +3,6 @@ package de.fh_dortmund.inf.cw.phaseten.server.messages;
 import java.io.Serializable;
 import java.util.Collection;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
-
 /**
  * @author Marc Mettke
  */
@@ -15,7 +13,6 @@ public class Lobby implements Serializable {
 	private Collection<Spectator> spectators;
 	
 	public Lobby(Collection<Player> players, Collection<Spectator> spectators) {
-		super();
 		this.players = players;
 		this.spectators = spectators;
 	}
@@ -36,7 +33,7 @@ public class Lobby implements Serializable {
 		// TODO: Add Spectators from lobby Object
 		return new Lobby(
 			Player.from(lobby.getPlayers()),
-			lobby.getSpectators()
+			Spectator.from(lobby.getSpectators())
 		);
 	}
 }

@@ -7,24 +7,26 @@ import java.util.function.Consumer;
 
 /**
  * @author Marc Mettke
+ * @author Robin Harbecke
  */
 public class Player implements Serializable {
 	private static final long serialVersionUID = -2947823309554723821L;
 	
-	private String playerName;
 	private int phase;
+	private String name;
 	
 	public Player(String playerName, int phase) {
-		super();
-		this.playerName = playerName;
 		this.phase = phase;
+		this.name = playerName;
 	}
 	
-	public String getPlayerName() {
-		return playerName;
-	}
 	public int getPhase() {
 		return phase;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 	
 	public static Player from(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player) {
