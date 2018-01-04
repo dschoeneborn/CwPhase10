@@ -24,6 +24,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Marc Mettke
@@ -226,6 +227,9 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 		entityManager.persist(game);
 		entityManager.flush();
 		sendGameMessage(game);
+		
+		//TODO - BM - 04.01.2018 - Das Spiel muss noch initialisiert werden (z.B. Kartenstapel)
+		throw new NotImplementedException();
 	}
 
 	private void updateClient(Player p) {

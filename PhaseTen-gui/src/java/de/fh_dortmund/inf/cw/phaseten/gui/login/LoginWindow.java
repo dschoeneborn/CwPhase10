@@ -1,6 +1,5 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.login;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,21 +9,35 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiManager;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 
 /**
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
-public class LoginWindow extends GuiFrame {
+public class LoginWindow extends GuiWindow implements ActionListener {
+	
+	private static final String ACTIONCOMMAND_LOGIN = "login";
+	private static final String ACTIONCOMMAND_REGISTER = "register";
+	
+	private static final String SUCCESSFULLY_REGISTERED = "Successfully registered";
+	private static final String USERNAME_TAKEN = "Username is already taken";
+	private static final String PASSWORD_NOT_MATCH = "Passwords do not match";
+	private static final String FILL_USERNAME_PASSWORD = "Please fill out username and password fields";
+	private static final String LOGINWINDOW_NAME = "Phaseten | Login";
+	private static final String LOGIN = "Login";
+	private static final String REGISTER = "Register";
+	private static final String USERNAME = "Username";
+	private static final String PASSWORD = "Password";
+	private static final String REPEAT_PASSWORD = "Repeat Password";
+	private static final String LOGIN_INVALID = "Username-password-combination is wrong";
+	
 	private static final long serialVersionUID = -3411026015858719190L;
 
 	private ServiceHandler serviceHandler;
@@ -35,8 +48,8 @@ public class LoginWindow extends GuiFrame {
 	private JTextField passwordWdhRegister;
 	private JLabel statusLabel;
 
-	public LoginWindow(ServiceHandler serviceHandler) {
-		super("Phaseten | Login", serviceHandler);
+	public LoginWindow(ServiceHandler serviceHandler, GuiManager guiManager) {
+		super(LOGINWINDOW_NAME, serviceHandler, guiManager);
 		this.serviceHandler = serviceHandler;
 		this.setContentPane(this.setUI());
 		this.setResizable(false);
@@ -44,46 +57,31 @@ public class LoginWindow extends GuiFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		switch(e.getActionCommand())
+		{
+			case ACTIONCOMMAND_LOGIN: login(); break;
+			case ACTIONCOMMAND_REGISTER: register(); break;
+			default: break;
+		}
+	}
 	
 	private Container setUI() {
 	        JPanel panel = new JPanel(new SpringLayout());
 	        
-	        JButton login = new JButton("Login");
-	        login.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					String username = usernameLogin.getText();
-					String password = passwordLogin.getText();
-					
-					if(!username.isEmpty() && !password.isEmpty()) {
-						try {
-							serviceHandler.login(username, password);
-						} catch (UserDoesNotExistException ignored) {
-							statusLabel.setText("Username with Password is not registered");
-						}
-					}
-				}
-        	});
-	        JButton register = new JButton("Register");
-	        register.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					String username = usernameRegister.getText();
-					String password = passwordRegister.getText();
-					String passwordWdh = passwordWdhRegister.getText();
-					
-					if(!username.isEmpty() && !password.isEmpty()) {
-						if( password.equals(passwordWdh) ) {
-							try {
-								serviceHandler.register(username, password);
-							} catch (UsernameAlreadyTakenException ignored) {
-								statusLabel.setText("Username is already registered");
-							}						
-						} else {
-							statusLabel.setText("Passwords do not match");
-						}						
-					}
-					
-				}
-        	});
+	        JButton login = new JButton(LOGIN);
+	        login.setActionCommand(ACTIONCOMMAND_LOGIN);
+	        login.addActionListener(this);
+	        
+	        JButton register = new JButton(REGISTER);
+	        register.setActionCommand(ACTIONCOMMAND_REGISTER);
+	        register.addActionListener(this);
 	        
 	        usernameLogin = new JTextField("", 15);
 	        passwordLogin = new JTextField("", 15);
@@ -92,17 +90,17 @@ public class LoginWindow extends GuiFrame {
 	        passwordWdhRegister = new JTextField("", 15);
 	        statusLabel = new JLabel();
 	        
-	        panel.add(new JLabel("Username: "));
+	        panel.add(new JLabel(USERNAME + ": "));
 	        panel.add(usernameLogin);
-	        panel.add(new JLabel("Password: "));
+	        panel.add(new JLabel(PASSWORD + ": "));
 	        panel.add(passwordLogin);
 	        panel.add(new JLabel());
 	        panel.add(login);
-	        panel.add(new JLabel("Username: "));
+	        panel.add(new JLabel(USERNAME + ": "));
 	        panel.add(usernameRegister);
-	        panel.add(new JLabel("Password: "));
+	        panel.add(new JLabel(PASSWORD + ": "));
 	        panel.add(passwordRegister);
-	        panel.add(new JLabel("Password Wdh: "));
+	        panel.add(new JLabel(REPEAT_PASSWORD + ": "));
 	        panel.add(passwordWdhRegister);
 	        panel.add(new JLabel());
 	        panel.add(register);
@@ -116,97 +114,59 @@ public class LoginWindow extends GuiFrame {
 	       return panel;	        
 	}
 	
-    /* Used by makeCompactGrid. */
-    private static SpringLayout.Constraints getConstraintsForCell(
-                                                int row, int col,
-                                                Container parent,
-                                                int cols) {
-        SpringLayout layout = (SpringLayout) parent.getLayout();
-        Component c = parent.getComponent(row * cols + col);
-        return layout.getConstraints(c);
-    }
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private void login()
+	{
+		String username = usernameLogin.getText();
+		String password = passwordLogin.getText();
+		
+		if(!username.isEmpty() && !password.isEmpty())
+		{
+			try
+			{
+				serviceHandler.login(username, password);
+				this.getGuiManager().showLobbyGui();
+			}
+			catch (UserDoesNotExistException ignored)
+			{
+				statusLabel.setText(LOGIN_INVALID);
+			}
+		}
+	}
 	
-    /**
-     * Aligns the first <code>rows</code> * <code>cols</code>
-     * components of <code>parent</code> in
-     * a grid. Each component in a column is as wide as the maximum
-     * preferred width of the components in that column;
-     * height is similarly determined for each row.
-     * The parent is made just big enough to fit them all.
-     *
-     * @param rows number of rows
-     * @param cols number of columns
-     * @param initialX x location to start the grid at
-     * @param initialY y location to start the grid at
-     * @param xPad x padding between cells
-     * @param yPad y padding between cells
-     */
-    public static void makeCompactGrid(Container parent,
-                                       int rows, int cols,
-                                       int initialX, int initialY,
-                                       int xPad, int yPad) {
-        SpringLayout layout;
-        try {
-            layout = (SpringLayout)parent.getLayout();
-        } catch (ClassCastException exc) {
-            System.err.println("The first argument to makeCompactGrid must use SpringLayout.");
-            return;
-        }
-
-        //Align all cells in each column and make them the same width.
-        Spring x = Spring.constant(initialX);
-        for (int c = 0; c < cols; c++) {
-            Spring width = Spring.constant(0);
-            for (int r = 0; r < rows; r++) {
-                width = Spring.max(width,
-                                   getConstraintsForCell(r, c, parent, cols).
-                                       getWidth());
-            }
-            for (int r = 0; r < rows; r++) {
-                SpringLayout.Constraints constraints =
-                        getConstraintsForCell(r, c, parent, cols);
-                constraints.setX(x);
-                constraints.setWidth(width);
-            }
-            x = Spring.sum(x, Spring.sum(width, Spring.constant(xPad)));
-        }
-
-        //Align all cells in each row and make them the same height.
-        Spring y = Spring.constant(initialY);
-        for (int r = 0; r < rows; r++) {
-            Spring height = Spring.constant(0);
-            for (int c = 0; c < cols; c++) {
-                height = Spring.max(height,
-                                    getConstraintsForCell(r, c, parent, cols).
-                                        getHeight());
-            }
-            for (int c = 0; c < cols; c++) {
-                SpringLayout.Constraints constraints =
-                        getConstraintsForCell(r, c, parent, cols);
-                constraints.setY(y);
-                constraints.setHeight(height);
-            }
-            y = Spring.sum(y, Spring.sum(height, Spring.constant(yPad)));
-        }
-
-        //Set the parent's size.
-        SpringLayout.Constraints pCons = layout.getConstraints(parent);
-        pCons.setConstraint(SpringLayout.SOUTH, y);
-        pCons.setConstraint(SpringLayout.EAST, x);
-    }
-
-	@Override
-	public void gameDataUpdated(Game game) {
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private void register()
+	{
+		String username = usernameRegister.getText();
+		String password = passwordRegister.getText();
+		String passwordWdh = passwordWdhRegister.getText();
 		
-	}
-
-	@Override
-	public void currentPlayerDataUpdated(CurrentPlayer currentPlayer) {
-		
-	}
-
-	@Override
-	public void lobbyDataUpdated(Lobby lobby) {
-		
+		if(!username.isEmpty() && !password.isEmpty())
+		{
+			if( password.equals(passwordWdh) ) {
+				try
+				{
+					serviceHandler.register(username, password);
+					statusLabel.setText(SUCCESSFULLY_REGISTERED);
+					this.getGuiManager().showLobbyGui();
+				}
+				catch (UsernameAlreadyTakenException ignored)
+				{
+					statusLabel.setText(USERNAME_TAKEN);
+				}					
+			}
+			else
+			{
+				statusLabel.setText(PASSWORD_NOT_MATCH);
+			}						
+		}
+		else
+		{
+			statusLabel.setText(FILL_USERNAME_PASSWORD);
+		}
 	}
 }

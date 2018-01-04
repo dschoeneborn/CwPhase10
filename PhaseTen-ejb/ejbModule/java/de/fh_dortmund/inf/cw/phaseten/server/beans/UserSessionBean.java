@@ -44,26 +44,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	@Override
 	public Player getOrCreatePlayer() throws NotLoggedInException
 	{
-		Player foundPlayer = null;
-		
-		if(currentUser != null)
-		{
-			if(currentUser.getPlayer() != null)
-			{
-				foundPlayer = currentUser.getPlayer();
-			}
-			else
-			{
-				foundPlayer = new Player(currentUser.getLoginName());
-				currentUser.setPlayer(foundPlayer);
-			}
-		}
-		else
-		{
-			throw new NotLoggedInException();
-		}
-		
-		return foundPlayer;
+		return userManagement.getOrCreatePlayer(currentUser);
 	}
 
 	/**
@@ -72,26 +53,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	@Override
 	public Spectator getOrCreateSpectator() throws NotLoggedInException
 	{
-		Spectator foundSpectator = null;
-		
-		if(currentUser != null)
-		{
-			if(currentUser.getSpectator() != null)
-			{
-				foundSpectator = currentUser.getSpectator();
-			}
-			else
-			{
-				foundSpectator = new Spectator(currentUser.getLoginName());
-				currentUser.setSpectator(foundSpectator);
-			}
-		}
-		else
-		{
-			throw new NotLoggedInException();
-		}
-		
-		return foundSpectator;
+		return userManagement.getOrCreateSpectator(currentUser);
 	}
 
 	/**

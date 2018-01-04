@@ -133,5 +133,10 @@ public class User implements Serializable{
 	public void setSpectator(Spectator spectator)
 	{
 		this.spectator = spectator;
+	}
+
+	public long getId()
+	{
+		return id;
 	}	
 }

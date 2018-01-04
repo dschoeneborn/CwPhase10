@@ -5,7 +5,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiManager;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiObserver;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
@@ -14,8 +16,9 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 /**
  * @author Robin Harbecke
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
-public class PlaygroundWindow extends GuiFrame {
+public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 	private static final long serialVersionUID = -8685207683648562278L;
 	
 	protected TopRowPane topRowPane;
@@ -23,8 +26,8 @@ public class PlaygroundWindow extends GuiFrame {
 	protected PlayerCardsPane playerCardsPane = new PlayerCardsPane();
 	protected StatusPanel statusPanel = new StatusPanel();
 	
-	public PlaygroundWindow(ServiceHandler serviceHandler) {
-		super("Phaseten | Game",serviceHandler);
+	public PlaygroundWindow(ServiceHandler serviceHandler, GuiManager guiManager) {
+		super("Phaseten | Game", serviceHandler, guiManager);
 		this.publicCardStackPane = new PublicCardStackPane(this.serviceHandler);
 		this.topRowPane = new TopRowPane(this.serviceHandler);
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));

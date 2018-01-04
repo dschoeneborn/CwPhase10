@@ -14,14 +14,12 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote;
 
 /**
  * @author Marc Mettke
  * @author Björn Merschmeier
  */
-public interface ServiceHandler extends StubRemote,
-										MessageListener {
+public interface ServiceHandler extends MessageListener {
 
 	void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException;
 
@@ -54,4 +52,8 @@ public interface ServiceHandler extends StubRemote,
 	void addObserver(Observer observer);
 	
 	void deleteObserver(Observer observer);
+
+	void logout() throws NotLoggedInException;
+
+	void exitLobby() throws NotLoggedInException;
 }

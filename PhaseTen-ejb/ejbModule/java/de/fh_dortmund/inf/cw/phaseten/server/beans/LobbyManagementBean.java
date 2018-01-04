@@ -81,7 +81,7 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	@Override
 	public void leaveLobby(Player player)
 	{
-		Lobby lobby = getLobbyByPlayer(player);
+		Lobby lobby = getOrCreateLobby();
 		
 		lobby.removePlayer(player);
 		
@@ -102,7 +102,8 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 		
 		l.addSpectator(spectator);
 		
-		entityManager.flush();
+		entityManager.merge(l);
+		
 		sendLobbyMessage();
 	}
 	
@@ -114,7 +115,7 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	@Override
 	public void leaveLobby(Spectator spectator)
 	{
-		Lobby lobby = getLobbyBySpectator(spectator);
+		Lobby lobby = getOrCreateLobby();
 		
 		lobby.removeSpectator(spectator);
 	}
@@ -124,7 +125,7 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	 */
 	@Override
 	public void startGame(Player player) throws NotEnoughPlayerException {
-		Lobby lobby = getLobbyByPlayer(player);
+		Lobby lobby = getOrCreateLobby();
 		
 		if (!gameValidation.hasEnoughPlayers(lobby)) {
 			throw new NotEnoughPlayerException();
@@ -145,31 +146,6 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	}
 
 	/**
-	 * Gets the latest Lobby from DB in which the player is present
-	 *
-	 * @author Tim Prange
-	 * @author Björn Merschmeier
-	 * @param Player player
-	 * @return Lobby
-	 */
-	private Lobby getLobbyByPlayer(Player player) {
-		Query namedQuery = entityManager.createNamedQuery("lobby.selectLobbyByUserId");
-		namedQuery.setParameter("playerId", player.getId());
-		return (Lobby)namedQuery.getSingleResult();
-	}
-
-	/**
-	 * Returns the lobby in which the spectator is present
-	 * @author Björn Merschmeier
-	 * @param Spectator spectator
-	 */
-	private Lobby getLobbyBySpectator(Spectator spectator) {
-		Query namedQuery = entityManager.createNamedQuery("lobby.selectLobbyBySpectatorId");
-		namedQuery.setParameter("spectatorId", spectator.getId());
-		return (Lobby)namedQuery.getSingleResult();
-	}
-
-	/**
 	 * Returns the latest lobby from the database
 	 * @author Björn Merschmeier
 	 */
@@ -185,7 +161,6 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 		{
 			Lobby l = new Lobby();
 			entityManager.persist(l);
-			entityManager.flush();
 			
 			return l;
 		}
