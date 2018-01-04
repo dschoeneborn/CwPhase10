@@ -4,8 +4,6 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +15,7 @@ import javax.persistence.Enumerated;
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
  */
 @Entity
 public class ColorDockPile extends DockPile {
@@ -48,8 +47,11 @@ public class ColorDockPile extends DockPile {
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile#dock(de.fh_dortmund.
 	 * inf.cw.phaseten.server.entities.Card)
 	 */
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
-	public boolean dock(Card card) {
+	public boolean addCard(Card card) {
 		if (card.getColor().equals(this.color)) {
 			this.cards.add(card);
 			return true;

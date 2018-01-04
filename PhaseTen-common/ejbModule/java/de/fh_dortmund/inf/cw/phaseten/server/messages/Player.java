@@ -27,22 +27,20 @@ public class Player implements Serializable {
 		return phase;
 	}
 	
-	public static Player from(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player,
-							  int phase) {
+	public static Player from(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player) {
 		// TODO: Add phase from player Object
 		return new Player(
 			player.getName(),
-			phase
+			player.getPhase().getValue()
 		);
 	}
 	
-	public static Collection<Player> from(Collection<de.fh_dortmund.inf.cw.phaseten.server.entities.Player> players,
-							  int phase) {
+	public static Collection<Player> from(Collection<de.fh_dortmund.inf.cw.phaseten.server.entities.Player> players) {
 		Collection<Player> _players = new ArrayList<>();
 		players.forEach(new Consumer<de.fh_dortmund.inf.cw.phaseten.server.entities.Player>() {
 			@Override
 			public void accept(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player) {
-				_players.add(from(player, phase));
+				_players.add(from(player));
 			}
 		});
 		return _players;

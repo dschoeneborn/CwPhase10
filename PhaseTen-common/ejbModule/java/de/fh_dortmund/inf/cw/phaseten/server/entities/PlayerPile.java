@@ -4,10 +4,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,16 +31,18 @@ public class PlayerPile extends Pile {
 		return this.cards;
 	}
 
-	public void addCard(Card card) {
+	public boolean addCard(Card card) {
 		ArrayList<Card> temp = new ArrayList<>();
 		temp.addAll(cards);
 		for (int i = 0; i < temp.size(); i++) {
 			cards.set(i + 1, temp.get(i));
 		}
 		this.cards.set(0, card);
+		
+		return true;
 	}
 
-	public void deleteCard(Card card) {
+	public void removeCard(Card card) {
 		this.cards.remove(card);
 	}
 }

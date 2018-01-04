@@ -139,5 +139,6 @@
 	<classpathentry kind="lib" path="lib/xml-resolver-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/xmlschema-core-2.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/xmlsec-2.0.6.jar"/>
+	<classpathentry kind="src" path="/PhaseTen-common"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

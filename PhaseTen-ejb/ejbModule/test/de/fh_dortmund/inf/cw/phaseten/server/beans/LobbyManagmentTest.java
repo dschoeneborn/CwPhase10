@@ -18,7 +18,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.TestType;
 @RunWith(ApplicationComposer.class)
 public class LobbyManagmentTest {
 	@EJB
-	LobbyManagment lobbyManagment;
+	LobbyManagementBean lobbyManagment;
 
 	@Module
 	public PersistenceUnit persistence() {
@@ -32,7 +32,7 @@ public class LobbyManagmentTest {
 
 	@Module
 	public StatelessBean app() throws Exception {
-		final StatelessBean bean = new StatelessBean(LobbyManagment.class);
+		final StatelessBean bean = new StatelessBean(LobbyManagementBean.class);
 		bean.setLocalBean(new Empty());
 		return bean;
 	}

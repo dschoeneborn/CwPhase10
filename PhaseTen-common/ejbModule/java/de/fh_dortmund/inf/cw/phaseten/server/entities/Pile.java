@@ -5,7 +5,6 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,13 +14,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
  */
 @MappedSuperclass
 public abstract class Pile implements Serializable {
@@ -36,4 +35,28 @@ public abstract class Pile implements Serializable {
 	@JoinColumn(name="PERSON_ID")
 	protected List<Card> cards;
 
+	public Pile()
+	{
+		cards = new ArrayList<Card>();
+	}
+	
+	/**
+	 * @author Björn Merschmeier
+	 * @param card
+	 */
+	public abstract boolean addCard(Card card);
+	
+	/**
+	 * @author Björn Merschmeier
+	 * @return
+	 */
+	public int getSize()
+	{
+		return cards.size();
+	}
+	
+	public List<Card> getCards()
+	{
+		return cards;
+	}
 }

@@ -6,12 +6,8 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
 
 /**
  * @author Dennis Schöneborn
@@ -31,6 +27,4 @@ public abstract class DockPile extends Pile {
 	public List<Card> getCards() {
 		return this.cards;
 	}
-
-	public abstract boolean dock(Card card);
 }

@@ -15,159 +15,212 @@ import javax.naming.NamingException;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InvalidCardCompilationException;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote;
 
 /**
  * @author Marc Mettke
+ * @author Tim Prange
  */
 public class ServiceHandlerImpl implements ServiceHandler {
 	private static ServiceHandlerImpl instance;
-	
+
 	private Context context;
 	private StubRemote stubRemote;
-	private PlayerManagmentRemote playerManagmentRemote;
-	private LobbyManagmentRemote lobbyManagmentRemote;
-	private GameManagmentRemote gameManagmentRemote;
-	
+	private UserManagementRemote playerManagmentRemote;
+	private LobbyManagementRemote lobbyManagmentRemote;
+	private GameManagementRemote gameManagmentRemote;
+	private UserSessionRemote userSessionRemote;
+
 	private JMSContext jmsContext;
 	private Topic playerMessageTopic;
 	private Topic lobbyMessageTopic;
 	private Topic gameMessageTopic;
-	JMSConsumer playerConsumer;
-	JMSConsumer lobbyConsumer;
-	JMSConsumer gameConsumer;
-	
+	private JMSConsumer playerConsumer;
+	private JMSConsumer lobbyConsumer;
+	private JMSConsumer gameConsumer;
+
 	private ServiceHandlerImpl() {
 		try {
 			context = new InitialContext();
 			stubRemote = (StubRemote) context.lookup(
-				"java:global/PhaseTen-ear/PhaseTen-ejb/ServerStub!de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote"
-			);
-			playerManagmentRemote = (PlayerManagmentRemote) context.lookup(
-				"java:global/PhaseTen-ear/PhaseTen-ejb/PlayerManagment!de.fh_dortmund.inf.cw.phaseten.server.shared.PlayerManagmentRemote"
-			);
-			lobbyManagmentRemote = (LobbyManagmentRemote) context.lookup(
-				"java:global/PhaseTen-ear/PhaseTen-ejb/LobbyManagment!de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagmentRemote"
-			);
-			gameManagmentRemote = (GameManagmentRemote) context.lookup(
-				"java:global/PhaseTen-ear/PhaseTen-ejb/GameManagment!de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagmentRemote"
-			);
-				
-			ConnectionFactory connectionFactory = (ConnectionFactory) context.lookup("java:comp/DefaultJMSConnectionFactory");
-			jmsContext = connectionFactory.createContext();	
+					"java:global/PhaseTen-ear/PhaseTen-ejb/ServerStub!de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote");
+			playerManagmentRemote = (UserManagementRemote) context.lookup(
+					"java:global/PhaseTen-ear/PhaseTen-ejb/UserManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote");
+			lobbyManagmentRemote = (LobbyManagementRemote) context.lookup(
+					"java:global/PhaseTen-ear/PhaseTen-ejb/LobbyManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote");
+			gameManagmentRemote = (GameManagementRemote) context.lookup(
+					"java:global/PhaseTen-ear/PhaseTen-ejb/GameManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote");
+			userSessionRemote = (UserSessionRemote) context.lookup(
+					"java:global/PhaseTen-ear/PhaseTen-ejb/UserSessionBean!de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote");
+					
+			
+			ConnectionFactory connectionFactory = (ConnectionFactory) context
+					.lookup("java:comp/DefaultJMSConnectionFactory");
+			jmsContext = connectionFactory.createContext();
 
 			playerMessageTopic = (Topic) context.lookup("java:global/jms/CurrentPlayer");
 			lobbyMessageTopic = (Topic) context.lookup("java:global/jms/Lobby");
-			gameMessageTopic = (Topic) context.lookup("java:global/jms/Game");	
-			
+			gameMessageTopic = (Topic) context.lookup("java:global/jms/Game");
+
 			this.playerConsumer = jmsContext.createConsumer(playerMessageTopic);
-			this.playerConsumer.setMessageListener(this);			
+			this.playerConsumer.setMessageListener(this);
 			this.lobbyConsumer = jmsContext.createConsumer(lobbyMessageTopic);
-			this.lobbyConsumer.setMessageListener(this);			
+			this.lobbyConsumer.setMessageListener(this);
 			this.gameConsumer = jmsContext.createConsumer(gameMessageTopic);
 			this.gameConsumer.setMessageListener(this);
-		} catch (NamingException ex) {
+		}
+		catch (NamingException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
-	
+
 	public static ServiceHandlerImpl getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new ServiceHandlerImpl();
 		}
 		return instance;
 	}
 
+	@Override
 	public String helloWorld() {
 		return stubRemote.helloWorld();
 	}
 
-	public void requestPlayerMessage() {
-		this.playerManagmentRemote.requestPlayerMessage();
+	@Override
+	public void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException {		
+		this.playerManagmentRemote.requestPlayerMessage(getOrCreateCurrentPlayer());
 	}
 
+	@Override
 	public void requestLobbyMessage() {
-		this.lobbyManagmentRemote.requestLobbyMessage();		
+		this.lobbyManagmentRemote.requestLobbyMessage();
 	}
 
-	public void requestGameMessage() {
-		this.gameManagmentRemote.requestGameMessage();	
+	@Override
+	public void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException {
+		this.gameManagmentRemote.requestGameMessage(getOrCreateCurrentPlayer());
 	}
 
+	@Override
 	public void register(String username, String password) throws UsernameAlreadyTakenException {
 		this.playerManagmentRemote.register(username, password);
 	}
 
+	@Override
 	public void login(String username, String password) throws UserDoesNotExistException {
 		this.playerManagmentRemote.login(username, password);
 	}
 
-	public void enterAsPlayer() throws NoFreeSlotException {
-		this.lobbyManagmentRemote.enterAsPlayer();
+	@Override
+	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException
+	{
+		this.lobbyManagmentRemote.enterLobby(getOrCreateCurrentPlayer());
+	}
+	
+	@Override
+	public void enterLobbyAsSpectator() throws NotLoggedInException
+	{
+		this.lobbyManagmentRemote.enterLobby(getOrCreateCurrentSpectator());
 	}
 
-	public void enterAsSpectator() {
-		this.lobbyManagmentRemote.enterAsSpectator();
+	@Override
+	public void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException
+	{
+		this.lobbyManagmentRemote.startGame(getOrCreateCurrentPlayer());
 	}
 
-	public void startGame() throws NotEnoughPlayerException {
-		this.lobbyManagmentRemote.startGame();
-	}
-
-	public void takeCardFromDrawPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException {
-		this.gameManagmentRemote.takeCardFromDrawPile();
-	}
-
-	public void takeCardFromDiscardPile() throws NotYourTurnException, CardAlreadyTakenInThisTurnException {
-		this.gameManagmentRemote.takeCardFromDrawPile();
-	}
-
-	public void addToOpenPile(Card card, DockPile dockPile)
-			throws NotYourTurnException, CardCannotBeAddedException, PhaseNotCompletedException {
-		this.gameManagmentRemote.addToOpenPile(card, dockPile);
-	}
-
-	public void goOut(Collection<Card> cards) throws NotYourTurnException, InvalidCardCompilationException {
-		this.gameManagmentRemote.goOut(cards);
-	}
-
-	public void discardCardToDiscardPile(Card card) throws NotYourTurnException, TakeCardBeforeDiscardingException {
-		this.gameManagmentRemote.discardCardToDiscardPile(card);
-	}
-
+	@Override
 	public void onMessage(Message message) {
 		try {
-			if(message.getJMSDestination().equals(playerMessageTopic) && message instanceof ObjectMessage) {
+			if (message.getJMSDestination().equals(playerMessageTopic) && message instanceof ObjectMessage) {
 				@SuppressWarnings("unused")
 				CurrentPlayer currentPlayer = (CurrentPlayer) ((ObjectMessage) message).getObject();
 				System.out.println("Received CurrentPlayer Object: " + currentPlayer);
-			} else if(message.getJMSDestination().equals(lobbyMessageTopic) && message instanceof ObjectMessage) {
+			}
+			else if (message.getJMSDestination().equals(lobbyMessageTopic) && message instanceof ObjectMessage) {
 				@SuppressWarnings("unused")
 				Lobby lobby = (Lobby) ((ObjectMessage) message).getObject();
 				System.out.println("Received Lobby Object: " + lobby);
-			} else if(message.getJMSDestination().equals(gameMessageTopic) && message instanceof ObjectMessage) {
+			}
+			else if (message.getJMSDestination().equals(gameMessageTopic) && message instanceof ObjectMessage) {
 				@SuppressWarnings("unused")
 				Game game = (Game) ((ObjectMessage) message).getObject();
 				System.out.println("Received Game Object: " + game);
 			}
-		} catch (JMSException e) {
+		}
+		catch (JMSException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.takeCardFromPullstack(getOrCreateCurrentPlayer());
+	}
+
+	@Override
+	public void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.takeCardFromLiFoStack(getOrCreateCurrentPlayer());
+	}
+
+	@Override
+	public void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.addToPileOnTable(getOrCreateCurrentPlayer(), card, dockPile);
+	}
+
+	@Override
+	public void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.layPhaseToTable(getOrCreateCurrentPlayer(), cards);
+	}
+
+	@Override
+	public void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException {
+		gameManagmentRemote.layCardToLiFoStack(getOrCreateCurrentPlayer(), card);
+	}
+
+	@Override
+	public void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException, PlayerDoesNotExistsException {
+		gameManagmentRemote.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, card);
+	}
+	
+	public JMSConsumer getPlayerConsumer()
+	{
+		return playerConsumer;
+	}
+	
+	public JMSConsumer getLobbyConsumer()
+	{
+		return lobbyConsumer;
+	}
+	
+	public JMSConsumer getGameConsumer()
+	{
+		return gameConsumer;
+	}
+	
+	private Spectator getOrCreateCurrentSpectator() throws NotLoggedInException
+	{
+		return userSessionRemote.getOrCreateSpectator();
+	}
+
+	private Player getOrCreateCurrentPlayer() throws NotLoggedInException
+	{
+		return userSessionRemote.getOrCreatePlayer();
 	}
 }

@@ -13,6 +13,7 @@ import javax.persistence.Entity;
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
  */
 @Entity
 public class LiFoStack extends Stack {
@@ -30,8 +31,16 @@ public class LiFoStack extends Stack {
 		}
 		this.cards.set(0, card);
 	}
+	
+	public Card showCard()
+	{
+		return new LinkedList<Card>(this.cards).getFirst();
+	}
 
-	public Card showCard() {
-		return this.cards.get(0);
+	@Override
+	public boolean addCard(Card card) {
+		this.cards.add(card);
+		
+		return true;
 	}
 }
