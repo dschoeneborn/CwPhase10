@@ -4,8 +4,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 
 /**
  * @author Robin Harbecke
@@ -23,9 +23,13 @@ public class DrawCardPilePane extends CardPilePane {
 			public void mouseClicked(MouseEvent e) { 
 				super.mouseClicked(e);
 				try {
-					DrawCardPilePane.this.serviceHandler.takeCardFromDrawPile();
-				} catch (NotYourTurnException e1) { 					
-				} catch (CardAlreadyTakenInThisTurnException e1) {
+					DrawCardPilePane.this.serviceHandler.takeCardFromPullstack();
+				} catch (MoveNotValidException e1) {
+					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+					e1.printStackTrace();
+				} catch (NotLoggedInException e1) {
+					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+					e1.printStackTrace();
 				}
 			}
 		});		

@@ -3,6 +3,8 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,7 +20,7 @@ import javax.persistence.OneToOne;
 /**
  * @author Dennis Schöneborn
  * @author Daniela Kaiser
- *
+ * @author Björn Merschmeier
  */
 
 @Entity
@@ -26,7 +28,12 @@ import javax.persistence.OneToOne;
 		@NamedQuery(name="User.findAll", query="select u from User u"),
 		@NamedQuery(name="User.findByName", query="select u from User u where u.loginName = :name")
 })
-public class User {
+public class User implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -106,6 +113,10 @@ public class User {
 	{
 		return player;
 	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 	
 	/**
 	 * @return Spectator
@@ -114,5 +125,13 @@ public class User {
 	{
 		return spectator;
 	}
-	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setSpectator(Spectator spectator)
+	{
+		this.spectator = spectator;
+	}	
 }

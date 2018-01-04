@@ -27,6 +27,4 @@ public abstract class DockPile extends Pile {
 	public List<Card> getCards() {
 		return this.cards;
 	}
-
-	public abstract boolean dock(Card card);
 }

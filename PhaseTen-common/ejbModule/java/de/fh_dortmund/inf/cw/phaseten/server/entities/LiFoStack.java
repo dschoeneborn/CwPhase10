@@ -4,6 +4,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.persistence.Entity;
 
@@ -12,6 +13,7 @@ import javax.persistence.Entity;
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
  */
 @Entity
 public class LiFoStack extends Stack {
@@ -24,8 +26,16 @@ public class LiFoStack extends Stack {
 	public void pushCard(Card card) {
 		this.cards.add(0, card);
 	}
+	
+	public Card showCard()
+	{
+		return new LinkedList<Card>(this.cards).getFirst();
+	}
 
-	public Card showCard() {
-		return this.cards.get(0);
+	@Override
+	public boolean addCard(Card card) {
+		this.cards.add(card);
+		
+		return true;
 	}
 }

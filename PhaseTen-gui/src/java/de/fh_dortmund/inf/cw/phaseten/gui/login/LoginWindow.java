@@ -15,7 +15,6 @@ import javax.swing.SpringLayout;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PasswordIncorrectException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
@@ -59,9 +58,7 @@ public class LoginWindow extends GuiFrame {
 						try {
 							serviceHandler.login(username, password);
 						} catch (UserDoesNotExistException ignored) {
-							statusLabel.setText("Username is not registered");
-						} catch (PasswordIncorrectException ignored) {
-							statusLabel.setText("Password is invalid for the given username");
+							statusLabel.setText("Username with Password is not registered");
 						}
 					}
 				}

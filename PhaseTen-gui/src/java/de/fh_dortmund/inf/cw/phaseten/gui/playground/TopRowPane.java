@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardAlreadyTakenInThisTurnException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 
 /**
@@ -47,18 +47,26 @@ public class TopRowPane extends JPanel{
 		this.drawPile.addMouseListener(new MouseAdapter() {			
 			public void mouseClicked(MouseEvent e) {
 				try {
-					TopRowPane.this.serviceHandler.takeCardFromDrawPile();
-				} catch (NotYourTurnException e1) {
-				} catch (CardAlreadyTakenInThisTurnException e1) {
+					TopRowPane.this.serviceHandler.takeCardFromPullstack();
+				} catch (MoveNotValidException e1) {
+					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+					e1.printStackTrace();
+				} catch (NotLoggedInException e1) {
+					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+					e1.printStackTrace();
 				}
 			} 
 		});
 		this.discardPile.addMouseListener(new MouseAdapter() {			
 			public void mouseClicked(MouseEvent e) {
 				try {
-					TopRowPane.this.serviceHandler.takeCardFromDiscardPile();
-				} catch (NotYourTurnException e1) {
-				} catch (CardAlreadyTakenInThisTurnException e1) {
+					TopRowPane.this.serviceHandler.takeCardFromLiFoStack();
+				} catch (MoveNotValidException e1) {
+					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+					e1.printStackTrace();
+				} catch (NotLoggedInException e1) {
+					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+					e1.printStackTrace();
 				}
 			} 
 		});

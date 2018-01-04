@@ -5,7 +5,6 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,11 +31,13 @@ public class PlayerPile extends Pile {
 		return this.cards;
 	}
 
-	public void addCard(Card card) {
+	public boolean addCard(Card card) {
 		this.cards.add(0, card);
+		
+		return true;
 	}
 
-	public void deleteCard(Card card) {
+	public void removeCard(Card card) {
 		this.cards.remove(card);
 	}
 }

@@ -4,7 +4,6 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.util.ArrayList;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -15,6 +14,7 @@ import javax.persistence.Enumerated;
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
  */
 public class SetDockPile extends DockPile {
 	private static final long serialVersionUID = -5890944285337742574L;
@@ -47,7 +47,7 @@ public class SetDockPile extends DockPile {
 	 * inf.cw.phaseten.server.entities.Card)
 	 */
 	@Override
-	public boolean dock(Card card) {
+	public boolean addCard(Card card) {
 		if (card.getCardValue().equals(this.cardValue)) {
 			this.cards.add(card);
 			return true;
@@ -56,4 +56,8 @@ public class SetDockPile extends DockPile {
 		return false;
 	}
 
+	public CardValue getCardValue()
+	{
+		return cardValue;
+	}
 }

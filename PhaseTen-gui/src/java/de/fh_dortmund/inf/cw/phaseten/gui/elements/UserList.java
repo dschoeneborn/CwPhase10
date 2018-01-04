@@ -40,7 +40,7 @@ public class UserList extends JPanel{
 	}
 		
 	
-	public void updateData(Collection<Player> players,Collection<Spectator> spectators) {
+	public void updateData(Collection<Player> players, Collection<Spectator> spectators) {
 		this.listModel.removeAllElements();
 		for (Player player : players) {
 			this.listModel.addElement(new PlayerListEntryGUI(player));

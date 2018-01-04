@@ -3,6 +3,8 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,10 +17,15 @@ import javax.persistence.ManyToOne;
  * @author Dennis Schöneborn
  * @author Sebastian Seitz
  * @author Daniela Kaiser
- *
+ *	@author Björn Merschmeier
  */
 @Entity
-public class Spectator {
+public class Spectator implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3498449127463809540L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -27,14 +34,21 @@ public class Spectator {
 	@JoinColumn(name="GAME_ID")
 	private Game game;
 	
+	private String name;
+	
 	private Spectator()
 	{
 		
 	}
 	
-	public Spectator(Game game)
+	public Spectator(String name)
 	{
-		this();
+		this.name = name;
+	}
+	
+	public Spectator(String name, Game game)
+	{
+		this(name);
 		this.game = game;
 	}
 
@@ -50,5 +64,14 @@ public class Spectator {
 	 */
 	public void setGame(Game game) {
 		this.game = game;
+	}
+
+	public long getId() {
+		return id;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 }

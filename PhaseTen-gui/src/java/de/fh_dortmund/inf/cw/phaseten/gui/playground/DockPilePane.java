@@ -17,6 +17,8 @@ import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
 
@@ -59,9 +61,15 @@ public class DockPilePane extends JPanel {
 			Transferable transfarable = dtde.getTransferable();
 			try {
 				Card card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
-				DockPilePane.this.serviceHandler.addToOpenPile(card, DockPilePane.this.dockPile);
+				DockPilePane.this.serviceHandler.addToPileOnTable(card, DockPilePane.this.dockPile);
 			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | CardCannotBeAddedException
 					| PhaseNotCompletedException e) {
+				e.printStackTrace();
+			} catch (MoveNotValidException e) {
+				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+				e.printStackTrace();
+			} catch (NotLoggedInException e) {
+				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
 				e.printStackTrace();
 			}
 			return;

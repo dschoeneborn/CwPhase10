@@ -10,24 +10,25 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 /**
  * @author Marc Mettke
  * @author Robin Harbecke
+ * @author Björn Merschmeier
  */
 public class Game implements Serializable {
 	private static final long serialVersionUID = -8803043695255479666L;
 
 	private Collection<Player> players;
-	private Collection<Spectator> spectator;
+	private Collection<Spectator> spectators;
 	private PullStack pullStack;
 	private LiFoStack liFoStack;
 	private Collection<DockPile> openPiles;
 	
 	public Game(Collection<Player> players, 
-			    Collection<Spectator> spectator, 
+			    Collection<Spectator> spectators, 
 			    PullStack pullStack, 
 			    LiFoStack liFoStack, 
 			    Collection<DockPile> openPiles) {
 		super();
 		this.players = players;
-		this.spectator = spectator;
+		this.spectators = spectators;
 		this.pullStack = pullStack;
 		this.liFoStack = liFoStack;
 		this.openPiles = openPiles;
@@ -38,7 +39,7 @@ public class Game implements Serializable {
 	}
 	
 	public Collection<Spectator> getSpectators() {
-		return spectator;
+		return spectators;
 	}	
 	
 	public PullStack getPullStack() {
@@ -53,13 +54,10 @@ public class Game implements Serializable {
 		return openPiles;
 	}
 	
-	public static Game from(de.fh_dortmund.inf.cw.phaseten.server.entities.Game game,
-						    Collection<Spectator> spectator,
-						    int phase) {
-		// TODO: Get Spectators from Game
+	public static Game from(de.fh_dortmund.inf.cw.phaseten.server.entities.Game game) {
 		return new Game(
-			Player.from(game.getPlayers(), phase),  
-			spectator, 
+			Player.from(game.getPlayers()),  
+			Spectator.from(game.getSpectators()), 
 			game.getPullStack(),
 			game.getLiFoStack(),
 			game.getOpenPiles()

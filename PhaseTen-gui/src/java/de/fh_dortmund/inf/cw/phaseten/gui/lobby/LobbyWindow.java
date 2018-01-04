@@ -17,6 +17,8 @@ import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
@@ -57,7 +59,12 @@ public class LobbyWindow extends GuiFrame {
 		
 		spectatorButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				serviceHandler.enterAsSpectator();
+				try {
+					serviceHandler.enterLobbyAsSpectator();
+				} catch (NotLoggedInException e1) {
+					e1.printStackTrace();
+					//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+				}
 				spectatorButton.setEnabled(false);
 				startGameButton.setEnabled(false);
 			}
@@ -66,7 +73,7 @@ public class LobbyWindow extends GuiFrame {
 		startGameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					serviceHandler.enterAsPlayer();
+					serviceHandler.enterLobbyAsPlayer();
 					spectatorButton.setEnabled(false);
 					
 					startGameButton.setText("Starten");
@@ -75,13 +82,27 @@ public class LobbyWindow extends GuiFrame {
 							try {
 								serviceHandler.startGame();
 							} catch (NotEnoughPlayerException exception) {
+								//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
 								exception.printStackTrace();
+							} catch (PlayerDoesNotExistsException e1) {
+								//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+								e1.printStackTrace();
+							} catch (NotLoggedInException e2) {
+								//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+								e2.printStackTrace();
 							}
 						}
 			    	});
 				} catch (NoFreeSlotException exception) {
+					//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
 					exception.printStackTrace();
 					startGameButton.setEnabled(false);
+				} catch (PlayerDoesNotExistsException e1) {
+					//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+					e1.printStackTrace();
+				} catch (NotLoggedInException e2) {
+					//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+					e2.printStackTrace();
 				}
 			}
 		});
@@ -117,7 +138,7 @@ public class LobbyWindow extends GuiFrame {
 
 	@Override
 	public void gameDataUpdated(Game game) {
-
+		//TODO - BM - 04.01.2018 - was ist hier zu tun?
 	}
 
 	@Override
@@ -127,6 +148,6 @@ public class LobbyWindow extends GuiFrame {
 
 	@Override
 	public void lobbyDataUpdated(Lobby lobby) {
-		userList.updateData(lobby.getPlayers(), lobby.getSpectator());
+		userList.updateData(lobby.getPlayers(), lobby.getSpectators());
 	}
 }

@@ -3,6 +3,8 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,9 +22,15 @@ import javax.persistence.OneToOne;
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
+ * @author Björn Merschmeier
  */
 @Entity
-public class Player {
+public class Player implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,7 +38,7 @@ public class Player {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@Basic(optional = false)
-	@JoinColumn(nullable = false, unique=true)
+	@JoinColumn(nullable = false, unique = true)
 	private PlayerPile playerPile;
 
 	@Column(nullable = false, unique = true)
@@ -44,15 +52,31 @@ public class Player {
 	@JoinColumn
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Lobby lobby;
-	
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private Stage phase;
 
+	@Enumerated(EnumType.ORDINAL)
+	@Column(nullable = false)
+	@Basic(optional = false)
+	private RoundStage roundStage;
+
+	@Column(nullable = false)
+	@Basic(optional = false)
+	private boolean playerLaidStage;
+
+	@Column(nullable = false)
+	@Basic(optional = false)
+	private boolean playerHasSkipCard;
+
 	private Player() {
 		this.playerPile = new PlayerPile();
 		this.phase = Stage.TWO_TRIPLES;
+		playerLaidStage = false;
+		playerHasSkipCard = false;
+		roundStage = RoundStage.PULL;
 	}
 
 	/**
@@ -106,6 +130,16 @@ public class Player {
 	public PlayerPile getPlayerPile() {
 		return playerPile;
 	}
+	
+	public void addCardToPlayerPile(Card c)
+	{
+		playerPile.addCard(c);
+	}
+	
+	public void removeCardFromPlayerPile(Card c)
+	{
+		playerPile.removeCard(c);
+	}
 
 	/**
 	 * 
@@ -113,6 +147,52 @@ public class Player {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public RoundStage getRoundStage() {
+		return roundStage;
+	}
+
+	/***
+	 * @author Björn Merschmeier
+	 */
+	public void addRoundStage() {
+		this.roundStage = RoundStage.getRoundStageValue(this.roundStage.getValue() + 1);
+	}
+
+	public Stage getPhase() {
+		return phase;
+	}
+
+	/***
+	 * @author Björn Merschmeier
+	 */
+	public void addPhase() {
+		this.phase = Stage.getStage(this.phase.getValue() + 1);
+	}
+
+	public boolean playerLaidStage() {
+		return playerLaidStage;
+	}
+
+	public void setPlayerLaidStage(boolean playerLaidStage) {
+		this.playerLaidStage = playerLaidStage;
+	}
+
+	public boolean hasSkipCard() {
+		return playerHasSkipCard;
+	}
+
+	public void givePlayerSkipCard() {
+		this.playerHasSkipCard = true;
+	}
+
+	public void resetRoundStage() {
+		this.roundStage = RoundStage.PULL;
 	}
 
 }

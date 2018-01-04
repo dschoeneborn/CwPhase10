@@ -1,8 +1,10 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,28 +12,43 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
+ * @author Tim Prange
  */
+@NamedQueries({
+	@NamedQuery(name="selectByUserId", query="SELECT g FROM Game g "
+											+ "JOIN Player p "
+											+ "WHERE p.id = :playerId")
+})
 @Entity
-public class Game {
+public class Game implements Serializable {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public static final int MAX_PLAYER = 6;
 	public static final int MIN_PLAYER = 3;
+	public static final int NUMBERS_OF_CARDS = 108;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,7 +56,15 @@ public class Game {
 
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "game")
 	@Basic(optional = false)
-	private Set<Player> players;
+	private List<Player> players;
+
+	@Column
+	private int currentPlayer;
+
+	// TODO - BM - 20.12.2017 - Diese Variable soll verwendet werden oder es müssen
+	// getter und setter erstellt werden
+	@Column
+	private int lastRoundBeginner;
 
 	@Basic(optional = false)
 	@OneToOne
@@ -59,30 +84,24 @@ public class Game {
 	private Set<Spectator> spectators;
 
 	/**
-	 * 
+	 *
 	 */
 	private Game() {
-		this.players = new HashSet<>();
+		this.players = new ArrayList<>();
 		this.spectators = new HashSet<>();
 		this.pullStack = new PullStack();
 		this.liFoStack = new LiFoStack();
 		this.openPiles = new LinkedList<>();
 	}
 
-	public Game(Set<Player> players, Set<Spectator> spectators) throws NotEnoughPlayerException, NoFreeSlotException {
+	public Game(Set<Player> players, Set<Spectator> spectators) {
 		this();
-		if (players.size() < MIN_PLAYER)
-			throw new NotEnoughPlayerException();
-		if (players.size() > MAX_PLAYER)
-			throw new NoFreeSlotException();
 
-		for(Player player : players)
-		{
+		for (Player player : players) {
 			this.addPlayer(player);
 		}
-		
-		for(Spectator spectator : spectators)
-		{
+
+		for (Spectator spectator : spectators) {
 			this.addSpectator(spectator);
 		}
 	}
@@ -143,6 +162,12 @@ public class Game {
 		this.addPlayer(p6);
 	}
 
+	public Game(ArrayList<?> arrayList, ArrayList<?> arrayList2, PullStack pullStack2, LiFoStack liFoStack2,
+			ArrayList<?> arrayList3) {
+		// TODO Auto-generated constructor stub
+		throw new NotImplementedException();
+	}
+
 	private void addPlayer(Player p) {
 		this.players.add(p);
 		p.setGame(this);
@@ -167,7 +192,7 @@ public class Game {
 		this.openPiles.add(pile);
 	}
 
-	public Set<Player> getPlayers() {
+	public List<Player> getPlayers() {
 		return players;
 	}
 
@@ -181,6 +206,30 @@ public class Game {
 
 	public LiFoStack getLiFoStack() {
 		return liFoStack;
+	}
+
+	public Player getCurrentPlayer() {
+		if (currentPlayer == -1) {
+			return null;
+		}
+		return players.get(currentPlayer);
+	}
+
+	public void setCurrentPlayer(Player player) {
+		this.currentPlayer = players.indexOf(player);
+	}
+
+	public void nextCurrentPlayer() {
+		if (players.size() > currentPlayer + 1) {
+			currentPlayer++;
+		}
+		else {
+			currentPlayer = 0;
+		}
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	// TODO Fassadenmethoden für die eintelnen Stacks

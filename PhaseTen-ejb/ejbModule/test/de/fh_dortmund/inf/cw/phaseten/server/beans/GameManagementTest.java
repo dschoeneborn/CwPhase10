@@ -16,9 +16,9 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.TestType;
  * @author Marc Mettke
  */
 @RunWith(ApplicationComposer.class)
-public class GameManagmentTest {
+public class GameManagementTest {
 	@EJB
-	GameManagment gameManagment;
+	GameManagementBean gameManagment;
 
 	@Module
 	public PersistenceUnit persistence() {
@@ -32,7 +32,7 @@ public class GameManagmentTest {
 
 	@Module
 	public StatelessBean app() throws Exception {
-		final StatelessBean bean = new StatelessBean(GameManagment.class);
+		final StatelessBean bean = new StatelessBean(GameManagementBean.class);
 		bean.setLocalBean(new Empty());
 		return bean;
 	}
