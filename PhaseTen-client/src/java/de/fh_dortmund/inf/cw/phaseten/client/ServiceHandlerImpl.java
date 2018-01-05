@@ -18,6 +18,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
@@ -105,7 +106,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException {
+	public void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException {
 		this.gameManagementRemote.requestGameMessage(getOrCreateCurrentPlayer());
 	}
 

@@ -22,6 +22,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -39,16 +40,12 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 											+ "WHERE p.id = :playerId")
 })
 @Entity
-public class Game implements Serializable {
-
-	/**
-	 *
-	 */
+public class Game implements Serializable
+{
 	private static final long serialVersionUID = 1L;
 
 	public static final int MAX_PLAYER = 6;
 	public static final int MIN_PLAYER = 3;
-	public static final int NUMBERS_OF_CARDS = 108;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,7 +61,7 @@ public class Game implements Serializable {
 	// TODO - BM - 20.12.2017 - Diese Variable soll verwendet werden oder es müssen
 	// getter und setter erstellt werden
 	@Column
-	private int lastRoundBeginner;
+	private int lastRoundBeginner = -1;
 
 	@Basic(optional = false)
 	@OneToOne
@@ -82,6 +79,9 @@ public class Game implements Serializable {
 
 	@OneToMany(mappedBy = "game")
 	private Set<Spectator> spectators;
+	
+	@Transient
+	private boolean gameInitialized = false;
 
 	/**
 	 *
@@ -89,8 +89,6 @@ public class Game implements Serializable {
 	private Game() {
 		this.players = new ArrayList<>();
 		this.spectators = new HashSet<>();
-		this.pullStack = new PullStack();
-		this.liFoStack = new LiFoStack();
 		this.openPiles = new LinkedList<>();
 	}
 
@@ -168,11 +166,6 @@ public class Game implements Serializable {
 		throw new NotImplementedException();
 	}
 
-	private void addPlayer(Player p) {
-		this.players.add(p);
-		p.setGame(this);
-	}
-
 	public void addSpectator(Spectator s) {
 		this.spectators.add(s);
 		s.setGame(this);
@@ -215,23 +208,59 @@ public class Game implements Serializable {
 		return players.get(currentPlayer);
 	}
 
-	public void setCurrentPlayer(Player player) {
-		this.currentPlayer = players.indexOf(player);
+	public void setCurrentPlayer(Player player)
+	{
+		currentPlayer = players.indexOf(player);
 	}
-
-	public void nextCurrentPlayer() {
-		if (players.size() > currentPlayer + 1) {
-			currentPlayer++;
-		}
-		else {
-			currentPlayer = 0;
-		}
+	
+	public Player getNextPlayer()
+	{
+		return players.get((currentPlayer + 1) % players.size());
 	}
 
 	public long getId() {
 		return id;
 	}
 
-	// TODO Fassadenmethoden für die eintelnen Stacks
+	public void setPullstack(PullStack pullStack)
+	{
+		this.pullStack = pullStack;
+	}
 
+	public void setLiFoStack(LiFoStack lifoStack)
+	{
+		this.liFoStack = lifoStack;
+	}
+	
+	public void setLastRoundBeginner(Player roundBeginner)
+	{
+		lastRoundBeginner = players.indexOf(roundBeginner);
+	}
+	
+	public Player getLastRoundBeginner()
+	{
+		Player result = null;
+		
+		if(lastRoundBeginner != -1)
+		{
+			result = players.get(lastRoundBeginner);
+		}
+		
+		return result;
+	}
+	
+	public boolean isInitialized()
+	{
+		return gameInitialized;
+	}
+	
+	public void setInitialized()
+	{
+		gameInitialized = true;
+	}
+
+	private void addPlayer(Player p) {
+		this.players.add(p);
+		p.setGame(this);
+	}
 }

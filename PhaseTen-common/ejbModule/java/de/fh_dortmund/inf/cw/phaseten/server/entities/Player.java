@@ -70,6 +70,10 @@ public class Player implements Serializable {
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private boolean playerHasSkipCard;
+	
+	@Column(nullable = false)
+	@Basic(optional = false)
+	private int negativePoints;
 
 	private Player() {
 		this.playerPile = new PlayerPile();
@@ -193,6 +197,21 @@ public class Player implements Serializable {
 
 	public void resetRoundStage() {
 		this.roundStage = RoundStage.PULL;
+	}
+
+	public boolean hasNoCards()
+	{
+		return this.playerPile.getSize() == 0;
+	}
+	
+	public int getNegativePoints()
+	{
+		return negativePoints;
+	}
+
+	public void addNegativePoints(int i)
+	{
+		negativePoints += i;
 	}
 
 }

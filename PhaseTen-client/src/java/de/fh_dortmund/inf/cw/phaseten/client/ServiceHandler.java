@@ -7,6 +7,7 @@ import javax.jms.MessageListener;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
@@ -31,7 +32,7 @@ public interface ServiceHandler extends MessageListener {
 
 	void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException;
 
-	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException;
+	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException;
 	
 	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException;
 

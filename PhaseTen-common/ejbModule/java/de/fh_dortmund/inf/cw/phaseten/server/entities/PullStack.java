@@ -3,6 +3,7 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.Entity;
@@ -11,20 +12,51 @@ import javax.persistence.Entity;
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
+ * @author Tim Prange
  */
 @Entity
-public class PullStack extends Stack {
+public class PullStack extends Stack
+{
 	private static final long serialVersionUID = 2117218073864785792L;
 
-	public PullStack() {
-		for (Color color : Color.values()) {
-			for (CardValue value : CardValue.values()) {
-				addCard(new Card(color, value));
-				if (!value.equals(CardValue.SKIP)) {
+	public PullStack()
+	{
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	public void initializeCards()
+	{
+		for (Color color : Color.values())
+		{
+			for (CardValue value : CardValue.values())
+			{
+				if (!value.equals(CardValue.SKIP) && !value.equals(CardValue.WILD))
+				{
+					addCard(new Card(color, value));
 					addCard(new Card(color, value));
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @author Björn Merschmeier
+	 */
+	public void shuffle()
+	{
+	    Random random = ThreadLocalRandom.current();
+	    
+	    for (int i = cards.size() - 1; i > 0; i--)
+	    {
+			int index = random.nextInt(i + 1);
+			
+			Card a = cards.get(index);
+			cards.set(index, cards.get(i));
+			cards.set(i, a);
+	    }
 	}
 
 	/*
@@ -39,11 +71,9 @@ public class PullStack extends Stack {
 	 * @author Tim Prange
 	 */
 	@Override
-	public boolean addCard(Card card) {
-
-		// TODO: so machen oder lieber anders?
-		int index = ThreadLocalRandom.current().nextInt(0, cards.size() + 1);
-		this.cards.add(index, card);
+	public boolean addCard(Card card)
+	{
+		this.cards.add(card);
 		return false;
 	}
 }

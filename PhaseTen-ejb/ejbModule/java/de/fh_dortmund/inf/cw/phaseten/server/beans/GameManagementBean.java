@@ -1,6 +1,8 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -15,16 +17,19 @@ import javax.persistence.Query;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Marc Mettke
@@ -48,8 +53,25 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	GameValidationLocal gameValidation;
 
 	@Override
-	public void requestGameMessage(Player p) {
-		sendGameMessage(p);
+	public void requestGameMessage(Player p) throws GameNotInitializedException
+	{
+		if(!getActualPlayedGame(p).isInitialized())
+		{
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(getActualPlayedGame(p).isInitialized())
+		{
+			sendGameMessage(p);
+		}
+		else
+		{
+			throw new GameNotInitializedException();
+		}
 	}
 
 	@Override
@@ -71,16 +93,17 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void takeCardFromPullstack(Player player) throws MoveNotValidException {
-		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
-		// nicht als Parameter übergeben lassen?
+	public void takeCardFromPullstack(Player player) throws MoveNotValidException
+	{
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidDrawCardFromPullStack(game, player)) {
+		if (gameValidation.isValidDrawCardFromPullStack(game, player))
+		{
 			Card drawnCard = game.getPullStack().pullTopCard();
 			player.addCardToPlayerPile(drawnCard);
 			player.addRoundStage();
 		}
-		else {
+		else
+		{
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
@@ -90,16 +113,17 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException {
-		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
-		// nicht als Parameter übergeben lassen?
+	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException
+	{
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidDrawCardFromLiFoStack(game, player)) {
+		if (gameValidation.isValidDrawCardFromLiFoStack(game, player))
+		{
 			Card drawnCard = game.getLiFoStack().pullTopCard();
 			player.addCardToPlayerPile(drawnCard);
 			player.addRoundStage();
 		}
-		else {
+		else
+		{
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
@@ -109,15 +133,16 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException {
-		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
-		// nicht als Parameter übergeben lassen?
+	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException
+	{
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidToAddCard(game, player, dockPile, card)) {
+		if (gameValidation.isValidToAddCard(game, player, dockPile, card))
+		{
 			dockPile.addCard(card);
 			player.removeCardFromPlayerPile(card);
 		}
-		else {
+		else
+		{
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
@@ -127,22 +152,25 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException {
-		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
-		// nicht als Parameter übergeben lassen?
+	public void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException
+	{
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidLayStageToTable(game, player, piles)) {
-			for (DockPile pile : piles) {
+		if (gameValidation.isValidLayStageToTable(game, player, piles))
+		{
+			for (DockPile pile : piles)
+			{
 				game.addOpenPile(pile);
 
-				for (Card card : pile.getCards()) {
+				for (Card card : pile.getCards())
+				{
 					player.removeCardFromPlayerPile(card);
 				}
 			}
 
 			player.setPlayerLaidStage(true);
 		}
-		else {
+		else
+		{
 			throw new MoveNotValidException();
 		}
 
@@ -153,16 +181,17 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException {
-		// TODO - BM - 31.12.2017 - Player vielleicht aus einer Playerbean auslesen und
-		// nicht als Parameter übergeben lassen?
+	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException
+	{
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
+		if (gameValidation.isValidPushCardToLiFoStack(game, player, card))
+		{
 			game.getLiFoStack().addCard(card);
 			player.resetRoundStage();
-			game.nextCurrentPlayer();
+			setNextPlayer(game);
 		}
-		else {
+		else
+		{
 			throw new MoveNotValidException();
 		}
 
@@ -175,13 +204,15 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 */
 	@Override
 	public void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card)
-			throws MoveNotValidException, PlayerDoesNotExistsException {
+			throws MoveNotValidException, PlayerDoesNotExistsException
+	{
 		laySkipCardForPlayerById(currentPlayer, destinationPlayer.getId(), card);
 	}
 
 	@Override
 	public void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, Card card)
-			throws MoveNotValidException, PlayerDoesNotExistsException {
+			throws MoveNotValidException, PlayerDoesNotExistsException
+	{
 		Game game = getActualPlayedGame(currentPlayer);
 		Player destinationPlayer = null;
 		
@@ -200,11 +231,12 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 		}
 		
 		if (card.getCardValue() == CardValue.SKIP
-				&& gameValidation.isValidLaySkipCard(currentPlayer, destinationPlayer, game)) {
+				&& gameValidation.isValidLaySkipCard(currentPlayer, destinationPlayer, game))
+		{
 			currentPlayer.removeCardFromPlayerPile(card);
 			destinationPlayer.givePlayerSkipCard();
 			currentPlayer.resetRoundStage();
-			game.nextCurrentPlayer();
+			setNextPlayer(game);
 		}
 		else {
 			throw new MoveNotValidException();
@@ -212,7 +244,7 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 		updateClient(currentPlayer);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagment#initGame(de.
@@ -223,13 +255,154 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void startGame(Game game) {
+	public void startGame(Game game)
+	{
 		entityManager.persist(game);
-		entityManager.flush();
+		
+		initNextRound(game);
+		game.setInitialized();
 		sendGameMessage(game);
 		
-		//TODO - BM - 04.01.2018 - Das Spiel muss noch initialisiert werden (z.B. Kartenstapel)
-		throw new NotImplementedException();
+		entityManager.flush();
+	}
+	
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 */
+	private void initNextRound(Game game)
+	{
+		initializePullstack(game);
+		initializeLiFoStack(game);
+		initializeFirstPlayer(game);
+		giveCardsToPlayers(game);
+		
+		if(game.getLiFoStack().showCard().getCardValue() == CardValue.SKIP)
+		{
+			setNextPlayer(game);
+		}
+		
+	}
+	
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 */
+	private void giveCardsToPlayers(Game game)
+	{
+		List<Player> players = game.getPlayers();
+		
+		for(int i = 0; i < 10; i++)
+		{
+			for(Player player : players)
+			{
+				player.addCardToPlayerPile(game.getPullStack().pullTopCard());
+			}
+		}
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 */
+	private void initializeFirstPlayer(Game game)
+	{
+		List<Player> players = game.getPlayers();
+		
+		Random r = new Random();
+		int randomPlayer = r.nextInt(players.size());
+		
+		game.setCurrentPlayer(players.get(randomPlayer));
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 */
+	private void initializeLiFoStack(Game game)
+	{
+		Card topCard = game.getPullStack().pullTopCard();
+		
+		LiFoStack lifoStack = new LiFoStack();
+		lifoStack.addCard(topCard);
+		
+		game.setLiFoStack(lifoStack);
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 */
+	private void initializePullstack(Game game)
+	{
+		PullStack pullStack = new PullStack();
+		pullStack.initializeCards();
+		pullStack.shuffle();
+		
+		game.setPullstack(pullStack);
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 * @throws MoveNotValidException 
+	 */
+	private void setNextPlayer(Game game)
+	{
+		Player nextPlayer = game.getNextPlayer();
+		game.setCurrentPlayer(nextPlayer);
+		
+		if(nextPlayer.hasSkipCard())
+		{
+			try
+			{
+				layCardToLiFoStack(nextPlayer, new Card(Color.NONE, CardValue.SKIP));
+			}
+			catch(MoveNotValidException e)
+			{
+				throw new RuntimeException("There happend something awkward in the gamelogic. You cannot continue your game, please restart or contact your administrator. #1");
+			}
+			setNextPlayer(game);
+		}
+		else if(nextPlayer.hasNoCards())
+		{
+			countPoints(game);
+			initNextRound(game);
+		}
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 */
+	private void countPoints(Game game)
+	{
+		List<Player> players = game.getPlayers();
+		
+		for(Player player : players)
+		{
+			List<Card> remainingCards = player.getPlayerPile().getCards();
+			
+			for(Card remainingCard : remainingCards)
+			{
+				if(remainingCard.getCardValue().getValue() >= 5)
+				{
+					player.addNegativePoints(5);
+				}
+				else if(remainingCard.getCardValue().getValue() >= 12)
+				{
+					player.addNegativePoints(10);
+				}
+				else if(remainingCard.getCardValue() == CardValue.SKIP)
+				{
+					player.addNegativePoints(15);
+				}
+				else if(remainingCard.getCardValue() == CardValue.WILD)
+				{
+					player.addNegativePoints(20);
+				}
+			}
+		}
 	}
 
 	private void updateClient(Player p) {
@@ -239,7 +412,6 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 		playerManagment.sendPlayerMessage(p);
 	}
 
-	@SuppressWarnings("unused")
 	private void sendGameMessage(de.fh_dortmund.inf.cw.phaseten.server.messages.Game game) {
 		Message message = jmsContext.createObjectMessage(game);
 		jmsContext.createProducer().send(gameMessageTopic, message);
