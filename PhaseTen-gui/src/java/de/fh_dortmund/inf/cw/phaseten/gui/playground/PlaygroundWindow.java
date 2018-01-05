@@ -9,9 +9,8 @@ import de.fh_dortmund.inf.cw.phaseten.gui.GuiManager;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiObserver;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
  * @author Robin Harbecke
@@ -40,24 +39,30 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-	}	
-
-	@Override
-	public void gameDataUpdated(Game game) {
-		this.topRowPane.gameDataUpdated(game);
-		this.publicCardStackPane.gameDataUpdated(game);
-		this.pack();
+		this.updated(null);
 	}
 
 	@Override
-	public void currentPlayerDataUpdated(CurrentPlayer currentPlayer) {
-		this.playerCardsPane.updateData(currentPlayer.getPlayerPile());
-		this.statusPanel.updateData(currentPlayer);
-		this.pack();
-	}
-
-	@Override
-	public void lobbyDataUpdated(Lobby lobby) {
+	public void updated(Object object)
+	{
+		if(object instanceof GameGuiData)
+		{
+			GameGuiData game = (GameGuiData) object;
+			
+			this.topRowPane.gameDataUpdated(game);
+			this.publicCardStackPane.gameDataUpdated(game);
+			this.pack();
+		}
 		
+		try
+		{
+			this.playerCardsPane.updateData(serviceHandler.getCards());
+			this.statusPanel.updateData(serviceHandler.getUser());
+			this.pack();
+		}
+		catch (NotLoggedInException e)
+		{
+			throw new RuntimeException("User tried to get Cards while not logged in in Game-Screen. This error should not happen!");
+		}
 	}
 }

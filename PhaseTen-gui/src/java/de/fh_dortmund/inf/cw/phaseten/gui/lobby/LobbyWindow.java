@@ -17,13 +17,12 @@ import de.fh_dortmund.inf.cw.phaseten.gui.GuiObserver;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
  * @author Marc Mettke
@@ -52,7 +51,8 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 	private JButton spectatorButton;
 	private JButton startGameButton;
 
-	public LobbyWindow(ServiceHandler serviceHandler, GuiManager guiManager) {
+	public LobbyWindow(ServiceHandler serviceHandler, GuiManager guiManager)
+	{
 		super(WINDOW_NAME, serviceHandler, guiManager);
 		this.serviceHandler = serviceHandler;
 		this.setContentPane(this.setUI());
@@ -60,21 +60,30 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+		this.updated(null);
 	}
 
 	@Override
-	public void gameDataUpdated(Game game) {
-		//TODO - BM - 04.01.2018 - was ist hier zu tun?
-	}
+	public void updated(Object o)
+	{
+		if(o instanceof GameGuiData)
+		{
+			getGuiManager().showPlaygoundGui();
+		}
+		
+		try
+		{
+			User u;
+			u = serviceHandler.getUser();
+			
+			statusPanel.updateData(u);
+		}
+		catch (NotLoggedInException e)
+		{
+			new RuntimeException("Lobby is shown, but user is not logged in. This error should not happen");
+		}
 
-	@Override
-	public void currentPlayerDataUpdated(CurrentPlayer currentPlayer) {
-		statusPanel.updateData(currentPlayer);
-	}
-
-	@Override
-	public void lobbyDataUpdated(Lobby lobby) {
-		userList.updateData(lobby.getPlayers(), lobby.getSpectators());
+		userList.updateData(serviceHandler.getLobbyPlayers(), serviceHandler.getLobbySpectators());
 	}
 
 	/**

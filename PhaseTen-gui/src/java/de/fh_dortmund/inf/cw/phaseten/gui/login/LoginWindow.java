@@ -49,7 +49,8 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 	private JTextField passwordWdhRegister;
 	private JLabel statusLabel;
 
-	public LoginWindow(ServiceHandler serviceHandler, GuiManager guiManager) {
+	public LoginWindow(ServiceHandler serviceHandler, GuiManager guiManager)
+	{
 		super(LOGINWINDOW_NAME, serviceHandler, guiManager);
 		this.serviceHandler = serviceHandler;
 		this.setContentPane(this.setUI());

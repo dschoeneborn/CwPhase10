@@ -3,6 +3,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -16,6 +17,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.jboss.weld.util.collections.ArraySet;
+
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
@@ -24,10 +27,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
@@ -77,10 +81,16 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	}
 
 	@Override
-	public void sendGameMessage(Player p) {
-		sendGameMessage(
-				de.fh_dortmund.inf.cw.phaseten.server.messages.Game
-						.from(getActualPlayedGame(p)));
+	public void sendGameMessage(Player p)
+	{
+		try
+		{
+			sendGameMessage(GameGuiData.from(getActualPlayedGame(p)));
+		}
+		catch (GameNotInitializedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -93,9 +103,10 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
+	 * @throws GameNotInitializedException 
 	 */
 	@Override
-	public void takeCardFromPullstack(Player player) throws MoveNotValidException
+	public void takeCardFromPullstack(Player player) throws MoveNotValidException, GameNotInitializedException
 	{
 		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidDrawCardFromPullStack(game, player))
@@ -113,9 +124,10 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
+	 * @throws GameNotInitializedException 
 	 */
 	@Override
-	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException
+	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException, GameNotInitializedException
 	{
 		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidDrawCardFromLiFoStack(game, player))
@@ -133,9 +145,10 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
+	 * @throws GameNotInitializedException 
 	 */
 	@Override
-	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException
+	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException, GameNotInitializedException
 	{
 		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidToAddCard(game, player, dockPile, card))
@@ -152,9 +165,10 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
+	 * @throws GameNotInitializedException 
 	 */
 	@Override
-	public void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException
+	public void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException, GameNotInitializedException
 	{
 		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidLayStageToTable(game, player, piles))
@@ -181,9 +195,10 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
+	 * @throws GameNotInitializedException 
 	 */
 	@Override
-	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException
+	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException, GameNotInitializedException
 	{
 		Game game = getActualPlayedGame(player);
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card))
@@ -203,17 +218,18 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	/**
 	 * @author Björn Merschmeier
 	 * @throws PlayerDoesNotExistsException 
+	 * @throws GameNotInitializedException 
 	 */
 	@Override
 	public void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card)
-			throws MoveNotValidException, PlayerDoesNotExistsException
+			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException
 	{
 		laySkipCardForPlayerById(currentPlayer, destinationPlayer.getId(), card);
 	}
 
 	@Override
 	public void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, Card card)
-			throws MoveNotValidException, PlayerDoesNotExistsException
+			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException
 	{
 		Game game = getActualPlayedGame(currentPlayer);
 		Player destinationPlayer = null;
@@ -257,22 +273,34 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void startGame(Game game)
+	public void startGame(Collection<Player> playersCollection, Collection<Spectator> spectatorsCollection)
 	{
-		entityManager.persist(game);
+		Set<Player> players = new ArraySet<>(playersCollection);
+		Set<Spectator> spectators = new ArraySet<>(spectatorsCollection);
+		
+		Game game = new Game(players, spectators);
 		
 		initNextRound(game);
 		game.setInitialized();
-		sendGameMessage(game);
-		
+
+		entityManager.persist(game);
 		entityManager.flush();
+		
+		sendGameMessage(game);
 	}
 
 
 	@Override
 	public boolean isInGame(Player p)
 	{
-		return (getActualPlayedGame(p) != null);
+		try
+		{
+			return (getActualPlayedGame(p) != null);
+		}
+		catch (GameNotInitializedException e)
+		{
+			return false;
+		}
 	}
 	
 	/**
@@ -367,7 +395,7 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 			{
 				layCardToLiFoStack(nextPlayer, new Card(Color.NONE, CardValue.SKIP));
 			}
-			catch(MoveNotValidException e)
+			catch(MoveNotValidException | GameNotInitializedException e)
 			{
 				throw new RuntimeException("There happend something awkward in the gamelogic. You cannot continue your game, please restart or contact your administrator. #1");
 			}
@@ -417,11 +445,11 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	private void updateClient(Player p) {
 		// Send updated Game to Client
 		sendGameMessage(p);
-		// Send updated Player Cards to Client
-		playerManagment.sendPlayerMessage(CurrentPlayer.from(p));
+
+		playerManagment.sendUserMessage();
 	}
 
-	private void sendGameMessage(de.fh_dortmund.inf.cw.phaseten.server.messages.Game game) {
+	private void sendGameMessage(de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData game) {
 		Message message = jmsContext.createObjectMessage(game);
 		jmsContext.createProducer().send(gameMessageTopic, message);
 	}
@@ -434,18 +462,26 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @param Player p
 	 * @return game
 	 */
-	private Game getActualPlayedGame(Player p)
+	private Game getActualPlayedGame(Player p) throws GameNotInitializedException
 	{
 		Query query = entityManager.createNamedQuery("selectByUserId");
 		query.setParameter("playerId", p.getId());
 		
 		try
 		{
-			return (Game)query.getSingleResult();
+			Game game = (Game)query.getSingleResult();
+			if(game.isInitialized())
+			{
+				return game;
+			}
+			else
+			{
+				throw new GameNotInitializedException();
+			}
 		}
 		catch(NoResultException e)
 		{
-			return null;
+			throw new GameNotInitializedException();
 		}
 	}
 }

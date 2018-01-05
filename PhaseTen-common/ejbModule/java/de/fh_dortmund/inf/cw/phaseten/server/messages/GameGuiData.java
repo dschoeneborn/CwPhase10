@@ -1,28 +1,30 @@
 package de.fh_dortmund.inf.cw.phaseten.server.messages;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
 /**
  * @author Marc Mettke
  * @author Robin Harbecke
  * @author Björn Merschmeier
  */
-public class Game implements Serializable {
+public class GameGuiData implements Serializable {
 	private static final long serialVersionUID = -8803043695255479666L;
 
-	private Collection<Player> players;
-	private Collection<Spectator> spectators;
+	private Collection<PlayerGuiData> players;
+	private Collection<String> spectators;
 	private PullStack pullStack;
 	private LiFoStack liFoStack;
 	private Collection<DockPile> openPiles;
 	
-	public Game(Collection<Player> players, 
-			    Collection<Spectator> spectators, 
+	public GameGuiData(Collection<PlayerGuiData> players, 
+			    Collection<String> spectators, 
 			    PullStack pullStack, 
 			    LiFoStack liFoStack, 
 			    Collection<DockPile> openPiles) {
@@ -34,11 +36,11 @@ public class Game implements Serializable {
 		this.openPiles = openPiles;
 	}
 	
-	public Collection<Player> getPlayers() {
+	public Collection<PlayerGuiData> getPlayers() {
 		return players;
 	}
 	
-	public Collection<Spectator> getSpectators() {
+	public Collection<String> getSpectators() {
 		return spectators;
 	}	
 	
@@ -54,10 +56,18 @@ public class Game implements Serializable {
 		return openPiles;
 	}
 	
-	public static Game from(de.fh_dortmund.inf.cw.phaseten.server.entities.Game game) {
-		return new Game(
-			Player.from(game.getPlayers()),  
-			Spectator.from(game.getSpectators()), 
+	public static GameGuiData from(de.fh_dortmund.inf.cw.phaseten.server.entities.Game game)
+	{
+		ArrayList<String> spectatorNames = new ArrayList<String>();
+		
+		for(Spectator spectator : game.getSpectators())
+		{
+			spectatorNames.add(spectator.getName());
+		}
+		
+		return new GameGuiData(
+			PlayerGuiData.from(game.getPlayers()),  
+			spectatorNames, 
 			game.getPullStack(),
 			game.getLiFoStack(),
 			game.getOpenPiles()

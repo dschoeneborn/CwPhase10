@@ -12,8 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
  * @author Marc Mettke
@@ -57,7 +56,6 @@ public class LobbyManagementTest {
 		this.latchLobby.await(30, TimeUnit.SECONDS);
 		
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageLobby).getObject() instanceof Lobby);
 	}
 
 	//@Test
@@ -69,7 +67,6 @@ public class LobbyManagementTest {
 		this.latchLobby.await(30, TimeUnit.SECONDS);
 		
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageLobby).getObject() instanceof Lobby);
 	}
 
 	//@Test
@@ -80,7 +77,6 @@ public class LobbyManagementTest {
 		this.latchLobby.await(30, TimeUnit.SECONDS);
 		
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageLobby).getObject() instanceof Lobby);
 	}
 
 	//@Test
@@ -91,6 +87,6 @@ public class LobbyManagementTest {
 		this.latchGame.await(30, TimeUnit.SECONDS);
 		
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof Game);
+		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof GameGuiData);
 	}
 }

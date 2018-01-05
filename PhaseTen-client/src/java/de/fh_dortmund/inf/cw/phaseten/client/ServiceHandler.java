@@ -7,6 +7,7 @@ import javax.jms.MessageListener;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
@@ -15,6 +16,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 
 /**
  * @author Marc Mettke
@@ -34,17 +36,17 @@ public interface ServiceHandler extends MessageListener {
 
 	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException;
 	
-	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException;
+	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
-	void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException;
+	void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
-	void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, NotLoggedInException;
+	void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
-	void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, NotLoggedInException;
+	void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
-	void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException;
+	void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
-	void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException, PlayerDoesNotExistsException;
+	void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException;
 
 	void register(String username, String password) throws UsernameAlreadyTakenException;
 
@@ -59,4 +61,11 @@ public interface ServiceHandler extends MessageListener {
 	void exitLobby() throws NotLoggedInException;
 
 	boolean playerIsInGame() throws NotLoggedInException;
+
+	Collection<PlayerGuiData> getLobbyPlayers();
+	Collection<String> getLobbySpectators();
+
+	User getUser() throws NotLoggedInException;
+
+	Collection<Card> getCards() throws NotLoggedInException;
 }

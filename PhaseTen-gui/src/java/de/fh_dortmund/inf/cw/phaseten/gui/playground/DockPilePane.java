@@ -17,6 +17,7 @@ import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
@@ -69,6 +70,9 @@ public class DockPilePane extends JPanel {
 				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
 				e.printStackTrace();
 			} catch (NotLoggedInException e) {
+				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+				e.printStackTrace();
+			} catch (GameNotInitializedException e) {
 				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
 				e.printStackTrace();
 			}

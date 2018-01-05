@@ -8,13 +8,11 @@ import de.fh_dortmund.inf.cw.phaseten.gui.lobby.LobbyWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.login.LoginWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.PlaygroundWindow;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
 
 /**
  * @author Robin Harbecke
  * @author Marc Mettke
+ * @author Björn Merschmeier
  */
 public class GuiManager implements Observer {
 	protected GuiFrame currentGuiFrame; 
@@ -49,40 +47,15 @@ public class GuiManager implements Observer {
 	@Override
 	public void update(Observable observable, Object data)
 	{
-		if( data instanceof Game ) {
-			if( this.currentGuiFrame instanceof LoginWindow ||
-				this.currentGuiFrame instanceof LobbyWindow ) {
-				this.showPlaygoundGui();
-			}
-			if(this.currentGuiFrame != null 
-				&& currentGuiFrame instanceof GuiObserver)
-			{
-				((GuiObserver)this.currentGuiFrame).gameDataUpdated((Game) data);
-			}		
-		}
-		else if(data instanceof Lobby 
-				&& this.currentGuiFrame != null 
-				&& currentGuiFrame instanceof GuiObserver)
+		if(this.currentGuiFrame != null 
+			&& currentGuiFrame instanceof GuiObserver)
 		{
-			((GuiObserver)this.currentGuiFrame).lobbyDataUpdated((Lobby) data);	
-		}
-		else if(data instanceof CurrentPlayer)
-		{
-			if(this.currentGuiFrame instanceof LoginWindow)
-			{
-				this.showLobbyGui();
-			}
-			if(this.currentGuiFrame != null
-				&& currentGuiFrame instanceof GuiObserver)
-			{
-				((GuiObserver)this.currentGuiFrame).currentPlayerDataUpdated((CurrentPlayer) data);
-			}
+			((GuiObserver)this.currentGuiFrame).updated(data);
 		}
 	}
 	
 	public void dispose()
 	{
-
 		try
 		{
 			this.serviceHandler.logout();

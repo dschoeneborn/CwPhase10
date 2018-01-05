@@ -20,8 +20,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -66,7 +65,7 @@ public class GameManagementTest {
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof Game);
+		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof GameGuiData);
 	}
 
 	//@Test
@@ -81,9 +80,8 @@ public class GameManagementTest {
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof Game);
+		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof GameGuiData);
 	}
 
 	//@Test
@@ -98,9 +96,8 @@ public class GameManagementTest {
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof Game);
+		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof GameGuiData);
 	}
 
 	//@Test
@@ -118,9 +115,8 @@ public class GameManagementTest {
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof Game);
+		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof GameGuiData);
 	}
 
 	//@Test
@@ -144,9 +140,8 @@ public class GameManagementTest {
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof Game);
+		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof GameGuiData);
 	}
 
 	//@Test
@@ -163,9 +158,8 @@ public class GameManagementTest {
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 		Assert.assertTrue(messageGame instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof Game);
+		Assert.assertTrue(((ObjectMessage) messageGame).getObject() instanceof GameGuiData);
 	}
 	
 	//@Test

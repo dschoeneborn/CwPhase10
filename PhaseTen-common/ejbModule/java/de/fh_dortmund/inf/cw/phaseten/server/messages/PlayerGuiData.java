@@ -9,13 +9,13 @@ import java.util.function.Consumer;
  * @author Marc Mettke
  * @author Robin Harbecke
  */
-public class Player implements Serializable {
+public class PlayerGuiData implements Serializable {
 	private static final long serialVersionUID = -2947823309554723821L;
 	
 	private int phase;
 	private String name;
 	
-	public Player(String playerName, int phase) {
+	public PlayerGuiData(String playerName, int phase) {
 		this.phase = phase;
 		this.name = playerName;
 	}
@@ -29,16 +29,16 @@ public class Player implements Serializable {
 		return name;
 	}
 	
-	public static Player from(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player) {
+	public static PlayerGuiData from(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player) {
 		// TODO: Add phase from player Object
-		return new Player(
+		return new PlayerGuiData(
 			player.getName(),
 			player.getPhase().getValue()
 		);
 	}
 	
-	public static Collection<Player> from(Collection<de.fh_dortmund.inf.cw.phaseten.server.entities.Player> players) {
-		Collection<Player> _players = new ArrayList<>();
+	public static Collection<PlayerGuiData> from(Collection<de.fh_dortmund.inf.cw.phaseten.server.entities.Player> players) {
+		Collection<PlayerGuiData> _players = new ArrayList<>();
 		players.forEach(new Consumer<de.fh_dortmund.inf.cw.phaseten.server.entities.Player>() {
 			@Override
 			public void accept(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player) {

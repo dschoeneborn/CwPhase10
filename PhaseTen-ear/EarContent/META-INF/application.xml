@@ -7,7 +7,7 @@
     <java>PhaseTen-common.jar</java>
   </module>
   <jms-destination>
-    <name>java:global/jms/CurrentPlayer</name>
+    <name>java:global/jms/User</name>
     <interface-name>javax.jms.Topic</interface-name>
     <destination-name>CurrentPlayer</destination-name>
   </jms-destination>

@@ -25,7 +25,6 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
@@ -40,7 +39,7 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 	@Inject
 	private JMSContext jmsContext;
 	
-	@Resource(lookup = "java:global/jms/CurrentPlayer")
+	@Resource(lookup = "java:global/jms/User")
 	private Topic playerMessageTopic;
 
 	@EJB
@@ -53,7 +52,7 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 
 	@Override
 	public void requestPlayerMessage(Player p) {
-		sendPlayerMessage(CurrentPlayer.from(p));
+		sendUserMessage();
 	}
 
 	@Override
@@ -122,8 +121,9 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 	}
 
 	@Override
-	public void sendPlayerMessage(CurrentPlayer p) {
-		Message message = jmsContext.createObjectMessage(p);
+	public void sendUserMessage()
+	{
+		Message message = jmsContext.createObjectMessage();
 		jmsContext.createProducer().send(playerMessageTopic, message);
 	}
 
@@ -161,7 +161,9 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 		{
 			foundPlayer = new Player(currentUser.getLoginName());
 			currentUser.setPlayer(foundPlayer);
+			em.merge(currentUser);
 		}
+		em.flush();
 		
 		return foundPlayer;
 	}
@@ -181,6 +183,7 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 		{
 			foundSpectator = new Spectator(currentUser.getLoginName());
 			currentUser.setSpectator(foundSpectator);
+			em.merge(currentUser);
 		}
 		
 		em.flush();

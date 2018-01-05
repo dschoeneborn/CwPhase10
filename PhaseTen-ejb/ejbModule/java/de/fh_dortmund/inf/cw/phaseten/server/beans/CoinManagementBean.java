@@ -9,13 +9,16 @@ import javax.jms.Topic;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementRemote;
 
+/**
+ * @author ????? TODO - Wer hat diese Klasse als erstes erstellt?
+ * @author Björn Merschmeier
+ *
+ */
 @Stateless
 public class CoinManagementBean implements CoinManagementRemote, CoinManagementLocal {
 
@@ -37,7 +40,7 @@ public class CoinManagementBean implements CoinManagementRemote, CoinManagementL
 			em.merge(user);
 			em.flush();
 
-			sendPlayerMessage(new CurrentPlayer(user.getLoginName(), 0, new PlayerPile(), "Waiting", user.getCoins()));
+			sendPlayerMessage();
 		}
 
 	}
@@ -51,7 +54,7 @@ public class CoinManagementBean implements CoinManagementRemote, CoinManagementL
 			em.merge(user);
 			em.flush();
 
-			sendPlayerMessage(new CurrentPlayer(user.getLoginName(), 0, new PlayerPile(), "Waiting", user.getCoins()));
+			sendPlayerMessage();
 		}
 	}
 
@@ -64,7 +67,7 @@ public class CoinManagementBean implements CoinManagementRemote, CoinManagementL
 			em.merge(user);
 			em.flush();
 
-			sendPlayerMessage(new CurrentPlayer(user.getLoginName(), 0, new PlayerPile(), "Waiting", user.getCoins()));
+			sendPlayerMessage();
 		}
 	}
 
@@ -77,8 +80,9 @@ public class CoinManagementBean implements CoinManagementRemote, CoinManagementL
 		return user;
 	}
 
-	private void sendPlayerMessage(CurrentPlayer player) {
-		Message message = jmsContext.createObjectMessage(player);
+	private void sendPlayerMessage()
+	{
+		Message message = jmsContext.createObjectMessage();
 		jmsContext.createProducer().send(playerMessageTopic, message);
 	}
 

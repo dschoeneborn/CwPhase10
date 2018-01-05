@@ -1,9 +1,12 @@
 package de.fh_dortmund.inf.cw.phaseten.server.shared;
 
+import java.util.Collection;
+
 import javax.ejb.Local;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
 /**
  * @author Marc Mettke
@@ -21,7 +24,7 @@ public interface GameManagementLocal extends GameManagement {
 	 * @author Tim Prange
 	 * @param game the game to put into that bean
 	 */
-	void startGame(Game game);
+	void startGame(Collection<Player> players, Collection<Spectator> spectators);
 
 	void sendGameMessage(Game game);
 }

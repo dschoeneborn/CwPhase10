@@ -10,26 +10,29 @@ import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
  * @author Robin Harbecke
  * @author Marc Mettke
  */
-public class TopRowPane extends JPanel{
+public class TopRowPane extends JPanel
+{
 	private static final long serialVersionUID = -6210706602718026386L;
 	
-	protected DrawCardPilePane drawPile;
-	protected DiscardCardPile discardPile;
+	private DrawCardPilePane drawPile;
+	private DiscardCardPile discardPile;
 	
-	protected PhaseCard phaseCard = new PhaseCard();
-	protected UserList userList = new UserList();
+	private PhaseCard phaseCard = new PhaseCard();
+	private UserList userList = new UserList();
 	
-	protected ServiceHandler serviceHandler;
+	private ServiceHandler serviceHandler;
 	
-	public TopRowPane(ServiceHandler serviceHandler) {
+	public TopRowPane(ServiceHandler serviceHandler)
+	{
 		this.serviceHandler = serviceHandler;
 		this.drawPile = new DrawCardPilePane(this.serviceHandler);
 		this.discardPile =  new DiscardCardPile(this.serviceHandler);
@@ -43,6 +46,13 @@ public class TopRowPane extends JPanel{
 		this.setupListeners();
 	}
 	
+	
+	public void gameDataUpdated(GameGuiData game)
+	{
+		this.userList.updateData(game.getPlayers(), game.getSpectators());
+		this.discardPile.updateData(game.getLiFoStack().showCard());		
+	}
+	
 	private void setupListeners() {
 		this.drawPile.addMouseListener(new MouseAdapter() {			
 			public void mouseClicked(MouseEvent e) {
@@ -53,6 +63,9 @@ public class TopRowPane extends JPanel{
 					e1.printStackTrace();
 				} catch (NotLoggedInException e1) {
 					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+					e1.printStackTrace();
+				} catch (GameNotInitializedException e1) {
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			} 
@@ -67,15 +80,12 @@ public class TopRowPane extends JPanel{
 				} catch (NotLoggedInException e1) {
 					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
 					e1.printStackTrace();
+				} catch (GameNotInitializedException e1) {
+					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+					e1.printStackTrace();
 				}
 			} 
 		});
-	}
-	
-	
-	public void gameDataUpdated(Game game) {
-		this.userList.updateData(game.getPlayers(),game.getSpectators());
-		this.discardPile.updateData(game.getLiFoStack().showCard());		
 	}
 	
 	private static Component topJustify( JPanel panel )  {

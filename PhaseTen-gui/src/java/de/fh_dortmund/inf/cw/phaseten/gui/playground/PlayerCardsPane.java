@@ -1,13 +1,13 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground;
 
 import java.awt.FlowLayout;
+import java.util.Collection;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 
 /**
  * @author Robin Harbecke
@@ -27,9 +27,10 @@ public class PlayerCardsPane extends JPanel{
 		this.add(this.scrollPane);			
 	}	
 	
-	public void updateData(PlayerPile pile) {
+	public void updateData(Collection<Card> collection)
+	{
 		this.cardList.removeAll();
-		for (Card card : pile.getCards()) {
+		for (Card card : collection) {
 			CardPane cardPane = new DragableCardPane(card);
 			this.cardList.add(cardPane);
 		}
