@@ -15,12 +15,10 @@ public class CurrentPlayer extends Player {
 	public CurrentPlayer(String playerName, 
 						 int phase, 
 						 PlayerPile playerPile, 
-						 String status, 
-						 int coins) {
+						 String status) {
 		super(playerName, phase);
 		this.playerPile = playerPile;
 		this.status = status;
-		this.coins = coins;
 	}
 
 	public PlayerPile getPlayerPile() {
@@ -35,17 +33,13 @@ public class CurrentPlayer extends Player {
 		return coins;
 	}
 	
-	public static CurrentPlayer from(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player,
-							  int phase, 
-							  String status, 
-							  int coins) {
+	public static CurrentPlayer from(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player) {
 		// TODO: Add phase, status, coins from player Object
 		return new CurrentPlayer(
 			player.getName(),
-			phase, 
+			player.getPhase().getValue(), 
 			player.getPlayerPile(), 
-			status, 
-			coins
+			"unbekannt"
 		);
 	}
 }

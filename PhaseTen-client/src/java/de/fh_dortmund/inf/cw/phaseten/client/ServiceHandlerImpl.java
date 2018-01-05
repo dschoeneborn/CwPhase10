@@ -210,6 +210,12 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 		lobbyManagementRemote.leaveLobby(getOrCreateCurrentPlayer());
 		lobbyManagementRemote.leaveLobby(getOrCreateCurrentSpectator());
 	}
+
+	@Override
+	public boolean playerIsInGame() throws NotLoggedInException
+	{
+		return gameManagementRemote.isInGame(getOrCreateCurrentPlayer());
+	}
 	
 	public JMSConsumer getPlayerConsumer()
 	{

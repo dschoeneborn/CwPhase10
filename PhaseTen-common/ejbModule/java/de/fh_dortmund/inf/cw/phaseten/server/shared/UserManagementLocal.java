@@ -7,6 +7,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 
 /**
  * @author Marc Mettke
@@ -14,7 +15,6 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenExce
  */
 @Local
 public interface UserManagementLocal extends UserManagement {
-	public void sendPlayerMessage(Player p);
 
 	Player getOrCreatePlayer(User user);
 
@@ -25,4 +25,6 @@ public interface UserManagementLocal extends UserManagement {
 	User login(String username, String password) throws UserDoesNotExistException;
 
 	public void logout(User currentUser);
+
+	void sendPlayerMessage(CurrentPlayer p);
 }

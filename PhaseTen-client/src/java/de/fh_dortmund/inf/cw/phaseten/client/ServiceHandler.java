@@ -57,4 +57,6 @@ public interface ServiceHandler extends MessageListener {
 	void logout() throws NotLoggedInException;
 
 	void exitLobby() throws NotLoggedInException;
+
+	boolean playerIsInGame() throws NotLoggedInException;
 }

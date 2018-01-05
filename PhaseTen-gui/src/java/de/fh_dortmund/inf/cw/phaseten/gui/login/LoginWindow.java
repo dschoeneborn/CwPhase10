@@ -14,6 +14,7 @@ import javax.swing.SpringLayout;
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiManager;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 
@@ -127,11 +128,23 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 			try
 			{
 				serviceHandler.login(username, password);
-				this.getGuiManager().showLobbyGui();
+
+				if(serviceHandler.playerIsInGame())
+				{
+					this.getGuiManager().showPlaygoundGui();
+				}
+				else
+				{
+					this.getGuiManager().showLobbyGui();
+				}
 			}
 			catch (UserDoesNotExistException ignored)
 			{
 				statusLabel.setText(LOGIN_INVALID);
+			}
+			catch (NotLoggedInException e)
+			{
+				throw new RuntimeException("User is not logged in after successful login. This error should not happen!");
 			}
 		}
 	}

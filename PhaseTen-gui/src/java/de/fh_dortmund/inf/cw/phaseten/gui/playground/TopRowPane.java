@@ -76,7 +76,7 @@ public class TopRowPane extends JPanel{
 	public void gameDataUpdated(Game game) {
 		this.userList.updateData(game.getPlayers(),game.getSpectators());
 		this.discardPile.updateData(game.getLiFoStack().showCard());		
-	}	
+	}
 	
 	private static Component topJustify( JPanel panel )  {
 	    Box  b = Box.createVerticalBox();

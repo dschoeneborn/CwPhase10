@@ -25,6 +25,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
@@ -52,7 +53,7 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 
 	@Override
 	public void requestPlayerMessage(Player p) {
-		sendPlayerMessage(p);
+		sendPlayerMessage(CurrentPlayer.from(p));
 	}
 
 	@Override
@@ -121,7 +122,7 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 	}
 
 	@Override
-	public void sendPlayerMessage(Player p) {
+	public void sendPlayerMessage(CurrentPlayer p) {
 		Message message = jmsContext.createObjectMessage(p);
 		jmsContext.createProducer().send(playerMessageTopic, message);
 	}

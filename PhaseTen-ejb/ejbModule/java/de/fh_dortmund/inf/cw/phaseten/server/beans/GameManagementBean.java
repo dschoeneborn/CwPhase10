@@ -12,6 +12,7 @@ import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.Topic;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -26,6 +27,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
@@ -265,6 +267,13 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 		
 		entityManager.flush();
 	}
+
+
+	@Override
+	public boolean isInGame(Player p)
+	{
+		return (getActualPlayedGame(p) != null);
+	}
 	
 	/**
 	 * @author Björn Merschmeier
@@ -409,7 +418,7 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 		// Send updated Game to Client
 		sendGameMessage(p);
 		// Send updated Player Cards to Client
-		playerManagment.sendPlayerMessage(p);
+		playerManagment.sendPlayerMessage(CurrentPlayer.from(p));
 	}
 
 	private void sendGameMessage(de.fh_dortmund.inf.cw.phaseten.server.messages.Game game) {
@@ -425,10 +434,18 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @param Player p
 	 * @return game
 	 */
-	private Game getActualPlayedGame(Player p) {
+	private Game getActualPlayedGame(Player p)
+	{
 		Query query = entityManager.createNamedQuery("selectByUserId");
 		query.setParameter("playerId", p.getId());
 		
-		return (Game)query.getSingleResult();
+		try
+		{
+			return (Game)query.getSingleResult();
+		}
+		catch(NoResultException e)
+		{
+			return null;
+		}
 	}
 }
