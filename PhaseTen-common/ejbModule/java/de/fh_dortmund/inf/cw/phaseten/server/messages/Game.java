@@ -2,15 +2,14 @@ package de.fh_dortmund.inf.cw.phaseten.server.messages;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Set;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
 /**
  * @author Marc Mettke
+ * @author Robin Harbecke
  * @author Björn Merschmeier
  */
 public class Game implements Serializable {
@@ -23,7 +22,7 @@ public class Game implements Serializable {
 	private Collection<DockPile> openPiles;
 	
 	public Game(Collection<Player> players, 
-			    Set<Spectator> spectators, 
+			    Collection<Spectator> spectators, 
 			    PullStack pullStack, 
 			    LiFoStack liFoStack, 
 			    Collection<DockPile> openPiles) {
@@ -39,10 +38,10 @@ public class Game implements Serializable {
 		return players;
 	}
 	
-	public Collection<Spectator> getSpectator() {
+	public Collection<Spectator> getSpectators() {
 		return spectators;
-	}
-
+	}	
+	
 	public PullStack getPullStack() {
 		return pullStack;
 	}
@@ -58,10 +57,10 @@ public class Game implements Serializable {
 	public static Game from(de.fh_dortmund.inf.cw.phaseten.server.entities.Game game) {
 		return new Game(
 			Player.from(game.getPlayers()),  
-			game.getSpectators(), 
+			Spectator.from(game.getSpectators()), 
 			game.getPullStack(),
 			game.getLiFoStack(),
 			game.getOpenPiles()
 		);	
-	}
+	}	
 }

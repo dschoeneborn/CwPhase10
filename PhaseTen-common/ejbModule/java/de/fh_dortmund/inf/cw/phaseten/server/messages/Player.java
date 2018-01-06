@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Stage;
-
 /**
  * @author Marc Mettke
  * @author Robin Harbecke
@@ -14,28 +12,28 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Stage;
 public class Player implements Serializable {
 	private static final long serialVersionUID = -2947823309554723821L;
 	
-	private String playerName;
-	private Stage phase;
+	private int phase;
+	private String name;
 	
-	public Player(String playerName, Stage phase) {
-		super();
-		this.playerName = playerName;
+	public Player(String playerName, int phase) {
 		this.phase = phase;
+		this.name = playerName;
 	}
 	
-	public String getPlayerName() {
-		return playerName;
-	}
-	
-	public Stage getPhase() {
+	public int getPhase() {
 		return phase;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 	
 	public static Player from(de.fh_dortmund.inf.cw.phaseten.server.entities.Player player) {
 		// TODO: Add phase from player Object
 		return new Player(
 			player.getName(),
-			player.getPhase()
+			player.getPhase().getValue()
 		);
 	}
 	

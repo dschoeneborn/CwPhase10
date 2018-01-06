@@ -1,6 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.client;
 
 import java.util.Collection;
+import java.util.Observable;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSConsumer;
@@ -37,7 +38,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote;
  * @author Marc Mettke
  * @author Tim Prange
  */
-public class ServiceHandlerImpl implements ServiceHandler {
+public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	private static ServiceHandlerImpl instance;
 
 	private Context context;
@@ -148,19 +149,25 @@ public class ServiceHandlerImpl implements ServiceHandler {
 	@Override
 	public void onMessage(Message message) {
 		try {
-			if (message.getJMSDestination().equals(playerMessageTopic) && message instanceof ObjectMessage) {
-				@SuppressWarnings("unused")
+			if (message.getJMSDestination().equals(playerMessageTopic) && message instanceof ObjectMessage)
+			{
 				CurrentPlayer currentPlayer = (CurrentPlayer) ((ObjectMessage) message).getObject();
+				setChanged();
+				notifyObservers(currentPlayer);
 				System.out.println("Received CurrentPlayer Object: " + currentPlayer);
 			}
-			else if (message.getJMSDestination().equals(lobbyMessageTopic) && message instanceof ObjectMessage) {
-				@SuppressWarnings("unused")
+			else if (message.getJMSDestination().equals(lobbyMessageTopic) && message instanceof ObjectMessage)
+			{
 				Lobby lobby = (Lobby) ((ObjectMessage) message).getObject();
+				setChanged();
+				notifyObservers(lobby);
 				System.out.println("Received Lobby Object: " + lobby);
 			}
-			else if (message.getJMSDestination().equals(gameMessageTopic) && message instanceof ObjectMessage) {
-				@SuppressWarnings("unused")
+			else if (message.getJMSDestination().equals(gameMessageTopic) && message instanceof ObjectMessage)
+			{
 				Game game = (Game) ((ObjectMessage) message).getObject();
+				setChanged();
+				notifyObservers(game);
 				System.out.println("Received Game Object: " + game);
 			}
 		}

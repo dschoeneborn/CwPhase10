@@ -18,9 +18,9 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
 
 /**
  * @author Dennis Schöneborn
+ * @author Marc Mettke
  * @author Björn Merschmeier
  */
-
 @Stateful
 public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	private User currentUser = null;
@@ -82,7 +82,8 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 			}
 			else
 			{
-				foundSpectator = new Spectator();
+				foundSpectator = new Spectator(currentUser.getLoginName());
+				currentUser.setSpectator(foundSpectator);
 			}
 		}
 		else

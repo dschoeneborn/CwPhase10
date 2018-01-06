@@ -57,7 +57,7 @@ public class SequenceDockPile extends DockPile {
 		boolean addedCard = false;
 
 		if (minimum == null || card.getCardValue().getValue() < minimum.getValue()) {
-			if (card.getCardValue() != CardValue.JOKER) {
+			if (card.getCardValue() != CardValue.WILD) {
 				minimum = card.getCardValue();
 			} else {
 				minimum = CardValue.SIX;
@@ -75,23 +75,23 @@ public class SequenceDockPile extends DockPile {
 		} else if (maximum == null || card.getCardValue().getValue() > maximum.getValue()) {
 			maximum = card.getCardValue();
 
-			LinkedList<Card> c = new LinkedList<>(this.cards);
+			LinkedList<Card> c = new LinkedList<Card>(this.cards);
 			c.addLast(card);
 			this.cards = c;
 
 			addedCard = true;
-		} else if (minimum != CardValue.ONE && card.getCardValue() == CardValue.JOKER) {
+		} else if (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD) {
 			minimum = CardValue.getCardValue(minimum.getValue() - 1);
 
-			LinkedList<Card> c = new LinkedList<>(this.cards);
+			LinkedList<Card> c = new LinkedList<Card>(this.cards);
 			c.addFirst(card);
 			this.cards = c;
 
 			addedCard = true;
-		} else if (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.JOKER) {
+		} else if (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD) {
 			maximum = CardValue.getCardValue(maximum.getValue() + 1);
 
-			LinkedList<Card> c = new LinkedList<>(this.cards);
+			LinkedList<Card> c = new LinkedList<Card>(this.cards);
 			c.addLast(card);
 			this.cards = c;
 

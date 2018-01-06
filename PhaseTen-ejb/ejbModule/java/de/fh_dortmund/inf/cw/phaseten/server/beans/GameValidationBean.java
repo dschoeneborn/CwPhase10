@@ -177,7 +177,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 				if ((sequenceDockPile.getMinimum().getValue() - 1 == c.getCardValue().getValue()
 						|| sequenceDockPile.getMaximum().getValue() + 1 == c.getCardValue().getValue()
-						|| c.getCardValue() == CardValue.JOKER) && !pileIsFull(sequenceDockPile)) {
+						|| c.getCardValue() == CardValue.WILD) && !pileIsFull(sequenceDockPile)) {
 					addCardAllowed = true;
 				}
 			}

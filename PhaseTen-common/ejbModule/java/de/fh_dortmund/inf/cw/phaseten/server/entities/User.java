@@ -13,14 +13,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 
 /**
  * @author Dennis Schöneborn
  * @author Daniela Kaiser
- *
+ * @author Björn Merschmeier
  */
 
 @Entity
@@ -128,5 +128,10 @@ public class User implements Serializable{
 
 	public String getPassword() {
 		return password;
+	}
+
+	public void setSpectator(Spectator spectator)
+	{
+		this.spectator = spectator;
 	}	
 }
