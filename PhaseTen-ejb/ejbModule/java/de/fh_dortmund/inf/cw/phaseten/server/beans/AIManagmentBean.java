@@ -1,6 +1,5 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.Stateless;

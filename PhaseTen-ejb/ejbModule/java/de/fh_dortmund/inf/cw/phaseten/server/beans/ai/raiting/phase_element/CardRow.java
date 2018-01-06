@@ -44,7 +44,7 @@ public class CardRow extends PhaseElement{
 			}
 		}
 		for (Card card : pile.getCards()) {
-			if(missingCardCount > 0 && card.getCardValue() == CardValue.JOKER) {
+			if(missingCardCount > 0 && card.getCardValue() == CardValue.WILD) {
 				foundPile = foundPile.addCard(card);
 				remainingCards = remainingCards.removeCard(card);
 				missingCardCount--;

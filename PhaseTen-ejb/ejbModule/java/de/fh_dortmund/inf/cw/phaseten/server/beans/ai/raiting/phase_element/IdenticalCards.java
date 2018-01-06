@@ -23,7 +23,7 @@ public class IdenticalCards extends PhaseElement {
 	@Override
 	public MissingResult getMissingCards(SimPile pile) {
 		Map<CardValue,Integer> cardCount = new HashMap<CardValue,Integer>();
-		cardCount.put(CardValue.JOKER, 0);
+		cardCount.put(CardValue.WILD, 0);
 		for (Card card : pile.getCards()) {
 			if(card.getCardValue() != CardValue.SKIP);
 			if(!cardCount.containsKey(card.getCardValue())) {
@@ -34,7 +34,7 @@ public class IdenticalCards extends PhaseElement {
 		CardValue bestCardValue = null;
 		int bestCardCount = 0;
 		for (CardValue cardValue : cardCount.keySet()) {
-			if(cardValue != CardValue.JOKER) {
+			if(cardValue != CardValue.WILD) {
 				if(cardCount.get(cardValue) > bestCardCount) {
 					bestCardCount = cardCount.get(cardValue);
 					bestCardValue = cardValue;
@@ -53,7 +53,7 @@ public class IdenticalCards extends PhaseElement {
 			}						
 		}
 		for (Card card: pile.getCards()) {
-			if(missingCardCount >0 && card.getCardValue() == CardValue.JOKER) {
+			if(missingCardCount >0 && card.getCardValue() == CardValue.WILD) {
 				remainingCards = remainingCards.removeCard(card);
 				foundCards = foundCards.addCard(card);
 				missingCardCount--;
