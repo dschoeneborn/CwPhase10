@@ -1,27 +1,35 @@
 package de.fh_dortmund.inf.cw.phaseten.server.messages;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Stage;
 
 /**
  * @author Marc Mettke
  */
 public class CurrentPlayer extends Player {
 	private static final long serialVersionUID = -8171079521185318013L;
-	
+
+	private boolean playerLaidStage;
 	private PlayerPile playerPile;
 	private String status;
 	private int coins;
 
 	public CurrentPlayer(String playerName, 
-						 int phase, 
+						 Stage phase, 
 						 PlayerPile playerPile, 
 						 String status, 
-						 int coins) {
+						 int coins,
+						 boolean playerLaidStage) {
 		super(playerName, phase);
 		this.playerPile = playerPile;
 		this.status = status;
 		this.coins = coins;
+		this.playerLaidStage = playerLaidStage;
 	}
+
+	public boolean getPlayerLaidStage() {
+		return playerLaidStage;
+	}	
 
 	public PlayerPile getPlayerPile() {
 		return playerPile;
@@ -39,13 +47,13 @@ public class CurrentPlayer extends Player {
 							  int phase, 
 							  String status, 
 							  int coins) {
-		// TODO: Add phase, status, coins from player Object
 		return new CurrentPlayer(
 			player.getName(),
-			phase, 
+			player.getPhase(), 
 			player.getPlayerPile(), 
 			status, 
-			coins
+			coins,
+			player.playerLaidStage()
 		);
 	}
 }

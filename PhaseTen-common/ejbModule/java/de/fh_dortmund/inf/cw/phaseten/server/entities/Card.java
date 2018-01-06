@@ -69,4 +69,27 @@ public class Card implements Serializable {
 		return cardValue;
 	}
 
+	
+	/**
+	 * @return the minus points of the card at the end of the round 
+	 */
+	public int getRoundEndValue() {
+		return 0;//TODO Implement
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Card other = (Card) obj;
+		if (cardValue != other.cardValue)
+			return false;
+		if (color != other.color)
+			return false;
+		return true;
+	}
 }
