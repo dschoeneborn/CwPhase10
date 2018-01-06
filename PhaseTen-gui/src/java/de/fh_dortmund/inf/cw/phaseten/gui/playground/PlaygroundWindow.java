@@ -39,7 +39,6 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		this.updated(null);
 	}
 
 	@Override

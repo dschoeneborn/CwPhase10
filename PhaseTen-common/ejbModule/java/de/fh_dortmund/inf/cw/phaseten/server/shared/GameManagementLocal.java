@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.ejb.Local;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
@@ -25,6 +24,4 @@ public interface GameManagementLocal extends GameManagement {
 	 * @param game the game to put into that bean
 	 */
 	void startGame(Collection<Player> players, Collection<Spectator> spectators);
-
-	void sendGameMessage(Game game);
 }

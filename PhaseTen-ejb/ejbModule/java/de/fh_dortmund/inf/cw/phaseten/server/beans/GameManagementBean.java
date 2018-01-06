@@ -93,14 +93,6 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 		}
 	}
 
-	@Override
-	public void sendGameMessage(Game game) {
-		for(Player p: game.getPlayers())
-		{
-			sendGameMessage(p);
-		}
-	}
-
 	/**
 	 * @author Björn Merschmeier
 	 * @throws GameNotInitializedException 
@@ -286,7 +278,7 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 		entityManager.persist(game);
 		entityManager.flush();
 		
-		sendGameMessage(game);
+		sendGameMessage((Player) players.toArray()[0]);
 	}
 
 
