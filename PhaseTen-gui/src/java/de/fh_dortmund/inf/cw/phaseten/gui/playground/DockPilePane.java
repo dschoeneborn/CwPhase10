@@ -15,13 +15,13 @@ import javax.swing.TransferHandler;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.CardCannotBeAddedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedException;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.OpenPileGuiData;
 
 /**
  * @author Robin Harbecke
@@ -29,17 +29,17 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PhaseNotCompletedExcepti
  */
 public class DockPilePane extends JPanel {
 	private static final long serialVersionUID = 7318654738136140956L;
-	
-	protected ServiceHandler serviceHandler;
-	protected DockPile dockPile;
 
-	public DockPilePane(ServiceHandler serviceHandler, DockPile dockPile) {
+	protected ServiceHandler serviceHandler;
+	protected OpenPileGuiData dockPile;
+
+	public DockPilePane(ServiceHandler serviceHandler, OpenPileGuiData dockPile) {
 		this.serviceHandler = serviceHandler;
 		this.dockPile = dockPile;
 		this.setLayout(new FlowLayout());
 		this.setTransferHandler(new TransferHandler("baseCard"));
 		this.setDropTarget(new DropTarget(this, new CardDropTargetListener()));
-		
+
 		this.updateData();
 	}
 
@@ -48,7 +48,7 @@ public class DockPilePane extends JPanel {
 		for (Card card : this.dockPile.getCards()) {
 			CardPane cardGui = new CardPane(card);
 			this.add(cardGui);
-		}		
+		}
 	}
 
 	class CardDropTargetListener implements DropTargetListener {
@@ -62,18 +62,22 @@ public class DockPilePane extends JPanel {
 			Transferable transfarable = dtde.getTransferable();
 			try {
 				Card card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
-				DockPilePane.this.serviceHandler.addToPileOnTable(card, DockPilePane.this.dockPile);
-			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | CardCannotBeAddedException
+				DockPilePane.this.serviceHandler.addToPileOnTable(card, DockPilePane.this.dockPile.getId());
+			}
+			catch (UnsupportedFlavorException | IOException | NotYourTurnException | CardCannotBeAddedException
 					| PhaseNotCompletedException e) {
 				e.printStackTrace();
-			} catch (MoveNotValidException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+			}
+			catch (MoveNotValidException e) {
+				// TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
 				e.printStackTrace();
-			} catch (NotLoggedInException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+			}
+			catch (NotLoggedInException e) {
+				// TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
 				e.printStackTrace();
-			} catch (GameNotInitializedException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+			}
+			catch (GameNotInitializedException e) {
+				// TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
 				e.printStackTrace();
 			}
 			return;

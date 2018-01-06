@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.OpenPileGuiData;
 
 /**
  * @author Robin Harbecke
@@ -16,7 +16,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
  */
 public class PublicCardStackPane extends JPanel {
 	private static final long serialVersionUID = -4152706728493122866L;
-	
+
 	protected JScrollPane scrollPane;
 	protected JPanel stackListPanel = new JPanel();
 
@@ -32,12 +32,12 @@ public class PublicCardStackPane extends JPanel {
 		// this.setMaximumSize(new Dimension(500,200));
 		this.add(this.scrollPane);
 	}
-	
+
 	public void gameDataUpdated(GameGuiData game) {
 		this.stackListPanel.removeAll();
-		for (DockPile pile: game.getOpenPiles()) {
-			DockPilePane dockPilePane = new DockPilePane(this.serviceHandler, pile);			
+		for (OpenPileGuiData pile : game.getOpenPiles()) {
+			DockPilePane dockPilePane = new DockPilePane(this.serviceHandler, pile);
 			this.stackListPanel.add(dockPilePane);
 		}
-	}	
+	}
 }

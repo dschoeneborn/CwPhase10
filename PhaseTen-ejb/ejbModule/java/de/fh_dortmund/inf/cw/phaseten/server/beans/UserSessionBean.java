@@ -170,9 +170,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 * @author Tim Prange
 	 */
 	@Override
-	public void addToPileOnTable(Card card, DockPile dockPile)
+	public void addToPileOnTable(Card card, long dockPileId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		gameManagement.addToPileOnTable(getOrCreateCurrentPlayer(), card, dockPile);
+		gameManagement.addToPileOnTable(getOrCreateCurrentPlayer(), card, dockPileId);
 
 	}
 

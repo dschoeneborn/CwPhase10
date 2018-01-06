@@ -65,7 +65,7 @@ public interface UserSessionRemote extends UserSession {
 	 * @param card
 	 * @param dockPile
 	 */
-	void addToPileOnTable(Card card, DockPile dockPile)
+	void addToPileOnTable(Card card, long dockPileId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	/**

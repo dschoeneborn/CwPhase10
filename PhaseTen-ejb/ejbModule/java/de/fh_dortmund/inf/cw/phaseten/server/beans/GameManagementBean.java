@@ -127,9 +127,10 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @throws GameNotInitializedException
 	 */
 	@Override
-	public void addToPileOnTable(Player player, Card card, DockPile dockPile)
+	public void addToPileOnTable(Player player, Card card, long dockPileId)
 			throws MoveNotValidException, GameNotInitializedException {
 		Game game = getActualPlayedGame(player);
+		DockPile dockPile = entityManager.find(DockPile.class, dockPileId);
 		if (gameValidation.isValidToAddCard(game, player, dockPile, card)) {
 			dockPile.addCard(card);
 			player.removeCardFromPlayerPile(card);

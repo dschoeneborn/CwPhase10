@@ -17,16 +17,20 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsExcep
 public interface GameManagement {
 	void takeCardFromLiFoStack(Player player) throws MoveNotValidException, GameNotInitializedException;
 
-	void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException, GameNotInitializedException;
+	void addToPileOnTable(Player player, Card card, long dockPileId)
+			throws MoveNotValidException, GameNotInitializedException;
 
 	void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException, GameNotInitializedException;
 
 	void takeCardFromPullstack(Player player) throws MoveNotValidException, GameNotInitializedException;
 
-	void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException, GameNotInitializedException;
+	void layPhaseToTable(Player player, Collection<DockPile> piles)
+			throws MoveNotValidException, GameNotInitializedException;
 
-	void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card) throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException;
+	void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card)
+			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException;
 
-	void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, Card card) throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException;
+	void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, Card card)
+			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException;
 
 }

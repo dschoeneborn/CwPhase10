@@ -142,9 +142,9 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void addToPileOnTable(Card card, DockPile dockPile)
+	public void addToPileOnTable(Card card, long dockPileId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		userSessionRemote.addToPileOnTable(card, dockPile);
+		userSessionRemote.addToPileOnTable(card, dockPileId);
 	}
 
 	@Override

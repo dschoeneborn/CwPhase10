@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
@@ -20,7 +19,7 @@ public class GameGuiData implements Serializable {
 	private Collection<PlayerGuiData> players;
 	private Collection<String> spectators;
 	private Card liFoStackTop;
-	private Collection<DockPile> openPiles;
+	private Collection<OpenPileGuiData> openPiles;
 
 	/**
 	 * Constructor for GameGuiData.java
@@ -31,7 +30,7 @@ public class GameGuiData implements Serializable {
 	 * @param openPiles
 	 */
 	public GameGuiData(Collection<PlayerGuiData> players, Collection<String> spectators, Card liFoStackTop,
-			Collection<DockPile> openPiles) {
+			Collection<OpenPileGuiData> openPiles) {
 		super();
 		this.players = players;
 		this.spectators = spectators;
@@ -56,7 +55,7 @@ public class GameGuiData implements Serializable {
 		return liFoStackTop;
 	}
 
-	public Collection<DockPile> getOpenPiles() {
+	public Collection<OpenPileGuiData> getOpenPiles() {
 		return openPiles;
 	}
 
@@ -68,6 +67,6 @@ public class GameGuiData implements Serializable {
 		}
 
 		return new GameGuiData(PlayerGuiData.from(game.getPlayers()), spectatorNames, game.getLiFoStack().showCard(),
-				game.getOpenPiles());
+				OpenPileGuiData.from(game.getOpenPiles()));
 	}
 }

@@ -29,31 +29,31 @@ public interface ServiceHandler extends MessageListener {
 	void requestLobbyMessage();
 
 	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException;
-	
+
 	void enterLobbyAsSpectator() throws NotLoggedInException;
 
 	void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException;
 
 	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException;
-	
+
 	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
-	void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
-
-	void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+	void layPhaseToTable(Collection<DockPile> cards)
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
-	void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException;
+	void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException,
+			PlayerDoesNotExistsException, GameNotInitializedException;
 
 	void register(String username, String password) throws UsernameAlreadyTakenException;
 
 	void login(String username, String password) throws UserDoesNotExistException;
-	
+
 	void addObserver(Observer observer);
-	
+
 	void deleteObserver(Observer observer);
 
 	void logout() throws NotLoggedInException;
@@ -63,9 +63,23 @@ public interface ServiceHandler extends MessageListener {
 	boolean playerIsInGame() throws NotLoggedInException;
 
 	Collection<PlayerGuiData> getLobbyPlayers();
+
 	Collection<String> getLobbySpectators();
 
 	User getUser() throws NotLoggedInException;
 
 	Collection<Card> getCards() throws NotLoggedInException;
+
+	/**
+	 * TODO Add JavaDoc
+	 *
+	 * @author Tim Prange
+	 * @param card
+	 * @param dockPileId
+	 * @throws MoveNotValidException
+	 * @throws NotLoggedInException
+	 * @throws GameNotInitializedException
+	 */
+	void addToPileOnTable(Card card, long dockPileId)
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 }
