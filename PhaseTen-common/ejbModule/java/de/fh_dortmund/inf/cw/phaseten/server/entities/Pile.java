@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
  * @author Daniela Kaiser
  * @author Sebastian Seitz
  * @author Björn Merschmeier
+ * @author Robin Harbecke
  */
 @MappedSuperclass
 public abstract class Pile implements Serializable {
@@ -45,6 +46,14 @@ public abstract class Pile implements Serializable {
 	 * @param card
 	 */
 	public abstract boolean addCard(Card card);
+	
+	/**
+	 * @author Robin Harbecke
+	 * @param card
+	 */
+	public boolean canAddCard(Card card) {//todo implement
+		return false;
+	}
 	
 	/**
 	 * @author Björn Merschmeier

@@ -5,16 +5,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Stage;
+
 /**
  * @author Marc Mettke
+ * @author Robin Harbecke
  */
 public class Player implements Serializable {
 	private static final long serialVersionUID = -2947823309554723821L;
 	
 	private String playerName;
-	private int phase;
+	private Stage phase;
 	
-	public Player(String playerName, int phase) {
+	public Player(String playerName, Stage phase) {
 		super();
 		this.playerName = playerName;
 		this.phase = phase;
@@ -23,7 +26,8 @@ public class Player implements Serializable {
 	public String getPlayerName() {
 		return playerName;
 	}
-	public int getPhase() {
+	
+	public Stage getPhase() {
 		return phase;
 	}
 	
@@ -31,7 +35,7 @@ public class Player implements Serializable {
 		// TODO: Add phase from player Object
 		return new Player(
 			player.getName(),
-			player.getPhase().getValue()
+			player.getPhase()
 		);
 	}
 	
