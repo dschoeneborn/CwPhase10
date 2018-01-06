@@ -388,7 +388,7 @@ public class GameManagementBean implements GameManagementLocal {
 		playerManagment.sendUserMessage();
 	}
 
-	private void sendGameMessage(de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData game) {
+	private void sendGameMessage(GameGuiData game) {
 		Message message = jmsContext.createObjectMessage(game);
 		jmsContext.createProducer().send(gameMessageTopic, message);
 	}
