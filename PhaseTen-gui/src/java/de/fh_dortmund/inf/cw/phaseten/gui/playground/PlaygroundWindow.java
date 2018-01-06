@@ -9,7 +9,9 @@ import de.fh_dortmund.inf.cw.phaseten.gui.GuiManager;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiObserver;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
@@ -19,12 +21,12 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
  */
 public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 	private static final long serialVersionUID = -8685207683648562278L;
-	
+
 	protected TopRowPane topRowPane;
 	protected PublicCardStackPane publicCardStackPane;
 	protected PlayerCardsPane playerCardsPane = new PlayerCardsPane();
 	protected StatusPanel statusPanel = new StatusPanel();
-	
+
 	public PlaygroundWindow(ServiceHandler serviceHandler, GuiManager guiManager) {
 		super("Phaseten | Game", serviceHandler, guiManager);
 		this.publicCardStackPane = new PublicCardStackPane(this.serviceHandler);
@@ -39,29 +41,32 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+		try {
+			serviceHandler.requestGameMessage();
+		}
+		catch (PlayerDoesNotExistsException | NotLoggedInException | GameNotInitializedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void updated(Object object)
-	{
-		if(object instanceof GameGuiData)
-		{
+	public void updated(Object object) {
+		if (object instanceof GameGuiData) {
 			GameGuiData game = (GameGuiData) object;
-			
+
 			this.topRowPane.gameDataUpdated(game);
 			this.publicCardStackPane.gameDataUpdated(game);
 			this.pack();
 		}
-		
-		try
-		{
+
+		try {
 			this.playerCardsPane.updateData(serviceHandler.getCards());
 			this.statusPanel.updateData(serviceHandler.getUser());
 			this.pack();
 		}
-		catch (NotLoggedInException e)
-		{
-			throw new RuntimeException("User tried to get Cards while not logged in in Game-Screen. This error should not happen!");
+		catch (NotLoggedInException e) {
+			throw new RuntimeException(
+					"User tried to get Cards while not logged in in Game-Screen. This error should not happen!");
 		}
 	}
 }

@@ -6,6 +6,7 @@ import javax.ejb.Local;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 
 /**
  * @author Marc Mettke
@@ -24,4 +25,8 @@ public interface GameManagementLocal extends GameManagement {
 	 * @param game the game to put into that bean
 	 */
 	void startGame(Collection<Player> players, Collection<Spectator> spectators);
+
+	void requestGameMessage(Player player) throws GameNotInitializedException;
+
+	boolean isInGame(Player player);
 }

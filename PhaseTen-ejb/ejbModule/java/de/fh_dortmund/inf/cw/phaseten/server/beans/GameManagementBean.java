@@ -33,7 +33,6 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
 
@@ -43,12 +42,12 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
  * @author Tim Prange
  */
 @Stateless
-public class GameManagementBean implements GameManagementRemote, GameManagementLocal {
+public class GameManagementBean implements GameManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Game")
 	private Topic gameMessageTopic;
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -59,56 +58,47 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	GameValidationLocal gameValidation;
 
 	@Override
-	public void requestGameMessage(Player p) throws GameNotInitializedException
-	{
-		if(!getActualPlayedGame(p).isInitialized())
-		{
+	public void requestGameMessage(Player p) throws GameNotInitializedException {
+		if (!getActualPlayedGame(p).isInitialized()) {
 			try {
 				Thread.sleep(3000);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		if(getActualPlayedGame(p).isInitialized())
-		{
+
+		if (getActualPlayedGame(p).isInitialized()) {
 			sendGameMessage(p);
 		}
-		else
-		{
+		else {
 			throw new GameNotInitializedException();
 		}
 	}
 
 	@Override
-	public void sendGameMessage(Player p)
-	{
-		try
-		{
+	public void sendGameMessage(Player p) {
+		try {
 			sendGameMessage(GameGuiData.from(getActualPlayedGame(p)));
 		}
-		catch (GameNotInitializedException e)
-		{
+		catch (GameNotInitializedException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * @author Björn Merschmeier
-	 * @throws GameNotInitializedException 
+	 * @throws GameNotInitializedException
 	 */
 	@Override
-	public void takeCardFromPullstack(Player player) throws MoveNotValidException, GameNotInitializedException
-	{
+	public void takeCardFromPullstack(Player player) throws MoveNotValidException, GameNotInitializedException {
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidDrawCardFromPullStack(game, player))
-		{
+		if (gameValidation.isValidDrawCardFromPullStack(game, player)) {
 			Card drawnCard = game.getPullStack().pullTopCard();
 			player.addCardToPlayerPile(drawnCard);
 			player.addRoundStage();
 		}
-		else
-		{
+		else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
@@ -116,20 +106,17 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
-	 * @throws GameNotInitializedException 
+	 * @throws GameNotInitializedException
 	 */
 	@Override
-	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException, GameNotInitializedException
-	{
+	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException, GameNotInitializedException {
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidDrawCardFromLiFoStack(game, player))
-		{
+		if (gameValidation.isValidDrawCardFromLiFoStack(game, player)) {
 			Card drawnCard = game.getLiFoStack().pullTopCard();
 			player.addCardToPlayerPile(drawnCard);
 			player.addRoundStage();
 		}
-		else
-		{
+		else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
@@ -137,19 +124,17 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
-	 * @throws GameNotInitializedException 
+	 * @throws GameNotInitializedException
 	 */
 	@Override
-	public void addToPileOnTable(Player player, Card card, DockPile dockPile) throws MoveNotValidException, GameNotInitializedException
-	{
+	public void addToPileOnTable(Player player, Card card, DockPile dockPile)
+			throws MoveNotValidException, GameNotInitializedException {
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidToAddCard(game, player, dockPile, card))
-		{
+		if (gameValidation.isValidToAddCard(game, player, dockPile, card)) {
 			dockPile.addCard(card);
 			player.removeCardFromPlayerPile(card);
 		}
-		else
-		{
+		else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
@@ -157,28 +142,24 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
-	 * @throws GameNotInitializedException 
+	 * @throws GameNotInitializedException
 	 */
 	@Override
-	public void layPhaseToTable(Player player, Collection<DockPile> piles) throws MoveNotValidException, GameNotInitializedException
-	{
+	public void layPhaseToTable(Player player, Collection<DockPile> piles)
+			throws MoveNotValidException, GameNotInitializedException {
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidLayStageToTable(game, player, piles))
-		{
-			for (DockPile pile : piles)
-			{
+		if (gameValidation.isValidLayStageToTable(game, player, piles)) {
+			for (DockPile pile : piles) {
 				game.addOpenPile(pile);
 
-				for (Card card : pile.getCards())
-				{
+				for (Card card : pile.getCards()) {
 					player.removeCardFromPlayerPile(card);
 				}
 			}
 
 			player.setPlayerLaidStage(true);
 		}
-		else
-		{
+		else {
 			throw new MoveNotValidException();
 		}
 
@@ -187,20 +168,17 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
-	 * @throws GameNotInitializedException 
+	 * @throws GameNotInitializedException
 	 */
 	@Override
-	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException, GameNotInitializedException
-	{
+	public void layCardToLiFoStack(Player player, Card card) throws MoveNotValidException, GameNotInitializedException {
 		Game game = getActualPlayedGame(player);
-		if (gameValidation.isValidPushCardToLiFoStack(game, player, card))
-		{
+		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
 			game.getLiFoStack().addCard(card);
 			player.resetRoundStage();
 			setNextPlayer(game);
 		}
-		else
-		{
+		else {
 			throw new MoveNotValidException();
 		}
 
@@ -209,40 +187,34 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 
 	/**
 	 * @author Björn Merschmeier
-	 * @throws PlayerDoesNotExistsException 
-	 * @throws GameNotInitializedException 
+	 * @throws PlayerDoesNotExistsException
+	 * @throws GameNotInitializedException
 	 */
 	@Override
 	public void laySkipCardForPlayer(Player currentPlayer, Player destinationPlayer, Card card)
-			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException
-	{
+			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException {
 		laySkipCardForPlayerById(currentPlayer, destinationPlayer.getId(), card);
 	}
 
 	@Override
 	public void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, Card card)
-			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException
-	{
+			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException {
 		Game game = getActualPlayedGame(currentPlayer);
 		Player destinationPlayer = null;
-		
-		for(Player p : game.getPlayers())
-		{
-			if(p.getId() == destinationPlayerId)
-			{
+
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == destinationPlayerId) {
 				destinationPlayer = p;
 				break;
 			}
 		}
-		
-		if(destinationPlayer == null)
-		{
+
+		if (destinationPlayer == null) {
 			throw new PlayerDoesNotExistsException();
 		}
-		
+
 		if (card.getCardValue() == CardValue.SKIP
-				&& gameValidation.isValidLaySkipCard(currentPlayer, destinationPlayer, game))
-		{
+				&& gameValidation.isValidLaySkipCard(currentPlayer, destinationPlayer, game)) {
 			currentPlayer.removeCardFromPlayerPile(card);
 			destinationPlayer.givePlayerSkipCard();
 			currentPlayer.resetRoundStage();
@@ -265,66 +237,55 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void startGame(Collection<Player> playersCollection, Collection<Spectator> spectatorsCollection)
-	{
+	public void startGame(Collection<Player> playersCollection, Collection<Spectator> spectatorsCollection) {
 		Set<Player> players = new ArraySet<>(playersCollection);
 		Set<Spectator> spectators = new ArraySet<>(spectatorsCollection);
-		
+
 		Game game = new Game(players, spectators);
-		
+
 		initNextRound(game);
 		game.setInitialized();
 
 		entityManager.persist(game);
-		entityManager.flush();
-		
+
 		sendGameMessage((Player) players.toArray()[0]);
 	}
 
-
 	@Override
-	public boolean isInGame(Player p)
-	{
-		try
-		{
+	public boolean isInGame(Player p) {
+		try {
 			return (getActualPlayedGame(p) != null);
 		}
-		catch (GameNotInitializedException e)
-		{
+		catch (GameNotInitializedException e) {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
-	private void initNextRound(Game game)
-	{
+	private void initNextRound(Game game) {
 		initializePullstack(game);
 		initializeLiFoStack(game);
 		initializeFirstPlayer(game);
 		giveCardsToPlayers(game);
-		
-		if(game.getLiFoStack().showCard().getCardValue() == CardValue.SKIP)
-		{
+
+		if (game.getLiFoStack().showCard().getCardValue() == CardValue.SKIP) {
 			setNextPlayer(game);
 		}
-		
+
 	}
-	
+
 	/**
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
-	private void giveCardsToPlayers(Game game)
-	{
+	private void giveCardsToPlayers(Game game) {
 		List<Player> players = game.getPlayers();
-		
-		for(int i = 0; i < 10; i++)
-		{
-			for(Player player : players)
-			{
+
+		for (int i = 0; i < 10; i++) {
+			for (Player player : players) {
 				player.addCardToPlayerPile(game.getPullStack().pullTopCard());
 			}
 		}
@@ -334,13 +295,12 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
-	private void initializeFirstPlayer(Game game)
-	{
+	private void initializeFirstPlayer(Game game) {
 		List<Player> players = game.getPlayers();
-		
+
 		Random r = new Random();
 		int randomPlayer = r.nextInt(players.size());
-		
+
 		game.setCurrentPlayer(players.get(randomPlayer));
 	}
 
@@ -348,13 +308,12 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
-	private void initializeLiFoStack(Game game)
-	{
+	private void initializeLiFoStack(Game game) {
 		Card topCard = game.getPullStack().pullTopCard();
-		
+
 		LiFoStack lifoStack = new LiFoStack();
 		lifoStack.addCard(topCard);
-		
+
 		game.setLiFoStack(lifoStack);
 	}
 
@@ -362,39 +321,34 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
-	private void initializePullstack(Game game)
-	{
+	private void initializePullstack(Game game) {
 		PullStack pullStack = new PullStack();
 		pullStack.initializeCards();
 		pullStack.shuffle();
-		
+
 		game.setPullstack(pullStack);
 	}
 
 	/**
 	 * @author Björn Merschmeier
 	 * @param game
-	 * @throws MoveNotValidException 
+	 * @throws MoveNotValidException
 	 */
-	private void setNextPlayer(Game game)
-	{
+	private void setNextPlayer(Game game) {
 		Player nextPlayer = game.getNextPlayer();
 		game.setCurrentPlayer(nextPlayer);
-		
-		if(nextPlayer.hasSkipCard())
-		{
-			try
-			{
+
+		if (nextPlayer.hasSkipCard()) {
+			try {
 				layCardToLiFoStack(nextPlayer, new Card(Color.NONE, CardValue.SKIP));
 			}
-			catch(MoveNotValidException | GameNotInitializedException e)
-			{
-				throw new RuntimeException("There happend something awkward in the gamelogic. You cannot continue your game, please restart or contact your administrator. #1");
+			catch (MoveNotValidException | GameNotInitializedException e) {
+				throw new RuntimeException(
+						"There happend something awkward in the gamelogic. You cannot continue your game, please restart or contact your administrator. #1");
 			}
 			setNextPlayer(game);
 		}
-		else if(nextPlayer.hasNoCards())
-		{
+		else if (nextPlayer.hasNoCards()) {
 			countPoints(game);
 			initNextRound(game);
 		}
@@ -404,30 +358,23 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
-	private void countPoints(Game game)
-	{
+	private void countPoints(Game game) {
 		List<Player> players = game.getPlayers();
-		
-		for(Player player : players)
-		{
+
+		for (Player player : players) {
 			List<Card> remainingCards = player.getPlayerPile().getCards();
-			
-			for(Card remainingCard : remainingCards)
-			{
-				if(remainingCard.getCardValue().getValue() >= 5)
-				{
+
+			for (Card remainingCard : remainingCards) {
+				if (remainingCard.getCardValue().getValue() >= 5) {
 					player.addNegativePoints(5);
 				}
-				else if(remainingCard.getCardValue().getValue() >= 12)
-				{
+				else if (remainingCard.getCardValue().getValue() >= 12) {
 					player.addNegativePoints(10);
 				}
-				else if(remainingCard.getCardValue() == CardValue.SKIP)
-				{
+				else if (remainingCard.getCardValue() == CardValue.SKIP) {
 					player.addNegativePoints(15);
 				}
-				else if(remainingCard.getCardValue() == CardValue.WILD)
-				{
+				else if (remainingCard.getCardValue() == CardValue.WILD) {
 					player.addNegativePoints(20);
 				}
 			}
@@ -454,25 +401,20 @@ public class GameManagementBean implements GameManagementRemote, GameManagementL
 	 * @param Player p
 	 * @return game
 	 */
-	private Game getActualPlayedGame(Player p) throws GameNotInitializedException
-	{
+	private Game getActualPlayedGame(Player p) throws GameNotInitializedException {
 		Query query = entityManager.createNamedQuery("selectByUserId");
 		query.setParameter("playerId", p.getId());
-		
-		try
-		{
-			Game game = (Game)query.getSingleResult();
-			if(game.isInitialized())
-			{
+
+		try {
+			Game game = (Game) query.getSingleResult();
+			if (game.isInitialized()) {
 				return game;
 			}
-			else
-			{
+			else {
 				throw new GameNotInitializedException();
 			}
 		}
-		catch(NoResultException e)
-		{
+		catch (NoResultException e) {
 			throw new GameNotInitializedException();
 		}
 	}

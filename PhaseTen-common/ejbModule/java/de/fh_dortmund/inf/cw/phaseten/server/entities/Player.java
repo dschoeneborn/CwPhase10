@@ -1,11 +1,10 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +27,7 @@ import javax.persistence.OneToOne;
 public class Player implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -37,42 +36,35 @@ public class Player implements Serializable {
 	private long id;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@Basic(optional = false)
 	@JoinColumn(nullable = false, unique = true)
 	private PlayerPile playerPile;
 
 	@Column(nullable = false, unique = true)
-	@Basic(optional = false)
 	private String name;
 
 	@JoinColumn
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne()
 	private Game game;
 
 	@JoinColumn
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne()
 	private Lobby lobby;
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
-	@Basic(optional = false)
 	private Stage phase;
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
-	@Basic(optional = false)
 	private RoundStage roundStage;
 
 	@Column(nullable = false)
-	@Basic(optional = false)
 	private boolean playerLaidStage;
 
 	@Column(nullable = false)
-	@Basic(optional = false)
 	private boolean playerHasSkipCard;
-	
+
 	@Column(nullable = false)
-	@Basic(optional = false)
 	private int negativePoints;
 
 	private Player() {
@@ -84,20 +76,11 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * 
 	 * @param name
 	 */
 	public Player(String name) {
 		this();
 		this.name = name;
-	}
-
-	/**
-	 * 
-	 * @param game
-	 */
-	public void setGame(Game game) {
-		this.game = game;
 	}
 
 	public void removeGame() {
@@ -113,7 +96,6 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * 
 	 * @param lobby
 	 */
 	public void setLobby(Lobby lobby) {
@@ -128,25 +110,21 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * 
 	 * @return playerPile
 	 */
 	public PlayerPile getPlayerPile() {
 		return playerPile;
 	}
-	
-	public void addCardToPlayerPile(Card c)
-	{
+
+	public void addCardToPlayerPile(Card c) {
 		playerPile.addCard(c);
 	}
-	
-	public void removeCardFromPlayerPile(Card c)
-	{
+
+	public void removeCardFromPlayerPile(Card c) {
 		playerPile.removeCard(c);
 	}
 
 	/**
-	 * 
 	 * @return name
 	 */
 	public String getName() {
@@ -199,19 +177,23 @@ public class Player implements Serializable {
 		this.roundStage = RoundStage.PULL;
 	}
 
-	public boolean hasNoCards()
-	{
+	public boolean hasNoCards() {
 		return this.playerPile.getSize() == 0;
 	}
-	
-	public int getNegativePoints()
-	{
+
+	public int getNegativePoints() {
 		return negativePoints;
 	}
 
-	public void addNegativePoints(int i)
-	{
+	public void addNegativePoints(int i) {
 		negativePoints += i;
+	}
+
+	/**
+	 * @param game
+	 */
+	protected void setGame(Game game) {
+		this.game = game;
 	}
 
 }
