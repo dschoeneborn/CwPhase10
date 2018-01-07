@@ -39,6 +39,20 @@ public class PullStack extends Stack
 					addCard(new Card(color, value));
 				}
 			}
+			
+			addCard(new Card(Color.NONE, CardValue.SKIP));
+			addCard(new Card(Color.NONE, CardValue.SKIP));
+			addCard(new Card(Color.NONE, CardValue.SKIP));
+			addCard(new Card(Color.NONE, CardValue.SKIP));
+			
+			addCard(new Card(Color.NONE, CardValue.WILD));
+			addCard(new Card(Color.NONE, CardValue.WILD));
+			addCard(new Card(Color.NONE, CardValue.WILD));
+			addCard(new Card(Color.NONE, CardValue.WILD));
+			addCard(new Card(Color.NONE, CardValue.WILD));
+			addCard(new Card(Color.NONE, CardValue.WILD));
+			addCard(new Card(Color.NONE, CardValue.WILD));
+			addCard(new Card(Color.NONE, CardValue.WILD));
 		}
 	}
 	
