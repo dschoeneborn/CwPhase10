@@ -1,6 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -15,8 +16,6 @@ import javax.jms.Message;
 import javax.jms.Topic;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.jboss.weld.util.collections.ArraySet;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
@@ -227,8 +226,8 @@ public class GameManagementBean implements GameManagementLocal {
 	 */
 	@Override
 	public void startGame(Collection<Player> playersCollection, Collection<Spectator> spectatorsCollection) {
-		Set<Player> players = new ArraySet<>(playersCollection);
-		Set<Spectator> spectators = new ArraySet<>(spectatorsCollection);
+		Set<Player> players = new HashSet<>(playersCollection);
+		Set<Spectator> spectators = new HashSet<>(spectatorsCollection);
 
 		Game game = new Game(players, spectators);
 
