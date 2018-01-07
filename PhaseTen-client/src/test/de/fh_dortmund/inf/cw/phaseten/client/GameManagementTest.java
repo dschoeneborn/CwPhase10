@@ -118,7 +118,7 @@ public class GameManagementTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.addToPileOnTable(card, dockPile.getId());
+		this.serviceHandler.addToPileOnTable(card.getId(), dockPile.getId());
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 
@@ -165,7 +165,7 @@ public class GameManagementTest {
 
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchGame = new CountDownLatch(1);
-		this.serviceHandler.layCardToLiFoStack(card);
+		this.serviceHandler.layCardToLiFoStack(card.getId());
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 		this.latchGame.await(30, TimeUnit.SECONDS);
 

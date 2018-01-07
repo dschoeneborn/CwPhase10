@@ -62,7 +62,7 @@ public class DockPilePane extends JPanel {
 			Transferable transfarable = dtde.getTransferable();
 			try {
 				Card card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
-				DockPilePane.this.serviceHandler.addToPileOnTable(card, DockPilePane.this.dockPile.getId());
+				DockPilePane.this.serviceHandler.addToPileOnTable(card.getId(), DockPilePane.this.dockPile.getId());
 			}
 			catch (UnsupportedFlavorException | IOException | NotYourTurnException | CardCannotBeAddedException
 					| PhaseNotCompletedException e) {

@@ -23,7 +23,7 @@ public class TopRowPane extends JPanel {
 	private static final long serialVersionUID = -6210706602718026386L;
 
 	private DrawCardPilePane drawPile;
-	private DiscardCardPile discardPile;
+	private LiFoStackPane discardPile;
 
 	private PhaseCard phaseCard = new PhaseCard();
 	private UserList userList = new UserList();
@@ -33,7 +33,7 @@ public class TopRowPane extends JPanel {
 	public TopRowPane(ServiceHandler serviceHandler) {
 		this.serviceHandler = serviceHandler;
 		this.drawPile = new DrawCardPilePane(this.serviceHandler);
-		this.discardPile = new DiscardCardPile(this.serviceHandler);
+		this.discardPile = new LiFoStackPane(this.serviceHandler);
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.add(topJustify(this.drawPile));
 		this.add(Box.createHorizontalStrut(10));

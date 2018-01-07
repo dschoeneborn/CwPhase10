@@ -44,7 +44,7 @@ public class LiFoStackPane extends CardPilePane {
 			Card card;
 			try {
 				card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
-				LiFoStackPane.this.serviceHandler.layCardToLiFoStack(card);
+				LiFoStackPane.this.serviceHandler.layCardToLiFoStack(card.getId());
 			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | TakeCardBeforeDiscardingException e) {				
 			} catch (MoveNotValidException e) {
 				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben

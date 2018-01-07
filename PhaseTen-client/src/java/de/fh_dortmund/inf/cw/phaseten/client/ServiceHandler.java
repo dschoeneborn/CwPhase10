@@ -43,9 +43,7 @@ public interface ServiceHandler extends MessageListener {
 	void layPhaseToTable(Collection<DockPile> cards)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
-	void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
-
-	void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException,
+	void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException, NotLoggedInException,
 			PlayerDoesNotExistsException, GameNotInitializedException;
 
 	void register(String username, String password) throws UsernameAlreadyTakenException;
@@ -70,16 +68,9 @@ public interface ServiceHandler extends MessageListener {
 
 	Collection<Card> getCards() throws NotLoggedInException;
 
-	/**
-	 * TODO Add JavaDoc
-	 *
-	 * @author Tim Prange
-	 * @param card
-	 * @param dockPileId
-	 * @throws MoveNotValidException
-	 * @throws NotLoggedInException
-	 * @throws GameNotInitializedException
-	 */
-	void addToPileOnTable(Card card, long dockPileId)
+	void addToPileOnTable(long cardId, long dockPileId)
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+
+	void layCardToLiFoStack(long cardId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 }

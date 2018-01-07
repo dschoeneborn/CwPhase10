@@ -31,7 +31,7 @@ public class LiFoStack extends Stack {
 		if (this.cards.isEmpty()) {
 			return null;
 		}
-		return new LinkedList<>(this.cards).getFirst();
+		return new LinkedList<>(this.cards).getLast();
 	}
 
 	@Override

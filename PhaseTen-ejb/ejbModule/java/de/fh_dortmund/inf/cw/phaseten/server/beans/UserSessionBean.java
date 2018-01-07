@@ -8,7 +8,6 @@ import java.util.Collection;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
@@ -168,11 +167,12 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void addToPileOnTable(Card card, long dockPileId)
+	public void addToPileOnTable(long cardId, long dockPileId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		gameManagement.addToPileOnTable(getOrCreateCurrentPlayer(), card, dockPileId);
+		gameManagement.addToPileOnTable(getOrCreateCurrentPlayer(), cardId, dockPileId);
 
 	}
 
@@ -198,11 +198,12 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void layCardToLiFoStack(Card card)
+	public void layCardToLiFoStack(long cardId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		gameManagement.layCardToLiFoStack(getOrCreateCurrentPlayer(), card);
+		gameManagement.layCardToLiFoStack(getOrCreateCurrentPlayer(), cardId);
 
 	}
 
@@ -214,11 +215,12 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException,
+	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
 			NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
-		gameManagement.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, card);
+		gameManagement.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, cardId);
 
 	}
 
