@@ -4,9 +4,6 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -70,14 +67,26 @@ public class Game implements Serializable {
 
 	@Transient
 	private boolean gameInitialized = false;
+	
+	private Game()
+	{
+		
+	}
 
 	/**
+	 * @param arrayList2 
+	 * @param discardPile 
+	 * @param pullStack2 
+	 * @param hashSet 
+	 * @param arrayList 
 	 *
 	 */
-	private Game() {
-		this.players = new ArrayList<>();
-		this.spectators = new HashSet<>();
-		this.openPiles = new LinkedList<>();
+	public Game(Set<Player> players, Set<Spectator> spectators, PullStack pullStack2, LiFoStack discardPile)
+	{
+		this(players, spectators);
+
+		this.setPullstack(pullStack2);
+		this.setLiFoStack(discardPile);
 	}
 
 	public Game(Set<Player> players, Set<Spectator> spectators) {

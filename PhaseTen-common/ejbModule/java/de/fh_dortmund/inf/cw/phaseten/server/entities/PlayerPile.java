@@ -19,6 +19,7 @@ import javax.persistence.Id;
 @Entity
 public class PlayerPile extends Pile {
 	private static final long serialVersionUID = -3026757589448841719L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -33,7 +34,6 @@ public class PlayerPile extends Pile {
 
 	public boolean addCard(Card card) {
 		this.cards.add(0, card);
-		
 		return true;
 	}
 
