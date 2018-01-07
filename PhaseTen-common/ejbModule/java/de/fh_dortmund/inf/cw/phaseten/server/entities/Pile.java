@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,7 +30,7 @@ public abstract class Pile implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable
 	protected List<Card> cards;
 
