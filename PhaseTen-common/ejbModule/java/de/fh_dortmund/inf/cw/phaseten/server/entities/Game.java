@@ -4,6 +4,8 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -102,6 +104,10 @@ public class Game implements Serializable {
 	}
 
 	public void addSpectator(Spectator s) {
+		if(this.spectators == null)
+		{
+			this.spectators = new HashSet<>();
+		}
 		this.spectators.add(s);
 		s.setGame(this);
 	}
@@ -186,6 +192,10 @@ public class Game implements Serializable {
 	}
 
 	private void addPlayer(Player p) {
+		if(this.players == null)
+		{
+			this.players = new ArrayList<>();
+		}
 		this.players.add(p);
 		p.setGame(this);
 	}
