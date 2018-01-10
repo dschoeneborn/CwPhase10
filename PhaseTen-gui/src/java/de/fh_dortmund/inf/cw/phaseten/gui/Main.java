@@ -4,6 +4,7 @@ import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandlerImpl;
 
 public class Main {
 	public static void main(String[] args) {	
-		new GuiManager(ServiceHandlerImpl.getInstance());
+		GuiManager guiManager = new GuiManager(ServiceHandlerImpl.getInstance());
+		guiManager.dispose();
 	}
 }

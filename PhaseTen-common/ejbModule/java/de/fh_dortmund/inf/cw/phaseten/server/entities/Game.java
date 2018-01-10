@@ -5,12 +5,10 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,8 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import javax.persistence.Transient;
 
 /**
  * @author Dennis Schöneborn
@@ -33,65 +30,66 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * @author Björn Merschmeier
  * @author Tim Prange
  */
-@NamedQueries({
-	@NamedQuery(name="selectByUserId", query="SELECT g FROM Game g "
-											+ "JOIN Player p "
-											+ "WHERE p.id = :playerId")
-})
+@NamedQueries({ @NamedQuery(name = "selectByUserId", query = "SELECT g FROM Game g " + "JOIN Player p "
+		+ "WHERE p.id = :playerId") })
 @Entity
 public class Game implements Serializable {
-
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public static final int MAX_PLAYER = 6;
-	public static final int MIN_PLAYER = 3;
-	public static final int NUMBERS_OF_CARDS = 108;
+	public static final int MIN_PLAYER = 2;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "game")
-	@Basic(optional = false)
+	@OneToMany(mappedBy = "game")
 	private List<Player> players;
 
 	@Column
 	private int currentPlayer;
 
-	// TODO - BM - 20.12.2017 - Diese Variable soll verwendet werden oder es müssen
-	// getter und setter erstellt werden
 	@Column
-	private int lastRoundBeginner;
+	private int lastRoundBeginner = -1;
 
-	@Basic(optional = false)
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, unique = true)
 	private PullStack pullStack;
 
-	@Basic(optional = false)
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, unique = true)
 	private LiFoStack liFoStack;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(unique = true)
 	private List<DockPile> openPiles;
 
 	@OneToMany(mappedBy = "game")
-	private Set<Spectator> spectators;
+	private List<Spectator> spectators;
+
+	@Transient
+	private boolean gameInitialized = false;
+	
+	private Game()
+	{
+		openPiles = new ArrayList<DockPile>();
+		spectators = new ArrayList<Spectator>();
+	}
 
 	/**
+	 * @param arrayList2 
+	 * @param discardPile 
+	 * @param pullStack2 
+	 * @param hashSet 
+	 * @param arrayList 
 	 *
 	 */
-	private Game() {
-		this.players = new ArrayList<>();
-		this.spectators = new HashSet<>();
-		this.pullStack = new PullStack();
-		this.liFoStack = new LiFoStack();
-		this.openPiles = new LinkedList<>();
+	public Game(Set<Player> players, Set<Spectator> spectators, PullStack pullStack2, LiFoStack discardPile)
+	{
+		this(players, spectators);
+
+		this.setPullstack(pullStack2);
+		this.setLiFoStack(discardPile);
 	}
 
 	public Game(Set<Player> players, Set<Spectator> spectators) {
@@ -104,73 +102,6 @@ public class Game implements Serializable {
 		for (Spectator spectator : spectators) {
 			this.addSpectator(spectator);
 		}
-	}
-
-	/**
-	 * @param p1
-	 * @param p2
-	 */
-	public Game(Player p1, Player p2) {
-		this();
-		this.addPlayer(p1);
-		this.addPlayer(p2);
-	}
-
-	/**
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 */
-	public Game(Player p1, Player p2, Player p3) {
-		this(p1, p2);
-		this.addPlayer(p3);
-	}
-
-	/**
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 * @param p4
-	 */
-	public Game(Player p1, Player p2, Player p3, Player p4) {
-		this(p1, p2, p3);
-		this.addPlayer(p4);
-	}
-
-	/**
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 * @param p4
-	 * @param p5
-	 */
-	public Game(Player p1, Player p2, Player p3, Player p4, Player p5) {
-		this(p1, p2, p3, p4);
-		this.addPlayer(p5);
-	}
-
-	/**
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 * @param p4
-	 * @param p5
-	 * @param p6
-	 */
-	public Game(Player p1, Player p2, Player p3, Player p4, Player p5, Player p6) {
-		this(p1, p2, p3, p4, p5);
-		this.addPlayer(p6);
-	}
-
-	public Game(ArrayList<?> arrayList, ArrayList<?> arrayList2, PullStack pullStack2, LiFoStack liFoStack2,
-			ArrayList<?> arrayList3) {
-		// TODO Auto-generated constructor stub
-		throw new NotImplementedException();
-	}
-
-	private void addPlayer(Player p) {
-		this.players.add(p);
-		p.setGame(this);
 	}
 
 	public void addSpectator(Spectator s) {
@@ -192,11 +123,11 @@ public class Game implements Serializable {
 		this.openPiles.add(pile);
 	}
 
-	public List<Player> getPlayers() {
+	public Collection<Player> getPlayers() {
 		return players;
 	}
 
-	public Set<Spectator> getSpectators() {
+	public Collection<Spectator> getSpectators() {
 		return spectators;
 	}
 
@@ -216,22 +147,53 @@ public class Game implements Serializable {
 	}
 
 	public void setCurrentPlayer(Player player) {
-		this.currentPlayer = players.indexOf(player);
+		currentPlayer = players.indexOf(player);
 	}
 
-	public void nextCurrentPlayer() {
-		if (players.size() > currentPlayer + 1) {
-			currentPlayer++;
-		}
-		else {
-			currentPlayer = 0;
-		}
+	public Player getNextPlayer() {
+		return players.get((currentPlayer + 1) % players.size());
 	}
 
 	public long getId() {
 		return id;
 	}
 
-	// TODO Fassadenmethoden für die eintelnen Stacks
+	public void setPullstack(PullStack pullStack) {
+		this.pullStack = pullStack;
+	}
 
+	public void setLiFoStack(LiFoStack lifoStack) {
+		this.liFoStack = lifoStack;
+	}
+
+	public void setLastRoundBeginner(Player roundBeginner) {
+		lastRoundBeginner = players.indexOf(roundBeginner);
+	}
+
+	public Player getLastRoundBeginner() {
+		Player result = null;
+
+		if (lastRoundBeginner != -1) {
+			result = players.get(lastRoundBeginner);
+		}
+
+		return result;
+	}
+
+	public boolean isInitialized() {
+		return gameInitialized;
+	}
+
+	public void setInitialized() {
+		gameInitialized = true;
+	}
+
+	private void addPlayer(Player p) {
+		if(this.players == null)
+		{
+			this.players = new ArrayList<>();
+		}
+		this.players.add(p);
+		p.setGame(this);
+	}
 }

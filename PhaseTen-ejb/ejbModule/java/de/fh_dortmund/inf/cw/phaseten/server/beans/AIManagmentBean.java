@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 
-import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.AISimplePlayerImpl;
+import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.SimpleAiBean;
 import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.IAIPlayer;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.CardsToPileAction;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.TakeCardAction;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.AIManagementLocal;
 
 /**
@@ -18,7 +18,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.AIManagementLocal;
  */
 @Stateless
 public class AIManagmentBean implements AIManagementLocal {
-	private static IAIPlayer aiPlayer = new AISimplePlayerImpl();
+	private static IAIPlayer aiPlayer = new SimpleAiBean();
 	
 	/**
 	 * First AI action in a single turn. Defines which card the ai wants to take
@@ -36,7 +36,7 @@ public class AIManagmentBean implements AIManagementLocal {
 			}
 		}
 	 */
-	public TakeCardAction takeCard(CurrentPlayer player, Game game) {
+	public TakeCardAction takeCard(Player player, Game game) {
 		return aiPlayer.takeCard(player, game);
 	}
 	
@@ -59,7 +59,7 @@ public class AIManagmentBean implements AIManagementLocal {
 			}
 		} while(actions.size() > 0);
 	 */
-	public List<CardsToPileAction> cardsToPile(CurrentPlayer player, Game game) {
+	public List<CardsToPileAction> cardsToPile(Player player, Game game) {
 		return aiPlayer.cardsToPile(player, game);
 	}
 	
@@ -73,7 +73,7 @@ public class AIManagmentBean implements AIManagementLocal {
 		Card card = discardCard(CurrentPlayer.from(...), Game.from(...));
 		// Remove Card from CurrentPlayer Array 
 	 */
-	public Card discardCard(CurrentPlayer player, Game game) {
+	public Card discardCard(Player player, Game game) {
 		return aiPlayer.discardCard(player, game);
 	}
 }

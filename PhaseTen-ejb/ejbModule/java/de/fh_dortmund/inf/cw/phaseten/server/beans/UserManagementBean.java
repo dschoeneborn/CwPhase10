@@ -21,12 +21,12 @@ import javax.persistence.PersistenceContext;
 import javax.xml.bind.DatatypeConverter;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
 
 /**
  * @author Marc Mettke
@@ -34,11 +34,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
  * @author Björn Merschmeier
  */
 @Stateless
-public class UserManagementBean implements UserManagementRemote, UserManagementLocal {
+public class UserManagementBean implements UserManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
-	
-	@Resource(lookup = "java:global/jms/CurrentPlayer")
+
+	@Resource(lookup = "java:global/jms/User")
 	private Topic playerMessageTopic;
 
 	@EJB
@@ -46,88 +46,128 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 
 	@PersistenceContext
 	private EntityManager em;
-	
+
 	private List<String> onlineUsers = synchronizedList(new LinkedList<>());
 
 	@Override
 	public void requestPlayerMessage(Player p) {
-		sendPlayerMessage(p);
+		sendUserMessage();
 	}
 
 	@Override
 	public User register(String username, String password) throws UsernameAlreadyTakenException {
 		User foundUser = null;
 		User user = new User(username, this.computeHash(password));
-		
-		try 
-		{
-			try
-			{
-				foundUser = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
+
+		try {
+			try {
+				foundUser = em.createNamedQuery("User.findByName", User.class).setParameter("name", username)
+						.getSingleResult();
 				throw new EntityExistsException();
 			}
-			catch(NoResultException e)
-			{
+			catch (NoResultException e) {
 				em.persist(user);
 			}
 		}
-		catch (EntityExistsException e)
-		{
+		catch (EntityExistsException e) {
 			throw new UsernameAlreadyTakenException();
 		}
 
-		try
-		{
+		try {
 			foundUser = this.login(username, password);
 		}
-		catch (UserDoesNotExistException e)
-		{
+		catch (UserDoesNotExistException e) {
 			e.printStackTrace();
 		}
 
 		this.lobbyManagment.sendLobbyMessage();
-		
+
 		return foundUser;
 	}
 
 	@Override
-	public User login(String username, String password) throws UserDoesNotExistException
-	{
+	public User login(String username, String password) throws UserDoesNotExistException {
 		password = computeHash(password);
-		
-		User user = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
-		
-		if(user == null || !user.getPassword().equals(password))
-		{
+
+		User user = null;
+
+		try {
+			user = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
+		}
+		catch (NoResultException e) {
 			throw new UserDoesNotExistException();
 		}
-		
+
+		if (user == null || !user.getPassword().equals(password)) {
+			user = null;
+			throw new UserDoesNotExistException();
+		}
+
 		onlineUsers.add(user.getLoginName());
-		
+
 		this.lobbyManagment.sendLobbyMessage();
-		
+
 		return user;
 	}
 
 	@Override
-	public void sendPlayerMessage(Player p) {
-		Message message = jmsContext.createObjectMessage(p);
+	public void sendUserMessage() {
+		Message message = jmsContext.createObjectMessage();
 		jmsContext.createProducer().send(playerMessageTopic, message);
 	}
 
 	@Override
 	public void logout(User currentUser) {
-		if(currentUser.getPlayer() != null)
-		{
-			lobbyManagment.leaveLobby(currentUser.getPlayer());
+		if (currentUser != null) {
+			if (currentUser.getPlayer() != null) {
+				lobbyManagment.leaveLobby(currentUser.getPlayer());
+			}
+
+			if (currentUser.getSpectator() != null) {
+				lobbyManagment.leaveLobby(currentUser.getSpectator());
+			}
+
+			onlineUsers.remove(currentUser.getLoginName());
 		}
-		
-		if(currentUser.getSpectator() != null)
-		{
-			lobbyManagment.leaveLobby(currentUser.getSpectator());
+	}
+
+	@Override
+	public Player getOrCreatePlayer(User user) {
+		User currentUser = em.find(User.class, user.getId());
+
+		Player foundPlayer = null;
+
+		if (currentUser.getPlayer() != null) {
+			foundPlayer = currentUser.getPlayer();
 		}
-		
-		onlineUsers.remove(currentUser.getLoginName());
+		else {
+			foundPlayer = new Player(currentUser.getLoginName());
+			currentUser.setPlayer(foundPlayer);
+			em.persist(currentUser);
+		}
+		em.flush();
+
+		return foundPlayer;
+	}
+
+	@Override
+	public Spectator getOrCreateSpectator(User user) {
+		User currentUser = em.find(User.class, user.getId());
+
+		Spectator foundSpectator = null;
+
+		if (currentUser.getSpectator() != null) {
+			foundSpectator = currentUser.getSpectator();
+		}
+		else {
+			foundSpectator = new Spectator(currentUser.getLoginName());
+			currentUser.setSpectator(foundSpectator);
+			em.persist(currentUser);
+		}
+
+		em.flush();
+
+		return foundSpectator;
 	}
 
 	private String computeHash(String pw) {
@@ -135,7 +175,8 @@ public class UserManagementBean implements UserManagementRemote, UserManagementL
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			byte[] hash = digest.digest(pw.getBytes());
 			return DatatypeConverter.printHexBinary(hash);
-		} catch (NoSuchAlgorithmException e) {
+		}
+		catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
 	}

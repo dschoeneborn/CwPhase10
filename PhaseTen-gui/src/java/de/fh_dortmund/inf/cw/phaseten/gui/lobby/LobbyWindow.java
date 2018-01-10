@@ -12,41 +12,197 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.gui.GuiFrame;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiManager;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiObserver;
+import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
  * @author Marc Mettke
  * @author Sven Krefeld
+ * @author Björn Merschmeier
  */
-public class LobbyWindow extends GuiFrame {
+public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserver {
 	private static final long serialVersionUID = -3411026015858719190L;
+	
+	public static final String ACTIONCOMMAND_SPECTATE = "spectate";
+	public static final String ACTIONCOMMAND_PLAY = "play";
+	public static final String ACTIONCOMMAND_DISCONNECT = "disconnect";
+	public static final String ACTIONCOMMAND_START = "start";
+	
+	public static final String WINDOW_NAME = "Phaseten | Lobby";
+	public static final String SPECTATE = "Zuschauen";
+	public static final String JOIN = "Beitreten";
+	public static final String DISCONNECT = "Verlassen";
+	public static final String START = "Starten";
 
 	private ServiceHandler serviceHandler;
 
 	protected ButtonPane buttonPane = new ButtonPane();
 	protected UserList userList = new UserList();
 	protected StatusPanel statusPanel = new StatusPanel();
+	private JButton spectatorButton;
+	private JButton startGameButton;
 
-	public LobbyWindow(ServiceHandler serviceHandler) {
-		super("Phaseten | Lobby", serviceHandler);
+	public LobbyWindow(ServiceHandler serviceHandler, GuiManager guiManager)
+	{
+		super(WINDOW_NAME, serviceHandler, guiManager);
 		this.serviceHandler = serviceHandler;
 		this.setContentPane(this.setUI());
 		this.setResizable(false);
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+		this.updated(null);
 	}
 
-	private Container setUI() {
+	@Override
+	public void updated(Object o)
+	{
+		if(o instanceof GameGuiData)
+		{
+			getGuiManager().showPlaygoundGui();
+		}
+		
+		try
+		{
+			User u;
+			u = serviceHandler.getUser();
+			
+			statusPanel.updateData(u);
+		}
+		catch (NotLoggedInException e)
+		{
+			new RuntimeException("Lobby is shown, but user is not logged in. This error should not happen");
+		}
+
+		userList.updateData(serviceHandler.getLobbyPlayers(), serviceHandler.getLobbySpectators());
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		switch(e.getActionCommand())
+		{
+			case ACTIONCOMMAND_SPECTATE: joinAsSpectator(); break;
+			case ACTIONCOMMAND_PLAY: joinAsPlayer(); break;
+			case ACTIONCOMMAND_DISCONNECT: disconnectFromLobby(); break;
+			case ACTIONCOMMAND_START: startGame(); break;
+			default: break;
+		}
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private void joinAsSpectator()
+	{
+		try
+		{
+			serviceHandler.enterLobbyAsSpectator();
+			
+			startGameButton.setText(DISCONNECT);
+			startGameButton.setActionCommand(ACTIONCOMMAND_DISCONNECT);
+		}
+		catch (NotLoggedInException e1)
+		{
+			e1.printStackTrace();
+			//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+		}
+		spectatorButton.setEnabled(false);
+		startGameButton.setEnabled(false);
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private void joinAsPlayer()
+	{
+		try
+		{
+			serviceHandler.enterLobbyAsPlayer();
+			spectatorButton.setEnabled(false);
+			
+			startGameButton.setText(START);
+			startGameButton.setActionCommand(ACTIONCOMMAND_START);
+		}
+		catch (NoFreeSlotException exception)
+		{
+			//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+			exception.printStackTrace();
+			startGameButton.setEnabled(false);
+		}
+		catch (PlayerDoesNotExistsException e1)
+		{
+			//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+			e1.printStackTrace();
+		}
+		catch (NotLoggedInException e2)
+		{
+			//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+			e2.printStackTrace();
+		}
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private void disconnectFromLobby()
+	{
+		try
+		{
+			serviceHandler.exitLobby();
+		}
+		catch (NotLoggedInException e)
+		{
+			//User is not logged in at this time
+			this.getGuiManager().showLoginGui();
+		}
+		
+		spectatorButton = new JButton(SPECTATE);
+		spectatorButton.setActionCommand(ACTIONCOMMAND_SPECTATE);
+		startGameButton = new JButton(JOIN);
+		startGameButton.setActionCommand(ACTIONCOMMAND_PLAY);
+	}
+	
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private void startGame()
+	{
+		try
+		{
+			serviceHandler.startGame();
+		}
+		catch (NotEnoughPlayerException exception)
+		{
+			//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+			exception.printStackTrace();
+		}
+		catch (PlayerDoesNotExistsException e1)
+		{
+			//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
+			e1.printStackTrace();
+		}
+		catch (NotLoggedInException e2)
+		{
+			//User is not logged in at this time
+			this.getGuiManager().showLoginGui();
+		}
+	}
+
+	private Container setUI()
+	{
 		JPanel panel = new JPanel();
 		GroupLayout layout = new GroupLayout(panel);
 		panel.setLayout(layout);
@@ -54,58 +210,12 @@ public class LobbyWindow extends GuiFrame {
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		
-		final JButton spectatorButton = new JButton("Zuschauen");
-		final JButton startGameButton = new JButton("Beitreten");
-		
-		spectatorButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					serviceHandler.enterLobbyAsSpectator();
-				} catch (NotLoggedInException e1) {
-					e1.printStackTrace();
-					//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
-				}
-				spectatorButton.setEnabled(false);
-				startGameButton.setEnabled(false);
-			}
-		});
-
-		startGameButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					serviceHandler.enterLobbyAsPlayer();
-					spectatorButton.setEnabled(false);
-					
-					startGameButton.setText("Starten");
-					startGameButton.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							try {
-								serviceHandler.startGame();
-							} catch (NotEnoughPlayerException exception) {
-								//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
-								exception.printStackTrace();
-							} catch (PlayerDoesNotExistsException e1) {
-								//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
-								e1.printStackTrace();
-							} catch (NotLoggedInException e2) {
-								//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
-								e2.printStackTrace();
-							}
-						}
-			    	});
-				} catch (NoFreeSlotException exception) {
-					//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
-					exception.printStackTrace();
-					startGameButton.setEnabled(false);
-				} catch (PlayerDoesNotExistsException e1) {
-					//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
-					e1.printStackTrace();
-				} catch (NotLoggedInException e2) {
-					//TODO - BM - 04.01.2018 - Fehlermeldung abfangen und darstellen!
-					e2.printStackTrace();
-				}
-			}
-		});
+		spectatorButton = new JButton(SPECTATE);
+		spectatorButton.setActionCommand(ACTIONCOMMAND_SPECTATE);
+		spectatorButton.addActionListener(this);
+		startGameButton = new JButton(JOIN);
+		startGameButton.setActionCommand(ACTIONCOMMAND_PLAY);
+		startGameButton.addActionListener(this);
 
 		JLabel label = new JLabel("Some text");
 
@@ -134,20 +244,5 @@ public class LobbyWindow extends GuiFrame {
 				);
 		
 		return panel;
-	}
-
-	@Override
-	public void gameDataUpdated(Game game) {
-		//TODO - BM - 04.01.2018 - was ist hier zu tun?
-	}
-
-	@Override
-	public void currentPlayerDataUpdated(CurrentPlayer currentPlayer) {
-		statusPanel.updateData(currentPlayer);
-	}
-
-	@Override
-	public void lobbyDataUpdated(Lobby lobby) {
-		userList.updateData(lobby.getPlayers(), lobby.getSpectators());
 	}
 }

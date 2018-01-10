@@ -17,7 +17,8 @@ import javax.naming.NamingException;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
@@ -25,27 +26,19 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote;
 
 /**
  * @author Marc Mettke
  * @author Tim Prange
+ * @author Björn Merschmeier
  */
 public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	private static ServiceHandlerImpl instance;
 
 	private Context context;
-	private StubRemote stubRemote;
-	private UserManagementRemote playerManagmentRemote;
-	private LobbyManagementRemote lobbyManagmentRemote;
-	private GameManagementRemote gameManagmentRemote;
 	private UserSessionRemote userSessionRemote;
 
 	private JMSContext jmsContext;
@@ -59,32 +52,20 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	private ServiceHandlerImpl() {
 		try {
 			context = new InitialContext();
-			stubRemote = (StubRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/ServerStub!de.fh_dortmund.inf.cw.phaseten.server.shared.StubRemote");
-			playerManagmentRemote = (UserManagementRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/UserManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementRemote");
-			lobbyManagmentRemote = (LobbyManagementRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/LobbyManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote");
-			gameManagmentRemote = (GameManagementRemote) context.lookup(
-					"java:global/PhaseTen-ear/PhaseTen-ejb/GameManagementBean!de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementRemote");
 			userSessionRemote = (UserSessionRemote) context.lookup(
 					"java:global/PhaseTen-ear/PhaseTen-ejb/UserSessionBean!de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote");
-					
-			
+
 			ConnectionFactory connectionFactory = (ConnectionFactory) context
 					.lookup("java:comp/DefaultJMSConnectionFactory");
 			jmsContext = connectionFactory.createContext();
 
-			playerMessageTopic = (Topic) context.lookup("java:global/jms/CurrentPlayer");
+			playerMessageTopic = (Topic) context.lookup("java:global/jms/User");
 			lobbyMessageTopic = (Topic) context.lookup("java:global/jms/Lobby");
-			gameMessageTopic = (Topic) context.lookup("java:global/jms/Game");
 
 			this.playerConsumer = jmsContext.createConsumer(playerMessageTopic);
 			this.playerConsumer.setMessageListener(this);
 			this.lobbyConsumer = jmsContext.createConsumer(lobbyMessageTopic);
 			this.lobbyConsumer.setMessageListener(this);
-			this.gameConsumer = jmsContext.createConsumer(gameMessageTopic);
-			this.gameConsumer.setMessageListener(this);
 		}
 		catch (NamingException ex) {
 			throw new RuntimeException(ex);
@@ -99,76 +80,150 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public String helloWorld() {
-		return stubRemote.helloWorld();
-	}
-
-	@Override
-	public void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException {		
-		this.playerManagmentRemote.requestPlayerMessage(getOrCreateCurrentPlayer());
+	public void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException {
+		userSessionRemote.requestPlayerMessage();
 	}
 
 	@Override
 	public void requestLobbyMessage() {
-		this.lobbyManagmentRemote.requestLobbyMessage();
+
+		userSessionRemote.requestLobbyMessage();
 	}
 
 	@Override
-	public void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException {
-		this.gameManagmentRemote.requestGameMessage(getOrCreateCurrentPlayer());
+	public void requestGameMessage()
+			throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException {
+		userSessionRemote.requestGameMessage();
 	}
 
 	@Override
 	public void register(String username, String password) throws UsernameAlreadyTakenException {
-		this.playerManagmentRemote.register(username, password);
+		userSessionRemote.register(username, password);
+		
+		createNewGameQueueConsumerWithMessageSelector();
 	}
 
 	@Override
 	public void login(String username, String password) throws UserDoesNotExistException {
-		this.playerManagmentRemote.login(username, password);
+		userSessionRemote.login(username, password);
+
+		createNewGameQueueConsumerWithMessageSelector();
 	}
 
 	@Override
-	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException
-	{
-		this.lobbyManagmentRemote.enterLobby(getOrCreateCurrentPlayer());
-	}
-	
-	@Override
-	public void enterLobbyAsSpectator() throws NotLoggedInException
-	{
-		this.lobbyManagmentRemote.enterLobby(getOrCreateCurrentSpectator());
+	public void logout() throws NotLoggedInException {
+		userSessionRemote.logout();
 	}
 
 	@Override
-	public void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException
-	{
-		this.lobbyManagmentRemote.startGame(getOrCreateCurrentPlayer());
+	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException {
+		userSessionRemote.enterLobbyAsPlayer();
+	}
+
+	@Override
+	public void enterLobbyAsSpectator() throws NotLoggedInException {
+		userSessionRemote.enterLobbyAsSpectator();
+	}
+
+	@Override
+	public void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException {
+		userSessionRemote.startGame();
+	}
+
+	@Override
+	public void takeCardFromPullstack()
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+		userSessionRemote.takeCardFromPullstack();
+	}
+
+	@Override
+	public void takeCardFromLiFoStack()
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+		userSessionRemote.takeCardFromLiFoStack();
+	}
+
+	@Override
+	public void addToPileOnTable(long cardId, long dockPileId)
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+		userSessionRemote.addToPileOnTable(cardId, dockPileId);
+	}
+
+	@Override
+	public void layPhaseToTable(Collection<DockPile> cards)
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+		userSessionRemote.layPhaseToTable(cards);
+	}
+
+	@Override
+	public void layCardToLiFoStack(long cardId)
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+		userSessionRemote.layCardToLiFoStack(cardId);
+	}
+
+	@Override
+	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
+			NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
+		userSessionRemote.laySkipCardForPlayer(destinationPlayerId, cardId);
+	}
+
+	@Override
+	public void exitLobby() throws NotLoggedInException {
+		userSessionRemote.exitLobby();
+	}
+
+	@Override
+	public boolean playerIsInGame() throws NotLoggedInException {
+		return userSessionRemote.playerIsInGame();
+	}
+
+	@Override
+	public Collection<PlayerGuiData> getLobbyPlayers() {
+		return userSessionRemote.getLobbyPlayers();
+	}
+
+	@Override
+	public Collection<String> getLobbySpectators() {
+		return userSessionRemote.getLobbySpectators();
+	}
+
+	@Override
+	public User getUser() throws NotLoggedInException {
+		return userSessionRemote.getUser();
+	}
+
+	@Override
+	public Collection<Card> getCards() throws NotLoggedInException {
+		Player currentPlayer = userSessionRemote.getOrCreatePlayer();
+		return currentPlayer.getPlayerPile().getCards();
+	}
+
+	public JMSConsumer getPlayerConsumer() {
+		return playerConsumer;
+	}
+
+	public JMSConsumer getLobbyConsumer() {
+		return lobbyConsumer;
+	}
+
+	public JMSConsumer getGameConsumer() {
+		return gameConsumer;
 	}
 
 	@Override
 	public void onMessage(Message message) {
 		try {
-			if (message.getJMSDestination().equals(playerMessageTopic) && message instanceof ObjectMessage)
-			{
-				CurrentPlayer currentPlayer = (CurrentPlayer) ((ObjectMessage) message).getObject();
+			if (message.getJMSDestination().equals(playerMessageTopic) && message instanceof ObjectMessage) {
 				setChanged();
-				notifyObservers(currentPlayer);
-				System.out.println("Received CurrentPlayer Object: " + currentPlayer);
+				notifyObservers();
 			}
-			else if (message.getJMSDestination().equals(lobbyMessageTopic) && message instanceof ObjectMessage)
-			{
-				Lobby lobby = (Lobby) ((ObjectMessage) message).getObject();
+			else if (message.getJMSDestination().equals(lobbyMessageTopic) && message instanceof ObjectMessage) {
 				setChanged();
-				notifyObservers(lobby);
-				System.out.println("Received Lobby Object: " + lobby);
+				notifyObservers();
 			}
-			else if (message.getJMSDestination().equals(gameMessageTopic) && message instanceof ObjectMessage)
-			{
-				Game game = (Game) ((ObjectMessage) message).getObject();
+			else if (message.getJMSDestination().equals(gameMessageTopic) && message instanceof ObjectMessage) {
+				GameGuiData game = (GameGuiData) ((ObjectMessage) message).getObject();
 				setChanged();
 				notifyObservers(game);
-				System.out.println("Received Game Object: " + game);
 			}
 		}
 		catch (JMSException e) {
@@ -176,58 +231,19 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 		}
 	}
 
-	@Override
-	public void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException {
-		gameManagmentRemote.takeCardFromPullstack(getOrCreateCurrentPlayer());
-	}
-
-	@Override
-	public void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException {
-		gameManagmentRemote.takeCardFromLiFoStack(getOrCreateCurrentPlayer());
-	}
-
-	@Override
-	public void addToPileOnTable(Card card, DockPile dockPile) throws MoveNotValidException, NotLoggedInException {
-		gameManagmentRemote.addToPileOnTable(getOrCreateCurrentPlayer(), card, dockPile);
-	}
-
-	@Override
-	public void layPhaseToTable(Collection<DockPile> cards) throws MoveNotValidException, NotLoggedInException {
-		gameManagmentRemote.layPhaseToTable(getOrCreateCurrentPlayer(), cards);
-	}
-
-	@Override
-	public void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException {
-		gameManagmentRemote.layCardToLiFoStack(getOrCreateCurrentPlayer(), card);
-	}
-
-	@Override
-	public void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException, PlayerDoesNotExistsException {
-		gameManagmentRemote.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, card);
-	}
-	
-	public JMSConsumer getPlayerConsumer()
-	{
-		return playerConsumer;
-	}
-	
-	public JMSConsumer getLobbyConsumer()
-	{
-		return lobbyConsumer;
-	}
-	
-	public JMSConsumer getGameConsumer()
-	{
-		return gameConsumer;
-	}
-	
-	private Spectator getOrCreateCurrentSpectator() throws NotLoggedInException
-	{
-		return userSessionRemote.getOrCreateSpectator();
-	}
-
-	private Player getOrCreateCurrentPlayer() throws NotLoggedInException
-	{
-		return userSessionRemote.getOrCreatePlayer();
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private void createNewGameQueueConsumerWithMessageSelector() {
+		try {
+			String messageSelector = "userNames LIKE '%;-;-;" + userSessionRemote.getUser().getLoginName() + ";-;-;%'";
+			gameMessageTopic = (Topic) context.lookup("java:global/jms/Game");
+			gameConsumer = jmsContext.createConsumer(gameMessageTopic, messageSelector);
+			gameConsumer.setMessageListener(this);
+		}
+		catch (NamingException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

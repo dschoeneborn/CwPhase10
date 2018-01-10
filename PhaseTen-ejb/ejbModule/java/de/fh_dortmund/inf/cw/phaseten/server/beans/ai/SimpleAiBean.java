@@ -13,17 +13,17 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.CardsToPileAction;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.TakeCardAction;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Game;
 
 /**
  * @author Robin Harbecke
  */
-public class AISimplePlayerImpl implements IAIPlayer {
+public class SimpleAiBean implements IAIPlayer {
 	@Override
-	public TakeCardAction takeCard(CurrentPlayer player, Game game) {	
+	public TakeCardAction takeCard(Player player, Game game) {	
 		Card discardCard = game.getLiFoStack().showCard();
 		
 		double ratingWithDiscardCard = getRatingWithExtraCard(player, game, discardCard);
@@ -49,9 +49,9 @@ public class AISimplePlayerImpl implements IAIPlayer {
 		}		
 	}
 	
-	private double getRatingWithExtraCard(CurrentPlayer player, Game game, Card card) {
+	private double getRatingWithExtraCard(Player player, Game game, Card card) {
 		return RateCardsUtil.rateCards(
-				player.getPlayerLaidStage(), 
+				player.playerLaidStage(), 
 				player.getPhase(), 
 				SimPile.from(
 					player.getPlayerPile(), 
@@ -62,8 +62,8 @@ public class AISimplePlayerImpl implements IAIPlayer {
 	}
 
 	@Override
-	public List<CardsToPileAction> cardsToPile(CurrentPlayer player, Game game) {		
-		if(!player.getPlayerLaidStage()) {
+	public List<CardsToPileAction> cardsToPile(Player player, Game game) {		
+		if(!player.playerLaidStage()) {
 			return this.layPhase(player, game);			
 		}else
 		{			
@@ -72,7 +72,7 @@ public class AISimplePlayerImpl implements IAIPlayer {
 		
 	}
 	
-	private List<CardsToPileAction> layPhase(CurrentPlayer player, Game game) {
+	private List<CardsToPileAction> layPhase(Player player, Game game) {
 		List<CardsToPileAction> actions = new ArrayList<CardsToPileAction>();
 		MissingResult rating = RateCardsForPhaseUtil.getPhaseResult(SimPile.from(player.getPlayerPile()), player.getPhase());
 		if(rating instanceof FoundPhaseResult) {
@@ -84,7 +84,7 @@ public class AISimplePlayerImpl implements IAIPlayer {
 		return actions;
 	}
 	
-	private List<CardsToPileAction> putCardsToExistingPile(CurrentPlayer player, Game game) {
+	private List<CardsToPileAction> putCardsToExistingPile(Player player, Game game) {
 		List<CardsToPileAction> actions = new ArrayList<CardsToPileAction>();
 		for (Card card : player.getPlayerPile().getCards()) {
 			for (DockPile pile: game.getOpenPiles()) {
@@ -97,7 +97,7 @@ public class AISimplePlayerImpl implements IAIPlayer {
 	}
 
 	@Override
-	public Card discardCard(CurrentPlayer player, Game game) {
+	public Card discardCard(Player player, Game game) {
 		Card minCard = null;
 		double minCardRating = Double.MAX_VALUE;
 		double tmpRating = -1;
@@ -113,9 +113,9 @@ public class AISimplePlayerImpl implements IAIPlayer {
 		return minCard;
 	}
 	
-	private double getRatingWithoutCard(CurrentPlayer player, Game game, Card card) {
+	private double getRatingWithoutCard(Player player, Game game, Card card) {
 		return RateCardsUtil.rateCards(
-				player.getPlayerLaidStage(), 
+				player.playerLaidStage(), 
 				player.getPhase(), 
 				SimPile.from(
 					player.getPlayerPile()

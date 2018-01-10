@@ -13,8 +13,7 @@ import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.PlayerListEntryGUI;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.SpectatorListEntryGui;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.UserListEntry;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.UserListRenderer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Player;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 
 /**
  * @author Robin Harbecke
@@ -40,12 +39,12 @@ public class UserList extends JPanel{
 	}
 		
 	
-	public void updateData(Collection<Player> players, Collection<Spectator> spectators) {
+	public void updateData(Collection<PlayerGuiData> collection, Collection<String> collection2) {
 		this.listModel.removeAllElements();
-		for (Player player : players) {
+		for (PlayerGuiData player : collection) {
 			this.listModel.addElement(new PlayerListEntryGUI(player));
 		}
-		for (Spectator spectator : spectators) {
+		for (String spectator : collection2) {
 			this.listModel.addElement(new SpectatorListEntryGui(spectator));
 		}		
 	}

@@ -1,11 +1,10 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,35 +19,32 @@ import javax.persistence.ManyToOne;
  * @author Björn Merschmeier
  */
 @Entity
-public class Spectator implements Serializable{
+public class Spectator implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3498449127463809540L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
-	@ManyToOne(cascade=CascadeType.PERSIST)
-	@JoinColumn(name="GAME_ID")
+
+	@ManyToOne()
+	@JoinColumn(name = "GAME_ID")
 	private Game game;
-	
+
 	private String name;
-	
+
 	@SuppressWarnings("unused")
-	private Spectator()
-	{
-		
+	private Spectator() {
+
 	}
-	
-	public Spectator(String name)
-	{
+
+	public Spectator(String name) {
 		this.name = name;
 	}
-	
-	public Spectator(String name, Game game)
-	{
+
+	public Spectator(String name, Game game) {
 		this(name);
 		this.game = game;
 	}
@@ -60,19 +56,18 @@ public class Spectator implements Serializable{
 		return game;
 	}
 
-	/**
-	 * @param game the game to set
-	 */
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
 	public long getId() {
 		return id;
 	}
-	
-	public String getName()
-	{
+
+	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @param game the game to set
+	 */
+	protected void setGame(Game game) {
+		this.game = game;
 	}
 }

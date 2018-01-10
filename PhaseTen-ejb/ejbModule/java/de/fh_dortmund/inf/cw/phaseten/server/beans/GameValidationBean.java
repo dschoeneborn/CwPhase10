@@ -35,13 +35,16 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * isValidDrawCardFromLiFoStack(de.fh_dortmund.inf.cw.phaseten.server.entities.
 	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
 	 */
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public boolean isValidDrawCardFromLiFoStack(Game g, Player player) {
 		boolean pullCardAllowed = true;
 
-		Card cardOnTop = g.getLiFoStack().showCard();
-
-		if (cardOnTop.getCardValue() == CardValue.SKIP || !playerIsCurrentPlayer(g, player)
+		if (!g.isInitialized()
+				|| g.getLiFoStack().showCard().getCardValue() == CardValue.SKIP 
+				|| !playerIsCurrentPlayer(g, player)
 				|| player.getRoundStage() != RoundStage.PULL) {
 			pullCardAllowed = false;
 		}
@@ -56,15 +59,21 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player,
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Card)
 	 */
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public boolean isValidPushCardToLiFoStack(Game g, Player player, Card c) {
 		boolean pushCardToLiFoStackAllowed = false;
 
-		if (playerIsCurrentPlayer(g, player)
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, player)
 				&& (player.getRoundStage() == RoundStage.PUT_AND_PUSH
 						|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP))
 				&& playerHasCard(c, player)
-				&& (!player.hasSkipCard() || (player.hasSkipCard() && c.getCardValue() == CardValue.SKIP))) {
+				&& (!player.hasSkipCard() 
+						|| (player.hasSkipCard() && c.getCardValue() == CardValue.SKIP)))
+		{
 			pushCardToLiFoStackAllowed = true;
 		}
 
@@ -77,13 +86,17 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * isValidDrawCardFromPullStack(de.fh_dortmund.inf.cw.phaseten.server.entities.
 	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
 	 */
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public boolean isValidDrawCardFromPullStack(Game g, Player player) {
 		boolean pullCardAllowed = false;
 
 		Player currentPlayer = g.getCurrentPlayer();
 
-		if (playerIsCurrentPlayer(g, player) && currentPlayer.getRoundStage() == RoundStage.PULL
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, player) && currentPlayer.getRoundStage() == RoundStage.PULL
 				&& !currentPlayer.hasSkipCard()) {
 			pullCardAllowed = true;
 		}
@@ -109,7 +122,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 			cardsInPiles.addAll(pile.getCards());
 		}
 
-		if (playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
 				&& !p.playerLaidStage() && playerHasCards(cardsInPiles, p)) {
 			switch (p.getPhase()) {
 			case TWO_TRIPLES:
@@ -159,32 +173,45 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Pile,
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Card)
 	 */
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
 	public boolean isValidToAddCard(Game g, Player p, Pile pile, Card c) {
 		boolean addCardAllowed = false;
 
-		if (playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& p.getPlayerPile().getSize() >= 1 && p.playerLaidStage() && playerHasCard(c, p)) {
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, p) 
+				&& !p.hasSkipCard() 
+				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
+				&& p.getPlayerPile().getSize() > 1 
+				&& p.playerLaidStage() && playerHasCard(c, p)) 
+		{
 			if (pile instanceof SetDockPile) {
 				SetDockPile setDockPile = (SetDockPile) pile;
 
-				if (setDockPile.getCardValue() == c.getCardValue()) {
+				if (setDockPile.getCardValue() == c.getCardValue())
+				{
 					addCardAllowed = true;
 				}
 			}
-			else if (pile instanceof SequenceDockPile) {
+			else if (pile instanceof SequenceDockPile)
+			{
 				SequenceDockPile sequenceDockPile = (SequenceDockPile) pile;
 
 				if ((sequenceDockPile.getMinimum().getValue() - 1 == c.getCardValue().getValue()
 						|| sequenceDockPile.getMaximum().getValue() + 1 == c.getCardValue().getValue()
-						|| c.getCardValue() == CardValue.WILD) && !pileIsFull(sequenceDockPile)) {
+						|| c.getCardValue() == CardValue.WILD) && !pileIsFull(sequenceDockPile))
+				{
 					addCardAllowed = true;
 				}
 			}
-			else if (pile instanceof ColorDockPile) {
+			else if (pile instanceof ColorDockPile)
+			{
 				ColorDockPile colorDockPile = (ColorDockPile) pile;
 
-				if (colorDockPile.getColor() == c.getColor()) {
+				if (colorDockPile.getColor() == c.getColor())
+				{
 					addCardAllowed = true;
 				}
 			}
@@ -210,9 +237,12 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Card skipCard = new Card(Color.NONE, CardValue.SKIP);
 
-		if (playerHasCard(skipCard, currentPlayer) && (currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH)
+		if (playerHasCard(skipCard, currentPlayer)
+				&& currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH
 				&& playerIsCurrentPlayer(g, currentPlayer) && !currentPlayer.hasSkipCard()
-				&& !destinationPlayer.hasSkipCard()) {
+				&& !destinationPlayer.hasSkipCard()
+				&& !destinationPlayer.hasNoCards()
+				&& currentPlayer.getPlayerPile().getSize() > 1) {
 			canLaySkipCard = true;
 		}
 
@@ -302,7 +332,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 */
 	private boolean pileIsFull(SequenceDockPile sequenceDockPile) {
 		// TODO needs to include wildcards
-		return sequenceDockPile.getMinimum() == CardValue.ONE && sequenceDockPile.getMaximum() == CardValue.TWELVE;
+		return (sequenceDockPile.getMinimum() == CardValue.ONE && sequenceDockPile.getMaximum() == CardValue.TWELVE);
 	}
 
 	/**

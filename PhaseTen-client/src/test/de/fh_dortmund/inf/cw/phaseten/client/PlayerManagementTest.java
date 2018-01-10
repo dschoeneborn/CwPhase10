@@ -11,9 +11,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
-import de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby;
-
 /**
  * @author Marc Mettke
  */
@@ -55,7 +52,6 @@ public class PlayerManagementTest {
 		this.latchPlayer.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 	}
 
 	//@Test
@@ -72,9 +68,7 @@ public class PlayerManagementTest {
 		this.latchLobby.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageLobby).getObject() instanceof Lobby);
 	}
 
 	//@Test
@@ -91,8 +85,6 @@ public class PlayerManagementTest {
 		this.latchLobby.await(30, TimeUnit.SECONDS);
 
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messagePlayer).getObject() instanceof CurrentPlayer);
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
-		Assert.assertTrue(((ObjectMessage) messageLobby).getObject() instanceof Lobby);
 	}
 }

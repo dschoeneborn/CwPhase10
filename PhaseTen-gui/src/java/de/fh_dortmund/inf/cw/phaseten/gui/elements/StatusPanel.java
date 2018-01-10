@@ -5,7 +5,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import de.fh_dortmund.inf.cw.phaseten.server.messages.CurrentPlayer;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 
 /**
  * @author Robin Harbecke
@@ -36,10 +36,11 @@ public class StatusPanel extends JPanel{
 		}
 		this.add(Box.createHorizontalGlue());		
 	}
-	
-	public void updateData(CurrentPlayer currentPlayer) {
-		this.statusLabel.setText(currentPlayer.getStatus());
-		this.nameLabel.setText(currentPlayer.getName());
-		this.coinsLabel.setText(String.valueOf(currentPlayer.getCoins()));
+
+	public void updateData(User user)
+	{
+		this.statusLabel.setText("TODO - Status setzen");
+		this.nameLabel.setText(user.getLoginName());
+		this.coinsLabel.setText(user.getCoins() + "");
 	}
 }

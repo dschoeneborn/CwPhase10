@@ -1,5 +1,8 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -8,20 +11,20 @@ import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.Topic;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote;
 
 /**
  * @author Marc Mettke
@@ -29,12 +32,12 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementRemote;
  * @author Björn Merschmeier
  */
 @Stateless
-public class LobbyManagementBean implements LobbyManagementRemote, LobbyManagementLocal {
+public class LobbyManagementBean implements LobbyManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Lobby")
 	private Topic lobbyMessageTopic;
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -47,75 +50,68 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	public void requestLobbyMessage() {
 		sendLobbyMessage();
 	}
-	
+
 	/**
 	 * @author Björn Merschmeier
 	 */
 	@Override
 	public void sendLobbyMessage() {
-		de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby messageLobby = 
-				de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby.from(getOrCreateLobby());
-		
-		sendLobbyMessage(messageLobby);
+		Message message = jmsContext.createObjectMessage();
+		jmsContext.createProducer().send(lobbyMessageTopic, message);
 	}
-	
+
 	/**
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void enterLobby(Player player) throws NoFreeSlotException
-	{
+	public void enterLobby(Player player) throws NoFreeSlotException {
 		Lobby l = getOrCreateLobby();
-		
-		if(l.isFull())
-		{
+
+		if (l.isFull()) {
 			throw new NoFreeSlotException();
 		}
-		
+
 		l.addPlayer(player);
-		
-		entityManager.flush();
+
 		sendLobbyMessage();
 	}
 
 	@Override
-	public void leaveLobby(Player player)
-	{
-		Lobby lobby = getLobbyByPlayer(player);
-		
+	public void leaveLobby(Player player) {
+		Lobby lobby = getOrCreateLobby();
+
 		lobby.removePlayer(player);
-		
-		if(lobby.getNumberOfPlayers() <= 0)
-		{
+
+		if (lobby.getNumberOfPlayers() <= 0) {
 			entityManager.remove(lobby);
 			entityManager.flush();
 		}
 	}
-	
+
 	/**
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void enterLobby(Spectator spectator)
-	{
+	public void enterLobby(Spectator spectator) {
 		Lobby l = getOrCreateLobby();
-		
+
 		l.addSpectator(spectator);
-		
-		entityManager.flush();
+
+		entityManager.merge(l);
+
 		sendLobbyMessage();
 	}
-	
+
 	/**
 	 * The spectator leaves his lobby (not checked if spectator is in lobby)
+	 *
 	 * @author Björn Merschmeier
 	 * @param Spectator spectator is the spectator to delete
 	 */
 	@Override
-	public void leaveLobby(Spectator spectator)
-	{
-		Lobby lobby = getLobbyBySpectator(spectator);
-		
+	public void leaveLobby(Spectator spectator) {
+		Lobby lobby = getOrCreateLobby();
+
 		lobby.removeSpectator(spectator);
 	}
 
@@ -124,69 +120,55 @@ public class LobbyManagementBean implements LobbyManagementRemote, LobbyManageme
 	 */
 	@Override
 	public void startGame(Player player) throws NotEnoughPlayerException {
-		Lobby lobby = getLobbyByPlayer(player);
-		
+		Lobby lobby = getOrCreateLobby();
+
 		if (!gameValidation.hasEnoughPlayers(lobby)) {
 			throw new NotEnoughPlayerException();
 		}
-		
-		Game game = new Game(lobby.getPlayers(), lobby.getSpectators());
-		
-		entityManager.persist(game);
-		gameManagment.startGame(game);
-		entityManager.flush();
-		
+
+		gameManagment.startGame(lobby.getPlayers(), lobby.getSpectators());
+
+		for (Player p : lobby.getPlayers()) {
+			p.setLobby(null);
+		}
 		entityManager.remove(lobby);
+		entityManager.flush();
 	}
 
-	private void sendLobbyMessage(de.fh_dortmund.inf.cw.phaseten.server.messages.Lobby lobby) {
-		Message message = jmsContext.createObjectMessage(lobby);
-		jmsContext.createProducer().send(lobbyMessageTopic, message);
+	@Override
+	public Collection<PlayerGuiData> getPlayersForGui() {
+		return PlayerGuiData.from(getOrCreateLobby().getPlayers());
 	}
 
-	/**
-	 * Gets the latest Lobby from DB in which the player is present
-	 *
-	 * @author Tim Prange
-	 * @author Björn Merschmeier
-	 * @param Player player
-	 * @return Lobby
-	 */
-	private Lobby getLobbyByPlayer(Player player) {
-		Query namedQuery = entityManager.createNamedQuery("lobby.selectLobbyByUserId");
-		namedQuery.setParameter("playerId", player.getId());
-		return (Lobby)namedQuery.getSingleResult();
-	}
+	@Override
+	public Collection<String> getSpectatorNamesForGui() {
+		ArrayList<String> result = new ArrayList<>();
 
-	/**
-	 * Returns the lobby in which the spectator is present
-	 * @author Björn Merschmeier
-	 * @param Spectator spectator
-	 */
-	private Lobby getLobbyBySpectator(Spectator spectator) {
-		Query namedQuery = entityManager.createNamedQuery("lobby.selectLobbyBySpectatorId");
-		namedQuery.setParameter("spectatorId", spectator.getId());
-		return (Lobby)namedQuery.getSingleResult();
+		for (Spectator s : getOrCreateLobby().getSpectators()) {
+			result.add(s.getName());
+		}
+
+		return result;
 	}
 
 	/**
 	 * Returns the latest lobby from the database
+	 *
 	 * @author Björn Merschmeier
 	 */
-	private Lobby getOrCreateLobby()
-	{
+	private Lobby getOrCreateLobby() {
 		Query namedQuery = entityManager.createNamedQuery("lobby.selectLatest");
-		
-		try
-		{
-			return (Lobby)namedQuery.getSingleResult();
+
+		try {
+			namedQuery.setLockMode(LockModeType.PESSIMISTIC_READ);
+			return (Lobby) namedQuery.getSingleResult();
 		}
-		catch(NoResultException e)
-		{
+		catch (NoResultException e) {
 			Lobby l = new Lobby();
 			entityManager.persist(l);
+			entityManager.lock(l, LockModeType.PESSIMISTIC_READ);
 			entityManager.flush();
-			
+
 			return l;
 		}
 	}
