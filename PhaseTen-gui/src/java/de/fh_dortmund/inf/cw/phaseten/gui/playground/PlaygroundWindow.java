@@ -9,6 +9,7 @@ import de.fh_dortmund.inf.cw.phaseten.gui.GuiManager;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiObserver;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.lay_phase.LayPhaseCardsRowPane;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
@@ -24,6 +25,7 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 
 	protected TopRowPane topRowPane;
 	protected PublicCardStackPane publicCardStackPane;
+	protected LayPhaseCardsRowPane layPhaseCardsRowPane;
 	protected PlayerCardsPane playerCardsPane = new PlayerCardsPane();
 	protected StatusPanel statusPanel = new StatusPanel();
 
@@ -31,9 +33,11 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 		super("Phaseten | Game", serviceHandler, guiManager);
 		this.publicCardStackPane = new PublicCardStackPane(this.serviceHandler);
 		this.topRowPane = new TopRowPane(this.serviceHandler);
+		this.layPhaseCardsRowPane = new LayPhaseCardsRowPane(serviceHandler);
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		this.add(this.topRowPane);
 		this.add(Box.createVerticalGlue());
+		this.add(this.publicCardStackPane);
 		this.add(this.publicCardStackPane);
 		this.add(this.playerCardsPane);
 		this.add(this.statusPanel);

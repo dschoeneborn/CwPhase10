@@ -42,6 +42,15 @@ public class DockPilePane extends JPanel {
 		
 		this.updateData();
 	}
+	
+	protected void handleCardDrop(Card card) {
+		try {
+			this.serviceHandler.addToPileOnTable(card, this.dockPile);
+		} catch (MoveNotValidException e) {		
+		} catch (NotLoggedInException e) {
+		} catch (GameNotInitializedException e) {			
+		}
+	}
 
 	protected void updateData() {
 		this.removeAll();
@@ -62,18 +71,8 @@ public class DockPilePane extends JPanel {
 			Transferable transfarable = dtde.getTransferable();
 			try {
 				Card card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
-				DockPilePane.this.serviceHandler.addToPileOnTable(card, DockPilePane.this.dockPile);
-			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | CardCannotBeAddedException
-					| PhaseNotCompletedException e) {
-				e.printStackTrace();
-			} catch (MoveNotValidException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
-				e.printStackTrace();
-			} catch (NotLoggedInException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
-				e.printStackTrace();
-			} catch (GameNotInitializedException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
+				DockPilePane.this.handleCardDrop(card);
+			} catch (UnsupportedFlavorException | IOException e) {
 				e.printStackTrace();
 			}
 			return;
