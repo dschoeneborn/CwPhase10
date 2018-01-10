@@ -17,6 +17,11 @@ public class OpenPileGuiData {
 		this.cards = cards;
 		this.id = id;
 	}
+	
+	public OpenPileGuiData()
+	{
+		this.cards = new ArrayList<Card>();
+	}
 
 	/**
 	 * Returns cards

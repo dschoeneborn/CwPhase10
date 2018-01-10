@@ -72,7 +72,8 @@ public class Game implements Serializable {
 	
 	private Game()
 	{
-		
+		openPiles = new ArrayList<DockPile>();
+		spectators = new HashSet<Spectator>();
 	}
 
 	/**
@@ -104,10 +105,6 @@ public class Game implements Serializable {
 	}
 
 	public void addSpectator(Spectator s) {
-		if(this.spectators == null)
-		{
-			this.spectators = new HashSet<>();
-		}
 		this.spectators.add(s);
 		s.setGame(this);
 	}
