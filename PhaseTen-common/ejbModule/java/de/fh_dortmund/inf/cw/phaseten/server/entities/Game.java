@@ -5,7 +5,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +65,7 @@ public class Game implements Serializable {
 	private List<DockPile> openPiles;
 
 	@OneToMany(mappedBy = "game")
-	private Set<Spectator> spectators;
+	private List<Spectator> spectators;
 
 	@Transient
 	private boolean gameInitialized = false;
@@ -73,7 +73,7 @@ public class Game implements Serializable {
 	private Game()
 	{
 		openPiles = new ArrayList<DockPile>();
-		spectators = new HashSet<Spectator>();
+		spectators = new ArrayList<Spectator>();
 	}
 
 	/**
@@ -123,11 +123,11 @@ public class Game implements Serializable {
 		this.openPiles.add(pile);
 	}
 
-	public List<Player> getPlayers() {
+	public Collection<Player> getPlayers() {
 		return players;
 	}
 
-	public Set<Spectator> getSpectators() {
+	public Collection<Spectator> getSpectators() {
 		return spectators;
 	}
 

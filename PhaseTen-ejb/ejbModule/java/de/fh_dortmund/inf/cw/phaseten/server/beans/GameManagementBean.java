@@ -1,5 +1,6 @@
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -288,7 +289,7 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void giveCardsToPlayers(Game game) {
-		List<Player> players = game.getPlayers();
+		Collection<Player> players = game.getPlayers();
 
 		for (int i = 0; i < 10; i++) {
 			for (Player player : players) {
@@ -302,7 +303,7 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void initializeFirstPlayer(Game game) {
-		List<Player> players = game.getPlayers();
+		List<Player> players = new ArrayList<Player>(game.getPlayers());
 
 		Random r = new Random();
 		int nextPlayer = 0;
@@ -411,7 +412,7 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void countPoints(Game game) {
-		List<Player> players = game.getPlayers();
+		List<Player> players = new ArrayList<Player>(game.getPlayers());
 
 		for (Player player : players) {
 			List<Card> remainingCards = player.getPlayerPile().getCards();

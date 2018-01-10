@@ -42,10 +42,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	public boolean isValidDrawCardFromLiFoStack(Game g, Player player) {
 		boolean pullCardAllowed = true;
 
-		Card cardOnTop = g.getLiFoStack().showCard();
-
 		if (!g.isInitialized()
-				|| cardOnTop.getCardValue() == CardValue.SKIP 
+				|| g.getLiFoStack().showCard().getCardValue() == CardValue.SKIP 
 				|| !playerIsCurrentPlayer(g, player)
 				|| player.getRoundStage() != RoundStage.PULL) {
 			pullCardAllowed = false;
