@@ -3,6 +3,8 @@ package de.fh_dortmund.inf.cw.phaseten.gui.playground;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
