@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.DockPilePane;
-import javafx.scene.layout.Pane;
 
 /**
  * @author Robin Harbecke
