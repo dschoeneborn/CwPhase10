@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.card;
 
 import javax.swing.JPanel;
 

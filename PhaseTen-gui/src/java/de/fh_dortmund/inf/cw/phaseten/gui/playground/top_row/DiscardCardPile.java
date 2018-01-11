@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.top_row;
 
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -10,6 +10,8 @@ import java.awt.dnd.DropTargetListener;
 import java.io.IOException;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.CardPilePane;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.CardTransfarable;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;

@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.player;
 
 import java.awt.FlowLayout;
 import java.util.Collection;
@@ -7,6 +7,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.CardPane;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.DragableCardPane;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 
 /**

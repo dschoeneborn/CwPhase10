@@ -1,7 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground.lay_phase;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.DockPilePane;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.DockPilePane;
 
 /**
  * @author Robin Harbecke
