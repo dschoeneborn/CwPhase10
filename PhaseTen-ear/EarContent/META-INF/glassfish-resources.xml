@@ -10,7 +10,7 @@
 		<property name="port" value="3306" />
 		<property name="databaseName" value="phaseten" />
 		<property name="user" value="root" />
-		<property name="password" value="passwort" />
+		<property name="password" value="root" />
 	</jdbc-connection-pool>
 
 	<jdbc-resource enabled="true"
