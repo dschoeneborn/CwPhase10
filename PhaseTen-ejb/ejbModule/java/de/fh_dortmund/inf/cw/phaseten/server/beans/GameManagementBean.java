@@ -76,8 +76,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	@Override
-	public void sendGameMessage(Player p)
-	{
+	public void sendGameMessage(Player p) {
 		sendGameMessage(GameGuiData.from(p.getGame()));
 	}
 
@@ -168,7 +167,8 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @throws GameNotInitializedException
 	 */
 	@Override
-	public void layCardToLiFoStack(Player player, long cardId) throws MoveNotValidException, GameNotInitializedException {
+	public void layCardToLiFoStack(Player player, long cardId)
+			throws MoveNotValidException, GameNotInitializedException {
 		Card card = findCard(player, cardId);
 		Game game = player.getGame();
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
@@ -241,8 +241,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	@Override
-	public boolean isInGame(Player p)
-	{
+	public boolean isInGame(Player p) {
 		return (p.getGame() != null);
 	}
 
@@ -252,19 +251,16 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param cardId
 	 * @return
 	 */
-	private Card findCard(Player player, long cardId)
-	{
+	private Card findCard(Player player, long cardId) {
 		Card foundCard = null;
-		
-		for(Card c : player.getPlayerPile().getCards())
-		{
-			if(c.getId() == cardId)
-			{
+
+		for (Card c : player.getPlayerPile().getCards()) {
+			if (c.getId() == cardId) {
 				foundCard = c;
 				break;
 			}
 		}
-		
+
 		return foundCard;
 	}
 
@@ -303,21 +299,18 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void initializeFirstPlayer(Game game) {
-		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		List<Player> players = new ArrayList<>(game.getPlayers());
 
 		Random r = new Random();
 		int nextPlayer = 0;
 
-		
-		if(game.getLastRoundBeginner() == null)
-		{
+		if (game.getLastRoundBeginner() == null) {
 			nextPlayer = r.nextInt(players.size());
 		}
-		else
-		{
+		else {
 			nextPlayer = (players.indexOf(game.getLastRoundBeginner()) + 1) % players.size();
 		}
-		
+
 		game.setCurrentPlayer(players.get(nextPlayer));
 		game.setLastRoundBeginner(players.get(nextPlayer));
 	}
@@ -350,41 +343,33 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	private void saveNewCards(List<Card> cards) {
-		for(Card card : cards)
-		{
+		for (Card card : cards) {
 			entityManager.persist(card);
 		}
 	}
 
-	private void deleteOldCards(Game game)
-	{		
-		if(game != null)
-		{
-			if(game.getPullStack() != null)
-			{
+	private void deleteOldCards(Game game) {
+		if (game != null) {
+			if (game.getPullStack() != null) {
 				deleteCards(game.getPullStack().getCards());
 			}
-			
-			if(game.getLiFoStack() != null)
-			{
+
+			if (game.getLiFoStack() != null) {
 				deleteCards(game.getLiFoStack().getCards());
 			}
-			
-			for(Player p : game.getPlayers())
-			{
+
+			for (Player p : game.getPlayers()) {
 				deleteCards(p.getPlayerPile().getCards());
 			}
-			
-			for (DockPile pile : game.getOpenPiles())
-			{
+
+			for (DockPile pile : game.getOpenPiles()) {
 				deleteCards(pile.getCards());
 			}
 		}
 	}
 
 	private void deleteCards(List<Card> cards) {
-		for(Card card : cards)
-		{
+		for (Card card : cards) {
 			entityManager.remove(card);
 		}
 	}
@@ -397,8 +382,8 @@ public class GameManagementBean implements GameManagementLocal {
 		Player nextPlayer = game.getNextPlayer();
 		game.setCurrentPlayer(nextPlayer);
 
-		if (nextPlayer.hasSkipCard())
-		{
+		if (nextPlayer.hasSkipCard()) {
+			nextPlayer.removeSkipCard();
 			setNextPlayer(game);
 		}
 		else if (nextPlayer.hasNoCards()) {
@@ -412,7 +397,7 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void countPoints(Game game) {
-		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		List<Player> players = new ArrayList<>(game.getPlayers());
 
 		for (Player player : players) {
 			List<Card> remainingCards = player.getPlayerPile().getCards();
@@ -443,30 +428,26 @@ public class GameManagementBean implements GameManagementLocal {
 
 	private void sendGameMessage(GameGuiData game) {
 		Message message = jmsContext.createObjectMessage(game);
-		
+
 		String playersAndSpectators = ";-;-;";
-		
-		for(PlayerGuiData player : game.getPlayers())
-		{
+
+		for (PlayerGuiData player : game.getPlayers()) {
 			playersAndSpectators += player.getName();
 			playersAndSpectators += ";-;-;";
 		}
-		
-		for(String spectator : game.getSpectators())
-		{
+
+		for (String spectator : game.getSpectators()) {
 			playersAndSpectators += spectator;
 			playersAndSpectators += ";-;-;";
 		}
-		
-		try
-		{
+
+		try {
 			message.setStringProperty("userNames", playersAndSpectators);
 		}
-		catch (JMSException e)
-		{
+		catch (JMSException e) {
 			e.printStackTrace();
 		}
-		
+
 		jmsContext.createProducer().send(gameMessageTopic, message);
 	}
 }

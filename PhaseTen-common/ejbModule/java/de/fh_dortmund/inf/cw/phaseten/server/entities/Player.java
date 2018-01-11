@@ -173,6 +173,10 @@ public class Player implements Serializable {
 		this.playerHasSkipCard = true;
 	}
 
+	public void removeSkipCard() {
+		this.playerHasSkipCard = false;
+	}
+
 	public void resetRoundStage() {
 		this.roundStage = RoundStage.PULL;
 	}
