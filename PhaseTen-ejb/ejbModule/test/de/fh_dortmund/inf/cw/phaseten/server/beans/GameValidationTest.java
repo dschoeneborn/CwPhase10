@@ -162,6 +162,10 @@ public class GameValidationTest {
 	// T: 290
 	// B: 285
 
+	/**
+	 * @author Björn Merschmeier
+	 * @author Tim Prange
+	 */
 	@Test
 	public void game() {
 		Player t = new Player("Tim");
@@ -249,7 +253,7 @@ public class GameValidationTest {
 		pullStack.addCard(pullStack15);
 		Card pullStack16 = new Card(Color.BLUE, CardValue.TWO);
 		pullStack.addCard(pullStack16);
-		Card pullStack17 = new Card(Color.BLUE, CardValue.THREE);
+		Card pullStack17 = new Card(Color.NONE, CardValue.SKIP);
 		pullStack.addCard(pullStack17);
 		Card pullStack18 = new Card(Color.BLUE, CardValue.SEVEN);
 		pullStack.addCard(pullStack18);
@@ -336,59 +340,211 @@ public class GameValidationTest {
 		layCardToLiFoStack(b, bCard9, g, lifoStack);
 
 		Assert.assertFalse(gameValidation.isValidToAddCard(g, t, phase1b1, tCard1));
+		
+		pullFromLiFo(t, g, lifoStack);
+		Assert.assertTrue(t.getPlayerPile().getCards().contains(bCard9));
 		// T: 12 von LIFO
+		
+		layCardToLiFoStack(t, tCard6, g, lifoStack);
 		// T: 6 auf LIFO
+		
+		pullFromLiFo(b, g, lifoStack);
 		// B: 6 von LIFO
+		
+		layCardToLiFoStack(b, bCard4, g, lifoStack);
 		// B: 7 auf LIFO
+		
+		pullFromLiFo(t, g, lifoStack);
 		// T: 7 von LIFO
+		
+		Collection<DockPile> pilesInCollectionT = new ArrayList<>();
+		DockPile phase1t1 = new SetDockPile(CardValue.SEVEN);
+		Assert.assertTrue(phase1t1.addCard(bCard4));
+		Assert.assertTrue(phase1t1.addCard(tCard7));
+		Assert.assertTrue(phase1t1.addCard(pullStack21));
+
+		DockPile phase1t2 = new SetDockPile(CardValue.TWELVE);
+		Assert.assertTrue(phase1t2.addCard(tCard9));
+		Assert.assertTrue(phase1t2.addCard(bCard9));
+		Assert.assertTrue(phase1t2.addCard(lifoStack1));
+
+		pilesInCollectionT.add(phase1t1);
+		pilesInCollectionT.add(phase1t2);
+
+		Assert.assertTrue(gameValidation.isValidLayStageToTable(g, t, pilesInCollectionT));
+
+		t.setPlayerLaidStage(true);
+
+		Assert.assertFalse(gameValidation.isValidLayStageToTable(g, t, pilesInCollectionT));
+
+		t.removeCardFromPlayerPile(bCard4);
+		t.removeCardFromPlayerPile(tCard7);
+		t.removeCardFromPlayerPile(pullStack21);
+		t.removeCardFromPlayerPile(tCard9);
+		t.removeCardFromPlayerPile(bCard9);
+		t.removeCardFromPlayerPile(lifoStack1);
+
+		g.addOpenPile(phase1t1);
+		g.addOpenPile(phase1t2);
 		// T: PHASE 7,7,7 12,12,12
+		
+		layCardToLiFoStack(t, tCard1, g, lifoStack);
 		// T: 2 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 7 von Pull
+		
+		Assert.assertTrue(gameValidation.isValidToAddCard(g, b, phase1t1, pullStack18));
+		phase1t1.addCard(pullStack18);
+		b.removeCardFromPlayerPile(pullStack18);
 		// B: 7 Anlegen
+		
+		layCardToLiFoStack(b, bCard1, g, lifoStack);
 		// B: 1 auf LIFO
+		
+		pullFromPullStack(t, g, pullStack);
 		// T: s von Pull
+		
+		laySkipCard(t, pullStack17, b, g, lifoStack);
 		// T: s auf LIFO B auswählen
+
+		pullFromPullStack(t, g, pullStack);
 		// T: 2 von PULL
+		
+		layCardToLiFoStack(t, pullStack16, g, lifoStack);
 		// T: 2 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 6 vom PULL
+		
+		layCardToLiFoStack(b, bCard2, g, lifoStack);
 		// B: 4 auf LIFO
+		
+		pullFromPullStack(t, g, pullStack);
 		// T: W von PULL
+		
+		Assert.assertTrue(gameValidation.isValidToAddCard(g, t, phase1b2, pullStack14));
+		phase1b2.addCard(pullStack14);
+		t.removeCardFromPlayerPile(pullStack14);
 		// T: W an 11 anlegen
+		
+		layCardToLiFoStack(t, tCard4, g, lifoStack);
 		// T: 5 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 3 von PULL
+		
+		layCardToLiFoStack(b, pullStack13, g, lifoStack);
 		// B: 3 auf LIFO
+
+		pullFromPullStack(t, g, pullStack);
 		// T: 1 von PULL
+		
+		layCardToLiFoStack(t, pullStack12, g, lifoStack);
 		// T: 1 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 6 von PULL
+		
+		layCardToLiFoStack(b, pullStack11, g, lifoStack);
 		// B: 6 auf LIFO
+		
+		pullFromPullStack(t, g, pullStack);
 		// T: 5 von PULL
+		
+		layCardToLiFoStack(t, pullStack10, g, lifoStack);
 		// T: 5 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 3 von PULL
+		
+		layCardToLiFoStack(b, pullStack9, g, lifoStack);
 		// B: 3 auf LIFO
+		
+		pullFromPullStack(t, g, pullStack);
 		// T: 4 von PULL
+		
+		layCardToLiFoStack(t, tCard5, g, lifoStack);
 		// T: 5 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 2 von PULL
+		
+		layCardToLiFoStack(b, pullStack7, g, lifoStack);
 		// B: 2 auf LIFO
+		
+		pullFromPullStack(t, g, pullStack);
 		// T: W von PULL
+		
+		Assert.assertTrue(gameValidation.isValidToAddCard(g, t, phase1b1, pullStack6));
+		phase1b1.addCard(pullStack6);
+		t.removeCardFromPlayerPile(pullStack6);
 		// T: W an 9
+		
+		layCardToLiFoStack(t, tCard2, g, lifoStack);
 		// T: 4 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 10 von PULL
+		
+		layCardToLiFoStack(b, pullStack5, g, lifoStack);
 		// B: 10 auf LIFO
+		
+		pullFromPullStack(t, g, pullStack);
 		// T: 12 von PULL
+		
+		Assert.assertTrue(gameValidation.isValidToAddCard(g, t, phase1t2, pullStack4));
+		phase1t2.addCard(pullStack4);
+		t.removeCardFromPlayerPile(pullStack4);
 		// T: 12 an 12 anlegen
+		
+		layCardToLiFoStack(t, tCard3, g, lifoStack);
 		// T: 4 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 9 von PULL
+		
+		Assert.assertTrue(gameValidation.isValidToAddCard(g, b, phase1b1, pullStack3));
+		phase1b1.addCard(pullStack3);
+		b.removeCardFromPlayerPile(pullStack3);
 		// B: 9 anlegen an 9en
+		
+		layCardToLiFoStack(b, bCard3, g, lifoStack);
 		// B: 6 auf LIFO
+		
+		pullFromPullStack(t, g, pullStack);
 		// T: 4 von PULL
+		
+		layCardToLiFoStack(t, pullStack2, g, lifoStack);
 		// T: 4 auf LIFO
+		
+		pullFromPullStack(b, g, pullStack);
 		// B: 11 von PULL
+		
+		Assert.assertTrue(gameValidation.isValidToAddCard(g, b, phase1b2, pullStack1));
+		phase1b2.addCard(pullStack1);
+		b.removeCardFromPlayerPile(pullStack1);
 		// B: 11 an 11en anlegen
+		
+		layCardToLiFoStack(b, pullStack15, g, lifoStack);
 		// B: 6 auf LIFO
+		
+		pullFromPullStack(t, g, pullStack);
 		// T: 7 von PULL
+		
+		Assert.assertTrue(gameValidation.isValidToAddCard(g, t, phase1t1, pullStack0));
+		phase1t1.addCard(pullStack0);
+		t.removeCardFromPlayerPile(pullStack0);
 		// T: 7 an 7en anlegen
+		
+		layCardToLiFoStack(t, pullStack8, g, lifoStack);
 		// T: 4 auf LIFO
+		
+		Assert.assertEquals(0, t.getPlayerPile().getCards().size());
+		Assert.assertEquals(1, b.getPlayerPile().getCards().size());
 	}
+	
+	//TODO - BM - 13.01.2018 - Es müssen noch die einzelnen Phasen getestet werden
 
 	/**
 	 * TODO Add JavaDoc

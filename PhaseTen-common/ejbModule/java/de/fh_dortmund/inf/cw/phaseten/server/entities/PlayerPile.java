@@ -5,6 +5,8 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,7 +39,10 @@ public class PlayerPile extends Pile {
 		return true;
 	}
 
-	public void removeCard(Card card) {
-		this.cards.remove(card);
+	public void removeCard(Card card) throws NoSuchElementException {
+		if(!this.cards.remove(card))
+		{
+			throw new NoSuchElementException();
+		}
 	}
 }

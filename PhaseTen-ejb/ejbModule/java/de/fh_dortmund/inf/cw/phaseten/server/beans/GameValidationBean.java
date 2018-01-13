@@ -190,7 +190,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 			if (pile instanceof SetDockPile) {
 				SetDockPile setDockPile = (SetDockPile) pile;
 
-				if (setDockPile.getCardValue() == c.getCardValue())
+				if (setDockPile.getCardValue() == c.getCardValue() || c.getCardValue() == CardValue.WILD)
 				{
 					addCardAllowed = true;
 				}

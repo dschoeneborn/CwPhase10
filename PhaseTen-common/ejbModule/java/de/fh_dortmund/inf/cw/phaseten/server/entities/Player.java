@@ -4,6 +4,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
+import java.util.NoSuchElementException;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -120,7 +121,7 @@ public class Player implements Serializable {
 		playerPile.addCard(c);
 	}
 
-	public void removeCardFromPlayerPile(Card c) {
+	public void removeCardFromPlayerPile(Card c) throws NoSuchElementException {
 		playerPile.removeCard(c);
 	}
 
