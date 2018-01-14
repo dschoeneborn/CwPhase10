@@ -26,29 +26,28 @@ public class PullStack extends Stack {
 
 	/**
 	 * @author Björn Merschmeier
+	 * @author Tim Prange
 	 */
 	public void initializeCards() {
 		for (Color color : Color.values()) {
-			for (CardValue value : CardValue.values()) {
-				if (!value.equals(CardValue.SKIP) && !value.equals(CardValue.WILD)) {
-					addCard(new Card(color, value));
-					addCard(new Card(color, value));
+			if (!color.equals(Color.NONE)) {
+				for (CardValue value : CardValue.values()) {
+					if (!value.equals(CardValue.SKIP) && !value.equals(CardValue.WILD)) {
+						addCard(new Card(color, value));
+						addCard(new Card(color, value));
+					}
 				}
+
+				addCard(new Card(Color.NONE, CardValue.SKIP));
+				addCard(new Card(Color.NONE, CardValue.SKIP));
+				addCard(new Card(Color.NONE, CardValue.SKIP));
+				addCard(new Card(Color.NONE, CardValue.SKIP));
+
+				addCard(new Card(Color.NONE, CardValue.WILD));
+				addCard(new Card(Color.NONE, CardValue.WILD));
+				addCard(new Card(Color.NONE, CardValue.WILD));
+				addCard(new Card(Color.NONE, CardValue.WILD));
 			}
-
-			addCard(new Card(Color.NONE, CardValue.SKIP));
-			addCard(new Card(Color.NONE, CardValue.SKIP));
-			addCard(new Card(Color.NONE, CardValue.SKIP));
-			addCard(new Card(Color.NONE, CardValue.SKIP));
-
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
 		}
 	}
 
@@ -67,14 +66,12 @@ public class PullStack extends Stack {
 		}
 	}
 
-	public void addCards(Collection<Card> notVisibleCards)
-	{
+	public void addCards(Collection<Card> notVisibleCards) {
 		this.addAll(notVisibleCards);
 	}
 
 	@Override
-	public boolean canAddCard(Card card)
-	{
+	public boolean canAddCard(Card card) {
 		return true;
 	}
 }
