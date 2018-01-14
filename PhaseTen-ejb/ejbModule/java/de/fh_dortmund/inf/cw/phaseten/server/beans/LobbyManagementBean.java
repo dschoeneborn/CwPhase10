@@ -127,10 +127,9 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 		}
 
 		gameManagment.startGame(lobby.getPlayers(), lobby.getSpectators());
+		
+		lobby.preRemove();
 
-		for (Player p : lobby.getPlayers()) {
-			p.setLobby(null);
-		}
 		entityManager.remove(lobby);
 	}
 
