@@ -69,6 +69,42 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		this.setVisible(true);
 		this.updated(null);
 	}
+	
+	/**
+	 * @author Sven Krefeld
+	 */
+	private Container setUI() {
+		JPanel panel = new JPanel();
+		GroupLayout layout = new GroupLayout(panel);
+		panel.setLayout(layout);
+
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		spectatorButton = new JButton(SPECTATE);
+		spectatorButton.setActionCommand(ACTIONCOMMAND_SPECTATE);
+		spectatorButton.addActionListener(this);
+		startGameButton = new JButton(JOIN);
+		startGameButton.setActionCommand(ACTIONCOMMAND_PLAY);
+		startGameButton.addActionListener(this);
+
+		infoLabel.setText("Some text");
+
+		layout.setHorizontalGroup(layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(this.statusPanel)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(spectatorButton)
+								.addComponent(startGameButton).addComponent(errorLabel))
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(infoLabel)
+								.addComponent(this.userList))));
+
+		layout.linkSize(SwingConstants.HORIZONTAL, userList, statusPanel);
+
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(this.userList).addComponent(infoLabel)
+				.addComponent(spectatorButton).addComponent(startGameButton).addComponent(errorLabel)
+				.addComponent(this.statusPanel));
+
+		return panel;
+	}
 
 	@Override
 	public void updated(Object o) {
@@ -124,6 +160,7 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		} catch (NotLoggedInException e1) {
 			errorLabel.setText(PLAYER_NOT_LOGGED_IN);
 			errorLabel.setForeground(Color.RED);
+			this.getGuiManager().showLoginGui();
 		}
 		spectatorButton.setEnabled(false);
 		startGameButton.setEnabled(false);
@@ -147,21 +184,25 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		} catch (PlayerDoesNotExistsException e1) {
 			errorLabel.setText(PLAYER_DOES_NOT_EXISTS);
 			errorLabel.setForeground(Color.RED);
+			this.getGuiManager().showLoginGui();
 		} catch (NotLoggedInException e2) {
 			errorLabel.setText(PLAYER_NOT_LOGGED_IN);
 			errorLabel.setForeground(Color.RED);
-			e2.printStackTrace();
+			this.getGuiManager().showLoginGui();
 		}
 	}
 
 	/**
 	 * @author Björn Merschmeier
+	 * @author Sven Krefeld
 	 */
 	private void disconnectFromLobby() {
 		try {
 			serviceHandler.exitLobby();
 		} catch (NotLoggedInException e) {
 			// User is not logged in at this time
+			errorLabel.setText(PLAYER_NOT_LOGGED_IN);
+			errorLabel.setForeground(Color.RED);
 			this.getGuiManager().showLoginGui();
 		}
 
@@ -184,46 +225,11 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		} catch (PlayerDoesNotExistsException e1) {
 			errorLabel.setText(PLAYER_DOES_NOT_EXISTS);
 			errorLabel.setForeground(Color.RED);
+			this.getGuiManager().showLoginGui();
 		} catch (NotLoggedInException e2) {
 			errorLabel.setText(PLAYER_NOT_LOGGED_IN);
 			errorLabel.setForeground(Color.RED);
 			this.getGuiManager().showLoginGui();
 		}
-	}
-	
-	/**
-	 * @author Sven Krefeld
-	 */
-	private Container setUI() {
-		JPanel panel = new JPanel();
-		GroupLayout layout = new GroupLayout(panel);
-		panel.setLayout(layout);
-
-		layout.setAutoCreateGaps(true);
-		layout.setAutoCreateContainerGaps(true);
-
-		spectatorButton = new JButton(SPECTATE);
-		spectatorButton.setActionCommand(ACTIONCOMMAND_SPECTATE);
-		spectatorButton.addActionListener(this);
-		startGameButton = new JButton(JOIN);
-		startGameButton.setActionCommand(ACTIONCOMMAND_PLAY);
-		startGameButton.addActionListener(this);
-
-		infoLabel.setText("Some text");
-
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(this.statusPanel)
-						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(spectatorButton)
-								.addComponent(startGameButton).addComponent(errorLabel))
-						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(infoLabel)
-								.addComponent(this.userList))));
-
-		layout.linkSize(SwingConstants.HORIZONTAL, userList, statusPanel);
-
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(this.userList).addComponent(infoLabel)
-				.addComponent(spectatorButton).addComponent(startGameButton).addComponent(errorLabel)
-				.addComponent(this.statusPanel));
-
-		return panel;
 	}
 }
