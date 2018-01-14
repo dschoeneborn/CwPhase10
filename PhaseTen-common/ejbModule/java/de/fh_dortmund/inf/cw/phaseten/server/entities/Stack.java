@@ -17,12 +17,12 @@ public abstract class Stack extends Pile {
 	private static final long serialVersionUID = -7799217959895975619L;
 
 	public Card pullTopCard() {
-		if (this.cards.isEmpty()) {
+		if (this.isEmpty()) {
 			return null;
 		}
 
-		Card temp = this.cards.get(this.cards.size() - 1);
-		this.cards.remove(this.cards.size() - 1);
+		Card temp = this.getCard(this.getCards().size() - 1);
+		this.removeCard(this.getCards().size() - 1);
 
 		return temp;
 	}

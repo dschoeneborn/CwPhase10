@@ -3,10 +3,6 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,22 +23,12 @@ public class PlayerPile extends Pile {
 	private long id;
 
 	public PlayerPile() {
-		this.cards = new ArrayList<Card>();
+		super();
 	}
 
-	public List<Card> getCards() {
-		return this.cards;
-	}
-
-	public boolean addCard(Card card) {
-		this.cards.add(0, card);
+	@Override
+	public boolean canAddCard(Card card)
+	{
 		return true;
-	}
-
-	public void removeCard(Card card) throws NoSuchElementException {
-		if(!this.cards.remove(card))
-		{
-			throw new NoSuchElementException();
-		}
 	}
 }

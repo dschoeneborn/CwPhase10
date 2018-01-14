@@ -3,6 +3,7 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -20,6 +21,7 @@ public class PullStack extends Stack {
 	private static final long serialVersionUID = 2117218073864785792L;
 
 	public PullStack() {
+		super();
 	}
 
 	/**
@@ -56,27 +58,23 @@ public class PullStack extends Stack {
 	public void shuffle() {
 		Random random = ThreadLocalRandom.current();
 
-		for (int i = cards.size() - 1; i > 0; i--) {
+		for (int i = getCards().size() - 1; i > 0; i--) {
 			int index = random.nextInt(i + 1);
 
-			Card a = cards.get(index);
-			cards.set(index, cards.get(i));
-			cards.set(i, a);
+			Card a = getCard(index);
+			setCard(index, getCard(i));
+			setCard(i, a);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Pile#addCard(de.fh_dortmund.
-	 * inf.cw.phaseten.server.entities.Card)
-	 */
-	/**
-	 * @author Tim Prange
-	 */
+	public void addCards(Collection<Card> notVisibleCards)
+	{
+		this.addAll(notVisibleCards);
+	}
+
 	@Override
-	public boolean addCard(Card card) {
-		this.cards.add(card);
-		return false;
+	public boolean canAddCard(Card card)
+	{
+		return true;
 	}
 }

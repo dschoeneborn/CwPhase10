@@ -115,4 +115,11 @@ public class Lobby implements Serializable {
 	public long getId() {
 		return id;
 	}
+
+	public void removeSpectators() {
+		for(Spectator s : spectators)
+		{
+			removeSpectator(s);
+		}
+	}
 }

@@ -30,4 +30,6 @@ public interface UserManagementLocal extends UserManagement {
 	void sendUserMessage();
 
 	void requestPlayerMessage(Player p) throws PlayerDoesNotExistsException, NotLoggedInException;
+
+	void unregister(User user, String password) throws PlayerDoesNotExistsException;
 }

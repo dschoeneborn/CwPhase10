@@ -132,7 +132,6 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 			p.setLobby(null);
 		}
 		entityManager.remove(lobby);
-		entityManager.flush();
 	}
 
 	@Override

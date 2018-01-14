@@ -20,9 +20,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.xml.bind.DatatypeConverter;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
@@ -168,6 +171,46 @@ public class UserManagementBean implements UserManagementLocal {
 		em.flush();
 
 		return foundSpectator;
+	}
+
+	@Override
+	public void unregister(User currentUser, String password) throws PlayerDoesNotExistsException
+	{
+		User user = em.find(User.class, currentUser.getId());
+		
+		if(user.getPassword().equals(computeHash(password)))
+		{
+			if(user.getPlayer() != null)
+			{
+				Game g = user.getPlayer().getGame();
+				Lobby l = user.getPlayer().getLobby();
+				
+				if(g != null)
+				{
+					g.removePlayer(user.getPlayer());
+				}
+				
+				if(l != null)
+				{
+					l.removePlayer(user.getPlayer());
+					l.removeSpectators();
+				}
+			}
+			if(user.getSpectator() != null)
+			{
+				Game g = user.getSpectator().getGame();
+				
+				if(g != null)
+				{
+					g.removeSpectator(user.getSpectator());
+				}
+			}
+			em.remove(user);
+		}
+		else
+		{
+			throw new PlayerDoesNotExistsException();
+		}
 	}
 
 	private String computeHash(String pw) {

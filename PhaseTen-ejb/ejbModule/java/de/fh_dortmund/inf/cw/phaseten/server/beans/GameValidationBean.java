@@ -184,7 +184,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 				&& playerIsCurrentPlayer(g, p) 
 				&& !p.hasSkipCard() 
 				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& p.getPlayerPile().getSize() > 1 
+				&& p.getPlayerPile().getCards().size() > 1 
 				&& p.playerLaidStage() && playerHasCard(c, p)) 
 		{
 			if (pile instanceof SetDockPile) {
@@ -199,6 +199,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 			{
 				SequenceDockPile sequenceDockPile = (SequenceDockPile) pile;
 
+				//TODO: Beachten, dass auch mehrere Wilds hintereinander gesetzt werden können, das ist derzeit noch ein Problem!
 				if ((sequenceDockPile.getMinimum().getValue() - 1 == c.getCardValue().getValue()
 						|| sequenceDockPile.getMaximum().getValue() + 1 == c.getCardValue().getValue()
 						|| c.getCardValue() == CardValue.WILD) && !pileIsFull(sequenceDockPile))
@@ -242,7 +243,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 				&& playerIsCurrentPlayer(g, currentPlayer) && !currentPlayer.hasSkipCard()
 				&& !destinationPlayer.hasSkipCard()
 				&& !destinationPlayer.hasNoCards()
-				&& currentPlayer.getPlayerPile().getSize() > 1) {
+				&& currentPlayer.getPlayerPile().getCards().size() > 1) {
 			canLaySkipCard = true;
 		}
 
@@ -422,7 +423,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * @return cardReadyorPhase8
 	 */
 	private boolean areCardsReadyForPhase8(List<DockPile> piles) {
-		return (piles.size() == 1 && piles.get(0) instanceof SetDockPile && piles.get(0).getSize() == 7);
+		return (piles.size() == 1 && piles.get(0) instanceof SetDockPile && piles.get(0).getCards().size() == 7);
 	}
 
 	/**
@@ -458,7 +459,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * @return pileIsSet
 	 */
 	private boolean pileIsSet(DockPile pile, int i) {
-		return (pile instanceof SetDockPile && pile.getSize() == i);
+		return (pile instanceof SetDockPile && pile.getCards().size() == i);
 	}
 
 	/**
@@ -470,7 +471,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * @return pileIsSequence
 	 */
 	private boolean pileIsSequence(DockPile pile, int i) {
-		return (pile instanceof SequenceDockPile && pile.getSize() == i);
+		return (pile instanceof SequenceDockPile && pile.getCards().size() == i);
 	}
 
 	/**

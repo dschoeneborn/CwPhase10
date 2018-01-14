@@ -174,6 +174,9 @@ public class GameManagementBean implements GameManagementLocal {
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
 			game.getLiFoStack().addCard(card);
 			player.removeCardFromPlayerPile(card);
+			
+			putNotVisibleLiFoStackCardsShuffledUnderPullStack(game);
+			
 			player.resetRoundStage();
 			setNextPlayer(game);
 		}
@@ -243,6 +246,15 @@ public class GameManagementBean implements GameManagementLocal {
 	@Override
 	public boolean isInGame(Player p) {
 		return (p.getGame() != null);
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 */
+	private void putNotVisibleLiFoStackCardsShuffledUnderPullStack(Game game) {
+		game.getPullStack().addCards(game.getLiFoStack().getNotVisibleCards());
+		game.getPullStack().shuffle();
 	}
 
 	/**
@@ -342,7 +354,7 @@ public class GameManagementBean implements GameManagementLocal {
 		game.setPullstack(pullStack);
 	}
 
-	private void saveNewCards(List<Card> cards) {
+	private void saveNewCards(Collection<Card> cards) {
 		for (Card card : cards) {
 			entityManager.persist(card);
 		}
@@ -368,7 +380,7 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 	}
 
-	private void deleteCards(List<Card> cards) {
+	private void deleteCards(Collection<Card> cards) {
 		for (Card card : cards) {
 			entityManager.remove(card);
 		}
@@ -400,7 +412,7 @@ public class GameManagementBean implements GameManagementLocal {
 		List<Player> players = new ArrayList<>(game.getPlayers());
 
 		for (Player player : players) {
-			List<Card> remainingCards = player.getPlayerPile().getCards();
+			Collection<Card> remainingCards = player.getPlayerPile().getCards();
 
 			for (Card remainingCard : remainingCards) {
 				if (remainingCard.getCardValue().getValue() >= 5) {

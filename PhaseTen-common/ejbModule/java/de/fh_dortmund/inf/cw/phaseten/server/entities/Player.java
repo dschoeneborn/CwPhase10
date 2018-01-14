@@ -84,30 +84,12 @@ public class Player implements Serializable {
 		this.name = name;
 	}
 
-	public void removeGame() {
-		this.game = null;
-	}
-
 	public Game getGame() {
 		return game;
 	}
 
 	public Lobby getLobby() {
 		return lobby;
-	}
-
-	/**
-	 * @param lobby
-	 */
-	public void setLobby(Lobby lobby) {
-		this.lobby = lobby;
-	}
-
-	/**
-	 * Delete Lobby from Player
-	 */
-	public void removeLobby() {
-		this.lobby = null;
 	}
 
 	/**
@@ -183,7 +165,7 @@ public class Player implements Serializable {
 	}
 
 	public boolean hasNoCards() {
-		return this.playerPile.getSize() == 0;
+		return this.playerPile.getCards().size() == 0;
 	}
 
 	public int getNegativePoints() {
@@ -199,6 +181,24 @@ public class Player implements Serializable {
 	 */
 	protected void setGame(Game game) {
 		this.game = game;
+	}
+
+	protected void removeGame() {
+		this.game = null;
+	}
+
+	/**
+	 * @param lobby
+	 */
+	protected void setLobby(Lobby lobby) {
+		this.lobby = lobby;
+	}
+
+	/**
+	 * Delete Lobby from Player
+	 */
+	protected void removeLobby() {
+		this.lobby = null;
 	}
 
 }

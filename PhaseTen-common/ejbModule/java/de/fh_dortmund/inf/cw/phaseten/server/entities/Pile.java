@@ -5,8 +5,11 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,38 +34,90 @@ public abstract class Pile implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinTable
-	protected List<Card> cards;
+	private List<Card> cards;
 
 	public Pile() {
 		cards = new ArrayList<>();
 	}
 
-	/**
-	 * @author Björn Merschmeier
-	 * @param card
-	 */
-	public abstract boolean addCard(Card card);
+	public Collection<Card> getCards() {
+		return new ArrayList<Card>(cards);
+	}
 
-	/**
-	 * @author Robin Harbecke
-	 * @param card
-	 */
-	public boolean canAddCard(Card card) {//todo implement
-		return false;
+	public boolean addCard(Card card)
+	{
+		if(canAddCard(card))
+		{
+			cards.add(card);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public boolean addAll(Collection<Card> notVisibleCards)
+	{
+		boolean canAddCards = true;
+		
+		for(Card c : notVisibleCards)
+		{
+			if(!this.canAddCard(c))
+			{
+				canAddCards = false;
+			}
+		}
+		
+		if(canAddCards)
+		{
+			cards.addAll(notVisibleCards);
+		}
+		
+		return canAddCards;
+	}
+
+	public boolean addFirst(Card card)
+	{
+		if(canAddCard(card))
+		{
+			LinkedList<Card> newCards = new LinkedList<>(cards);
+			newCards.addFirst(card);
+			cards = newCards;
+			
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public boolean isEmpty()
+	{
+		return cards.isEmpty();
+	}
+
+	public Card getCard(int i)
+	{
+		return cards.get(i);
 	}
 	
-	/**
-	 * @author Björn Merschmeier
-	 * @return
-	 */
-	public int getSize() {
-		return cards.size();
+	public void setCard(int i, Card c)
+	{
+		cards.set(i, c);
 	}
 
-	public List<Card> getCards() {
-		return cards;
+	public void removeCard(int i)
+	{
+		cards.remove(i);
+	}
+	
+	public void removeCard(Card c)
+	{
+		cards.remove(c);
 	}
 
 	/**
@@ -74,4 +129,10 @@ public abstract class Pile implements Serializable {
 	public long getId() {
 		return id;
 	}
+
+	/**
+	 * @author Robin Harbecke
+	 * @param card
+	 */
+	public abstract boolean canAddCard(Card card);
 }

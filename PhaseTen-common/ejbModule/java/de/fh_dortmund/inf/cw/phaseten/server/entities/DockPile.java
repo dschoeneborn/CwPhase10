@@ -3,8 +3,6 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -22,10 +20,5 @@ public abstract class DockPile extends Pile {
 
 	protected DockPile() {
 
-	}
-
-	@Override
-	public List<Card> getCards() {
-		return this.cards;
 	}
 }

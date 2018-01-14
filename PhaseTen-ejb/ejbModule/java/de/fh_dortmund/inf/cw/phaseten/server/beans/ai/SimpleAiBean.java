@@ -88,7 +88,7 @@ public class SimpleAiBean implements IAIPlayer {
 		List<CardsToPileAction> actions = new ArrayList<CardsToPileAction>();
 		for (Card card : player.getPlayerPile().getCards()) {
 			for (DockPile pile: game.getOpenPiles()) {
-				if(pile.getSize() < (player.getPlayerPile().getCards().size()-1) && pile.canAddCard(card)){
+				if(pile.getCards().size() < (player.getPlayerPile().getCards().size()-1) && pile.canAddCard(card)){
 					actions.add(new CardsToPileAction(pile, Arrays.asList(card), true));
 				}
 			}

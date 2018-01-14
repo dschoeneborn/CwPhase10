@@ -3,9 +3,6 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -39,7 +36,7 @@ public class SequenceDockPile extends DockPile {
 	 * 
 	 */
 	public SequenceDockPile() {
-		this.cards = new ArrayList<>();
+		super();
 	}
 
 	/*
@@ -67,33 +64,29 @@ public class SequenceDockPile extends DockPile {
 				maximum = minimum;
 			}
 
-			LinkedList<Card> c = new LinkedList<Card>(this.cards);
-			c.addFirst(card);
-			this.cards = c;
+			addFirst(card);
 
 			addedCard = true;
 		} else if (maximum == null || card.getCardValue().getValue() > maximum.getValue()) {
 			maximum = card.getCardValue();
 
-			LinkedList<Card> c = new LinkedList<Card>(this.cards);
-			c.addLast(card);
-			this.cards = c;
+			super.addCard(card);
 
 			addedCard = true;
 		} else if (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD) {
+			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
+			
 			minimum = CardValue.getCardValue(minimum.getValue() - 1);
 
-			LinkedList<Card> c = new LinkedList<Card>(this.cards);
-			c.addFirst(card);
-			this.cards = c;
+			addFirst(card);
 
 			addedCard = true;
 		} else if (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD) {
+			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
+			
 			maximum = CardValue.getCardValue(maximum.getValue() + 1);
 
-			LinkedList<Card> c = new LinkedList<Card>(this.cards);
-			c.addLast(card);
-			this.cards = c;
+			super.addCard(card);
 
 			addedCard = true;
 		}
@@ -107,6 +100,17 @@ public class SequenceDockPile extends DockPile {
 
 	public CardValue getMaximum() {
 		return maximum;
+	}
+
+	@Override
+	public boolean canAddCard(Card card)
+	{
+		//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
+		
+		return (minimum == null || card.getCardValue().getValue() < minimum.getValue()
+				|| maximum == null || card.getCardValue().getValue() > maximum.getValue()
+				|| (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD)
+				|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD));
 	}
 
 }

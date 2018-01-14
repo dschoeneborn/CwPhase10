@@ -52,15 +52,15 @@ public class Game implements Serializable {
 	@Column
 	private int lastRoundBeginner = -1;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false, unique = true)
 	private PullStack pullStack;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false, unique = true)
 	private LiFoStack liFoStack;
 
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(unique = true)
 	private List<DockPile> openPiles;
 
@@ -186,6 +186,16 @@ public class Game implements Serializable {
 
 	public void setInitialized() {
 		gameInitialized = true;
+	}
+
+	public void removeSpectator(Spectator spectator) {
+		spectator.removeGame();
+		this.spectators.remove(spectator);
+	}
+	
+	public void removePlayer(Player player) {
+		player.removeGame();
+		this.players.remove(player);
 	}
 
 	private void addPlayer(Player p) {
