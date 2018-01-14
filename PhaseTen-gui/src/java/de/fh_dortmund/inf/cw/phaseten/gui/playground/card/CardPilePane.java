@@ -19,7 +19,16 @@ public abstract class CardPilePane extends JPanel {
 	
 	public void updateData(Card card) {
 		this.removeAll();
-		this.card = new CardPane(card);
-		this.add(this.card);
+		
+		if(card == null)
+		{
+			this.card = new CardPane();
+			this.add(this.card);
+		}
+		else
+		{
+			this.card = new CardPane(card);
+			this.add(this.card);
+		}
 	}
 }

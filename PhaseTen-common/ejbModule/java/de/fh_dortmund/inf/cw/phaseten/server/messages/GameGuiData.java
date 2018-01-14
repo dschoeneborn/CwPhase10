@@ -4,9 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
 /**
@@ -19,58 +18,55 @@ public class GameGuiData implements Serializable {
 
 	private Collection<PlayerGuiData> players;
 	private Collection<String> spectators;
-	private PullStack pullStack;
-	private LiFoStack liFoStack;
-	private Collection<DockPile> openPiles;
-	
-	public GameGuiData(Collection<PlayerGuiData> players, 
-			    Collection<String> spectators, 
-			    PullStack pullStack, 
-			    LiFoStack liFoStack, 
-			    Collection<DockPile> openPiles) {
+	private Card liFoStackTop;
+	private Collection<OpenPileGuiData> openPiles;
+
+	/**
+	 * Constructor for GameGuiData.java
+	 *
+	 * @param players
+	 * @param spectators
+	 * @param liFoStackTop
+	 * @param openPiles
+	 */
+	public GameGuiData(Collection<PlayerGuiData> players, Collection<String> spectators, Card liFoStackTop,
+			Collection<OpenPileGuiData> openPiles) {
 		super();
 		this.players = players;
 		this.spectators = spectators;
-		this.pullStack = pullStack;
-		this.liFoStack = liFoStack;
+		this.liFoStackTop = liFoStackTop;
 		this.openPiles = openPiles;
 	}
-	
+
 	public Collection<PlayerGuiData> getPlayers() {
 		return players;
 	}
-	
+
 	public Collection<String> getSpectators() {
 		return spectators;
-	}	
-	
-	public PullStack getPullStack() {
-		return pullStack;
 	}
-	
-	public LiFoStack getLiFoStack() {
-		return liFoStack;
+
+	/**
+	 * Returns liFoStackTop
+	 *
+	 * @return the liFoStackTop
+	 */
+	public Card getLiFoStackTop() {
+		return liFoStackTop;
 	}
-	
-	public Collection<DockPile> getOpenPiles() {
+
+	public Collection<OpenPileGuiData> getOpenPiles() {
 		return openPiles;
 	}
-	
-	public static GameGuiData from(de.fh_dortmund.inf.cw.phaseten.server.entities.Game game)
-	{
-		ArrayList<String> spectatorNames = new ArrayList<String>();
-		
-		for(Spectator spectator : game.getSpectators())
-		{
+
+	public static GameGuiData from(Game game) {
+		ArrayList<String> spectatorNames = new ArrayList<>();
+
+		for (Spectator spectator : game.getSpectators()) {
 			spectatorNames.add(spectator.getName());
 		}
-		
-		return new GameGuiData(
-			PlayerGuiData.from(game.getPlayers()),  
-			spectatorNames, 
-			game.getPullStack(),
-			game.getLiFoStack(),
-			game.getOpenPiles()
-		);	
-	}	
+
+		return new GameGuiData(PlayerGuiData.from(game.getPlayers()), spectatorNames, game.getLiFoStack().showCard(),
+				OpenPileGuiData.from(game.getOpenPiles()));
+	}
 }

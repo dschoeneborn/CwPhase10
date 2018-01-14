@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground.top_row;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground;
 
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -25,12 +25,12 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscarding
  * @author Sven Krefeld
  *
  */
-public class DiscardCardPile extends CardPilePane {
+public class LiFoStackPane extends CardPilePane {
 	private static final long serialVersionUID = 7330764386204801790L;
 	
 	protected ServiceHandler serviceHandler;
 	
-	public DiscardCardPile(ServiceHandler serviceHandler) {
+	public LiFoStackPane(ServiceHandler serviceHandler) {
 		this.serviceHandler = serviceHandler;
 		this.setDropTarget(new DropTarget(this, new CardDropTargetListener()));
 	}
@@ -47,7 +47,7 @@ public class DiscardCardPile extends CardPilePane {
 			Card card;
 			try {
 				card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
-				DiscardCardPile.this.serviceHandler.layCardToLiFoStack(card.getId());
+				LiFoStackPane.this.serviceHandler.layCardToLiFoStack(card.getId());
 			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | TakeCardBeforeDiscardingException e) {				
 			} catch (MoveNotValidException e) {
 				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben

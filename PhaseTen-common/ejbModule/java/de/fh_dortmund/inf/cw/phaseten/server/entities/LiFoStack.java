@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
@@ -20,22 +20,24 @@ public class LiFoStack extends Stack {
 	private static final long serialVersionUID = -1006154816006779657L;
 
 	public LiFoStack() {
-		this.cards = new ArrayList<Card>();
+		this.cards = new ArrayList<>();
 	}
 
 	public void pushCard(Card card) {
 		this.cards.add(0, card);
 	}
-	
-	public Card showCard()
-	{
-		return new LinkedList<Card>(this.cards).getFirst();
+
+	public Card showCard() {
+		if (this.cards.isEmpty()) {
+			return null;
+		}
+		return new LinkedList<>(this.cards).getLast();
 	}
 
 	@Override
 	public boolean addCard(Card card) {
 		this.cards.add(card);
-		
+
 		return true;
 	}
 }

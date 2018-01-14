@@ -5,8 +5,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -66,18 +65,31 @@ public class Game implements Serializable {
 	private List<DockPile> openPiles;
 
 	@OneToMany(mappedBy = "game")
-	private Set<Spectator> spectators;
+	private List<Spectator> spectators;
 
 	@Transient
 	private boolean gameInitialized = false;
+	
+	private Game()
+	{
+		openPiles = new ArrayList<DockPile>();
+		spectators = new ArrayList<Spectator>();
+	}
 
 	/**
+	 * @param arrayList2 
+	 * @param discardPile 
+	 * @param pullStack2 
+	 * @param hashSet 
+	 * @param arrayList 
 	 *
 	 */
-	private Game() {
-		this.players = new ArrayList<>();
-		this.spectators = new HashSet<>();
-		this.openPiles = new LinkedList<>();
+	public Game(Set<Player> players, Set<Spectator> spectators, PullStack pullStack2, LiFoStack discardPile)
+	{
+		this(players, spectators);
+
+		this.setPullstack(pullStack2);
+		this.setLiFoStack(discardPile);
 	}
 
 	public Game(Set<Player> players, Set<Spectator> spectators) {
@@ -111,11 +123,11 @@ public class Game implements Serializable {
 		this.openPiles.add(pile);
 	}
 
-	public List<Player> getPlayers() {
+	public Collection<Player> getPlayers() {
 		return players;
 	}
 
-	public Set<Spectator> getSpectators() {
+	public Collection<Spectator> getSpectators() {
 		return spectators;
 	}
 
@@ -177,6 +189,10 @@ public class Game implements Serializable {
 	}
 
 	private void addPlayer(Player p) {
+		if(this.players == null)
+		{
+			this.players = new ArrayList<>();
+		}
 		this.players.add(p);
 		p.setGame(this);
 	}

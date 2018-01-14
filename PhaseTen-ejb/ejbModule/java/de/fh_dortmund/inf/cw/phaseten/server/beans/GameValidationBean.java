@@ -42,9 +42,9 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	public boolean isValidDrawCardFromLiFoStack(Game g, Player player) {
 		boolean pullCardAllowed = true;
 
-		Card cardOnTop = g.getLiFoStack().showCard();
-
-		if (cardOnTop.getCardValue() == CardValue.SKIP || !playerIsCurrentPlayer(g, player)
+		if (!g.isInitialized()
+				|| g.getLiFoStack().showCard().getCardValue() == CardValue.SKIP 
+				|| !playerIsCurrentPlayer(g, player)
 				|| player.getRoundStage() != RoundStage.PULL) {
 			pullCardAllowed = false;
 		}
@@ -66,7 +66,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	public boolean isValidPushCardToLiFoStack(Game g, Player player, Card c) {
 		boolean pushCardToLiFoStackAllowed = false;
 
-		if (playerIsCurrentPlayer(g, player)
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, player)
 				&& (player.getRoundStage() == RoundStage.PUT_AND_PUSH
 						|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP))
 				&& playerHasCard(c, player)
@@ -94,7 +95,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Player currentPlayer = g.getCurrentPlayer();
 
-		if (playerIsCurrentPlayer(g, player) && currentPlayer.getRoundStage() == RoundStage.PULL
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, player) && currentPlayer.getRoundStage() == RoundStage.PULL
 				&& !currentPlayer.hasSkipCard()) {
 			pullCardAllowed = true;
 		}
@@ -120,7 +122,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 			cardsInPiles.addAll(pile.getCards());
 		}
 
-		if (playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
 				&& !p.playerLaidStage() && playerHasCards(cardsInPiles, p)) {
 			switch (p.getPhase()) {
 			case TWO_TRIPLES:
@@ -177,7 +180,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	public boolean isValidToAddCard(Game g, Player p, Pile pile, Card c) {
 		boolean addCardAllowed = false;
 
-		if (playerIsCurrentPlayer(g, p) 
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, p) 
 				&& !p.hasSkipCard() 
 				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
 				&& p.getPlayerPile().getSize() > 1 
@@ -328,7 +332,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 */
 	private boolean pileIsFull(SequenceDockPile sequenceDockPile) {
 		// TODO needs to include wildcards
-		return sequenceDockPile.getMinimum() == CardValue.ONE && sequenceDockPile.getMaximum() == CardValue.TWELVE;
+		return (sequenceDockPile.getMinimum() == CardValue.ONE && sequenceDockPile.getMaximum() == CardValue.TWELVE);
 	}
 
 	/**

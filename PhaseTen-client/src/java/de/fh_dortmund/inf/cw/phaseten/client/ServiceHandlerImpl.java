@@ -17,7 +17,6 @@ import javax.naming.NamingException;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
@@ -34,6 +33,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
 /**
  * @author Marc Mettke
  * @author Tim Prange
+ * @author Björn Merschmeier
  */
 public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	private static ServiceHandlerImpl instance;
@@ -61,14 +61,11 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 
 			playerMessageTopic = (Topic) context.lookup("java:global/jms/User");
 			lobbyMessageTopic = (Topic) context.lookup("java:global/jms/Lobby");
-			gameMessageTopic = (Topic) context.lookup("java:global/jms/Game");
 
 			this.playerConsumer = jmsContext.createConsumer(playerMessageTopic);
 			this.playerConsumer.setMessageListener(this);
 			this.lobbyConsumer = jmsContext.createConsumer(lobbyMessageTopic);
 			this.lobbyConsumer.setMessageListener(this);
-			this.gameConsumer = jmsContext.createConsumer(gameMessageTopic);
-			this.gameConsumer.setMessageListener(this);
 		}
 		catch (NamingException ex) {
 			throw new RuntimeException(ex);
@@ -102,11 +99,15 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	@Override
 	public void register(String username, String password) throws UsernameAlreadyTakenException {
 		userSessionRemote.register(username, password);
+		
+		createNewGameQueueConsumerWithMessageSelector();
 	}
 
 	@Override
 	public void login(String username, String password) throws UserDoesNotExistException {
 		userSessionRemote.login(username, password);
+
+		createNewGameQueueConsumerWithMessageSelector();
 	}
 
 	@Override
@@ -142,9 +143,9 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void addToPileOnTable(Card card, DockPile dockPile)
+	public void addToPileOnTable(long cardId, long dockPileId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		userSessionRemote.addToPileOnTable(card, dockPile);
+		userSessionRemote.addToPileOnTable(cardId, dockPileId);
 	}
 
 	@Override
@@ -154,15 +155,15 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void layCardToLiFoStack(Card card)
+	public void layCardToLiFoStack(long cardId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		userSessionRemote.layCardToLiFoStack(card);
+		userSessionRemote.layCardToLiFoStack(cardId);
 	}
 
 	@Override
-	public void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException,
+	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
 			NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
-		userSessionRemote.laySkipCardForPlayer(destinationPlayerId, card);
+		userSessionRemote.laySkipCardForPlayer(destinationPlayerId, cardId);
 	}
 
 	@Override
@@ -192,7 +193,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 
 	@Override
 	public Collection<Card> getCards() throws NotLoggedInException {
-		Player currentPlayer = getOrCreateCurrentPlayer();
+		Player currentPlayer = userSessionRemote.getOrCreatePlayer();
 		return currentPlayer.getPlayerPile().getCards();
 	}
 
@@ -230,11 +231,19 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 		}
 	}
 
-	private Spectator getOrCreateCurrentSpectator() throws NotLoggedInException {
-		return userSessionRemote.getOrCreateSpectator();
-	}
-
-	private Player getOrCreateCurrentPlayer() throws NotLoggedInException {
-		return userSessionRemote.getOrCreatePlayer();
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private void createNewGameQueueConsumerWithMessageSelector() {
+		try {
+			String messageSelector = "userNames LIKE '%;-;-;" + userSessionRemote.getUser().getLoginName() + ";-;-;%'";
+			gameMessageTopic = (Topic) context.lookup("java:global/jms/Game");
+			gameConsumer = jmsContext.createConsumer(gameMessageTopic, messageSelector);
+			gameConsumer.setMessageListener(this);
+		}
+		catch (NamingException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

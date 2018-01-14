@@ -21,8 +21,8 @@ public abstract class Stack extends Pile {
 			return null;
 		}
 
-		Card temp = this.cards.get(0);
-		this.cards.remove(0);
+		Card temp = this.cards.get(this.cards.size() - 1);
+		this.cards.remove(this.cards.size() - 1);
 
 		return temp;
 	}

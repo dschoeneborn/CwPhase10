@@ -7,7 +7,6 @@ import java.util.Collection;
 
 import javax.ejb.Remote;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
@@ -19,6 +18,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 
 /**
  * @author Dennis Schöneborn
+ * @author Tim Prange
+ * @author Björn Merschmeier
  */
 @Remote
 public interface UserSessionRemote extends UserSession {
@@ -62,10 +63,10 @@ public interface UserSessionRemote extends UserSession {
 	 * TODO Add JavaDoc
 	 *
 	 * @author Tim Prange
-	 * @param card
+	 * @param cardId
 	 * @param dockPile
 	 */
-	void addToPileOnTable(Card card, DockPile dockPile)
+	void addToPileOnTable(long cardId, long dockPileId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	/**
@@ -81,18 +82,18 @@ public interface UserSessionRemote extends UserSession {
 	 * TODO Add JavaDoc
 	 *
 	 * @author Tim Prange
-	 * @param card
+	 * @param cardId
 	 */
-	void layCardToLiFoStack(Card card) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+	void layCardToLiFoStack(long cardId) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	/**
 	 * TODO Add JavaDoc
 	 *
 	 * @author Tim Prange
 	 * @param destinationPlayerId
-	 * @param card
+	 * @param cardId
 	 */
-	void laySkipCardForPlayer(long destinationPlayerId, Card card) throws MoveNotValidException, NotLoggedInException,
+	void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException, NotLoggedInException,
 			PlayerDoesNotExistsException, GameNotInitializedException;
 
 	/**

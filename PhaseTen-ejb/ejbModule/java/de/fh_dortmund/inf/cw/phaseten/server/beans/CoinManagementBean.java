@@ -15,7 +15,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementRemote;
 
 /**
- * @author ????? TODO - Wer hat diese Klasse als erstes erstellt?
+ * @author Robin Harbecke
  * @author Björn Merschmeier
  *
  */
@@ -85,5 +85,4 @@ public class CoinManagementBean implements CoinManagementRemote, CoinManagementL
 		Message message = jmsContext.createObjectMessage();
 		jmsContext.createProducer().send(playerMessageTopic, message);
 	}
-
 }

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
  * @author Daniela Kaiser
  * @author Sebastian Seitz
  * @author Björn Merschmeier
+ * @author Robin Harbecke
  */
 @MappedSuperclass
 public abstract class Pile implements Serializable {
@@ -30,7 +31,7 @@ public abstract class Pile implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable
 	protected List<Card> cards;
 
@@ -45,6 +46,14 @@ public abstract class Pile implements Serializable {
 	public abstract boolean addCard(Card card);
 
 	/**
+	 * @author Robin Harbecke
+	 * @param card
+	 */
+	public boolean canAddCard(Card card) {//todo implement
+		return false;
+	}
+	
+	/**
 	 * @author Björn Merschmeier
 	 * @return
 	 */
@@ -54,5 +63,15 @@ public abstract class Pile implements Serializable {
 
 	public List<Card> getCards() {
 		return cards;
+	}
+
+	/**
+	 * TODO Add JavaDoc
+	 *
+	 * @author Tim Prange
+	 * @return
+	 */
+	public long getId() {
+		return id;
 	}
 }

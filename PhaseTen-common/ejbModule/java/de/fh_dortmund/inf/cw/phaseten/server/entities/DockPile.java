@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
@@ -24,6 +24,7 @@ public abstract class DockPile extends Pile {
 
 	}
 
+	@Override
 	public List<Card> getCards() {
 		return this.cards;
 	}
