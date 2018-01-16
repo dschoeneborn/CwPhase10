@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground.card;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.top_row;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,16 +32,16 @@ public class PhaseCard extends JPanel{
 			} else phasen[i].setForeground(Color.black);
 			
 			add(phasen[i]);
-		}
-		
+		}	
 	}
 	
 	public void updatePhase(int phaseUpdate){
+		phaseUpdate++; // ugly fix
 		phasen[this.phase-1].setForeground(Color.black);
 		this.phase = phaseUpdate;
 		phasen[this.phase-1].setForeground(Color.red);
-		
-		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	private String getPhase(int phase)

@@ -1,5 +1,6 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground.top_row;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.public_cards;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.BoxLayout;
@@ -7,7 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.DockPilePane;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.CardPane;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.OpenPileDataPane;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.OpenPileGuiData;
 
@@ -30,16 +32,20 @@ public class PublicCardStackPane extends JPanel {
 		this.scrollPane = new JScrollPane(this.stackListPanel);
 		this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		this.stackListPanel.setLayout(new FlowLayout());
-		// this.setMaximumSize(new Dimension(500,200));
+		this.stackListPanel.setLayout(new FlowLayout()); 
 		this.add(this.scrollPane);
+		this.setPreferredSize(new Dimension(CardPane.cardSize.width*11+200, CardPane.cardSize.height+30));		
+		this.setMinimumSize(this.getPreferredSize());
+		this.setMaximumSize(this.getPreferredSize());
 	}
 
 	public void gameDataUpdated(GameGuiData game) {
 		this.stackListPanel.removeAll();
 		for (OpenPileGuiData pile : game.getOpenPiles()) {
-			DockPilePane dockPilePane = new DockPilePane(this.serviceHandler, pile);
+			OpenPileDataPane dockPilePane = new OpenPileDataPane(this.serviceHandler, pile);
 			this.stackListPanel.add(dockPilePane);
 		}
+		this.revalidate();
+		this.repaint();
 	}
 }

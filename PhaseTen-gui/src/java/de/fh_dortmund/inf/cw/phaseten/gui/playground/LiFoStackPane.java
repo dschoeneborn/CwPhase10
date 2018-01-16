@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.CardPilePane;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.CardTransfarable;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.drag_drop.CardTransfarable;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
@@ -35,7 +35,7 @@ public class LiFoStackPane extends CardPilePane {
 		this.setDropTarget(new DropTarget(this, new CardDropTargetListener()));
 	}
 
-	class CardDropTargetListener implements DropTargetListener {
+	class CardDropTargetListener implements DropTargetListener {//TODO change listener to default card listener
 		@Override
 		public void dropActionChanged(DropTargetDragEvent dtde) {
 
@@ -50,15 +50,12 @@ public class LiFoStackPane extends CardPilePane {
 				LiFoStackPane.this.serviceHandler.layCardToLiFoStack(card.getId());
 			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | TakeCardBeforeDiscardingException e) {				
 			} catch (MoveNotValidException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
-				e.printStackTrace();
+				System.out.println("Move not valide");				
 			} catch (NotLoggedInException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
-				e.printStackTrace();
+				System.out.println("Not logged in");
 			} catch (GameNotInitializedException e) {
-				//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
-				e.printStackTrace();
-			}						
+				System.out.println("Game not initialized");
+			}					
 			return;
 		}
 

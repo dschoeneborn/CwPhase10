@@ -22,19 +22,16 @@ public class DrawCardPilePane extends CardPilePane {
 		this.serviceHandler = serviceHandler;
 		this.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) { 
-				super.mouseClicked(e);
+			public void mouseClicked(MouseEvent evt) { 
+				super.mouseClicked(evt);
 				try {
 					DrawCardPilePane.this.serviceHandler.takeCardFromPullstack();
-				} catch (MoveNotValidException e1) {
-					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
-					e1.printStackTrace();
-				} catch (NotLoggedInException e1) {
-					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
-					e1.printStackTrace();
-				} catch (GameNotInitializedException e1) {
-					//TODO - BM - 04.01.2018 - Exception abfangen und ausgeben
-					e1.printStackTrace();
+				} catch (MoveNotValidException e) {
+					System.out.println("Move not valide");				
+				} catch (NotLoggedInException e) {
+					System.out.println("Not logged in");
+				} catch (GameNotInitializedException e) {
+					System.out.println("Game not initialized");
 				}
 			}
 		});		

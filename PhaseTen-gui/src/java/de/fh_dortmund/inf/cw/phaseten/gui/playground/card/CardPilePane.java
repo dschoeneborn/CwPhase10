@@ -10,25 +10,30 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 public abstract class CardPilePane extends JPanel {
 	private static final long serialVersionUID = -6744980761177786388L;
 	
-	protected CardPane card;
+	protected CardPane cardPane;
 	
 	public CardPilePane() {
-		this.card = new CardPane();
-		this.add(this.card);
+		this.cardPane = new CardPane();
+		this.add(this.cardPane);		
+		this.setPreferredSize(CardPane.cardSize);
+		this.setMinimumSize(this.getPreferredSize());
+		this.setMaximumSize(this.getPreferredSize());
+		this.updateData(null);
 	}
 	
 	public void updateData(Card card) {
-		this.removeAll();
-		
+		this.removeAll();		
 		if(card == null)
 		{
-			this.card = new CardPane();
-			this.add(this.card);
+			this.cardPane = new CardPane();
+			this.add(this.cardPane);
 		}
 		else
 		{
-			this.card = new CardPane(card);
-			this.add(this.card);
+			this.cardPane = new CardPane(card);
+			this.add(this.cardPane);
 		}
+		this.revalidate();
+		this.repaint();
 	}
 }

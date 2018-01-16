@@ -46,6 +46,8 @@ public class UserList extends JPanel{
 		}
 		for (String spectator : collection2) {
 			this.listModel.addElement(new SpectatorListEntryGui(spectator));
-		}		
+		}
+		this.revalidate();
+		this.repaint();
 	}
 }

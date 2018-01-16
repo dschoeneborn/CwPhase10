@@ -1,41 +1,53 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground.player;
 
-import java.awt.FlowLayout;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.CardPane;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.DragableCardPane;
+import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.player.lay_phase.LayPhaseRowPane;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 
 /**
  * @author Robin Harbecke
+ *
  */
-public class PlayerCardsPane extends JPanel{	
-	private static final long serialVersionUID = -4081504045974992274L;
+public class PlayerCardsPane extends JPanel {	
+	private static final long serialVersionUID = -6715084044323813223L;
 	
-	protected JScrollPane scrollPane;
-	protected JPanel cardList = new JPanel();
+	protected Collection<Card> tempCollection;
+	protected LayPhaseRowPane layPhaseRowPane;
+	protected PlayerHandCardsPane playerHandCardsPane;
 	
-	public PlayerCardsPane() {
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));		
-		this.cardList.setLayout(new FlowLayout());
-		this.scrollPane = new JScrollPane(this.cardList);
-		this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		this.add(this.scrollPane);			
-	}	
+	public PlayerCardsPane(ServiceHandler serviceHandler){
+		super();
+		this.layPhaseRowPane = new LayPhaseRowPane(serviceHandler, this);
+		this.playerHandCardsPane = new PlayerHandCardsPane(this);
+		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));		
+		this.add(this.layPhaseRowPane);
+		this.add(this.playerHandCardsPane);
+	}
 	
 	public void updateData(Collection<Card> collection)
 	{
-		this.cardList.removeAll();
-		for (Card card : collection) {
-			CardPane cardPane = new DragableCardPane(card);
-			this.cardList.add(cardPane);
-		}
+		this.tempCollection = collection;		
+		this.updateData();		
+	}
+	
+	public void updateData() {
+		this.playerHandCardsPane.updateData(this.tempCollection);
+		this.layPhaseRowPane.updateData(this.tempCollection);
+		this.revalidate();
+		this.repaint();		
 	}	
-
+	
+	public List<Card> getCardsOnTempPile() {
+		return this.layPhaseRowPane.getCardsOnTempPile();
+	}
+	
+	public boolean removeCardFromTempPile(Card card) {
+		return this.layPhaseRowPane.removeCardFromTempPile(card);
+	}
 }

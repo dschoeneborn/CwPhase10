@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground.card;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.card.drag_drop;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;

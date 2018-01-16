@@ -9,9 +9,8 @@ import de.fh_dortmund.inf.cw.phaseten.gui.GuiManager;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiObserver;
 import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.lay_phase.LayPhaseCardsRowPane;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.player.PlayerCardsPane;
-import de.fh_dortmund.inf.cw.phaseten.gui.playground.top_row.PublicCardStackPane;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.public_cards.PublicCardStackPane;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.top_row.TopRowPane;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
@@ -27,21 +26,19 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 	private static final long serialVersionUID = -8685207683648562278L;
 
 	protected TopRowPane topRowPane;
-	protected PublicCardStackPane publicCardStackPane;
-	protected LayPhaseCardsRowPane layPhaseCardsRowPane;
-	protected PlayerCardsPane playerCardsPane = new PlayerCardsPane();
+	protected PublicCardStackPane publicCardStackPane;	
+	protected PlayerCardsPane playerCardsPane;
 	protected StatusPanel statusPanel = new StatusPanel();
 
 	public PlaygroundWindow(ServiceHandler serviceHandler, GuiManager guiManager) {
 		super("Phaseten | Game", serviceHandler, guiManager);
+		this.playerCardsPane =  new PlayerCardsPane(serviceHandler);
 		this.publicCardStackPane = new PublicCardStackPane(this.serviceHandler);
-		this.topRowPane = new TopRowPane(this.serviceHandler);
-		this.layPhaseCardsRowPane = new LayPhaseCardsRowPane(serviceHandler);
+		this.topRowPane = new TopRowPane(this.serviceHandler);		
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		this.add(this.topRowPane);
 		this.add(Box.createVerticalGlue());
-		this.add(this.publicCardStackPane);
-		this.add(this.publicCardStackPane);
+		this.add(this.publicCardStackPane);		
 		this.add(this.playerCardsPane);
 		this.add(this.statusPanel);
 		this.setResizable(false);
