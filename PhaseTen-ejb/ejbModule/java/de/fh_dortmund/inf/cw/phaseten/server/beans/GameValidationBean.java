@@ -96,7 +96,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		Player currentPlayer = g.getCurrentPlayer();
 
 		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, player) && currentPlayer.getRoundStage() == RoundStage.PULL
+				&& playerIsCurrentPlayer(g, player)
+				&& currentPlayer.getRoundStage() == RoundStage.PULL
 				&& !currentPlayer.hasSkipCard()) {
 			pullCardAllowed = true;
 		}

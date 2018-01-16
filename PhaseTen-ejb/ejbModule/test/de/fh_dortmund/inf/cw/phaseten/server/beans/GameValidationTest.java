@@ -166,7 +166,38 @@ public class GameValidationTest {
 	@Test
 	public void testIsValidDrawCardFromPullStack() throws Exception
 	{
+		Card validCard = new Card(Color.RED, CardValue.EIGHT);
 		
+		HashSet<Player> players = new HashSet<>();
+		Player p1 = new Player("P1");
+		p1.addCardToPlayerPile(validCard);
+		Player p2 = new Player("P2");
+		p2.addCardToPlayerPile(validCard);
+		players.add(p1);
+		players.add(p2);
+		
+		Game game = new Game(players, new HashSet<Spectator>());
+		game.setCurrentPlayer(p1);
+		
+		LiFoStack liFo = new LiFoStack();
+		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		game.setLiFoStack(liFo);
+		
+		//Game is not initialized
+		Assert.assertEquals(false, gameValidation.isValidDrawCardFromPullStack(game, p1));
+		
+		game.setInitialized();	
+		//Everything ok
+		Assert.assertEquals(true, gameValidation.isValidDrawCardFromPullStack(game, p1));
+		
+		p1.addRoundStage();
+		//Player is in wrong round stage
+		Assert.assertEquals(false, gameValidation.isValidDrawCardFromPullStack(game, p1));
+		p1.resetRoundStage();
+		
+		p1.givePlayerSkipCard();
+		//Player has skip card
+		Assert.assertEquals(false, gameValidation.isValidDrawCardFromPullStack(game, p1));
 	}
 	
 	@Test
