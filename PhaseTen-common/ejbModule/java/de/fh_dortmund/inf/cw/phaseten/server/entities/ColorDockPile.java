@@ -16,6 +16,7 @@ import javax.persistence.Enumerated;
  * @author Daniela Kaiser
  * @author Sebastian Seitz
  * @author Björn Merschmeier
+ * @author Robin Harbecke
  */
 @Entity
 public class ColorDockPile extends DockPile {
@@ -49,10 +50,11 @@ public class ColorDockPile extends DockPile {
 	 */
 	/**
 	 * @author Björn Merschmeier
+	 * @author Robin Harbecke
 	 */
 	@Override
 	public boolean addCard(Card card) {
-		if (card.getColor().equals(this.color)) {
+		if (card.getColor().equals(this.color) || card.getCardValue().equals(CardValue.WILD)) {
 			this.cards.add(card);
 			return true;
 		}
