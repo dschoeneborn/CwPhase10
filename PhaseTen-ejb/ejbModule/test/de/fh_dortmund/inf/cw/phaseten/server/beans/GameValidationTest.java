@@ -121,7 +121,46 @@ public class GameValidationTest {
 	@Test
 	public void testIsValidPushCardToLiFoStack() throws Exception
 	{
+		Card validCard = new Card(Color.RED, CardValue.EIGHT);
+		Card notValidCard = new Card(Color.NONE, CardValue.SKIP);
 		
+		HashSet<Player> players = new HashSet<>();
+		Player p1 = new Player("P1");
+		p1.addRoundStage();
+		p1.addCardToPlayerPile(validCard);
+		Player p2 = new Player("P2");
+		p2.addRoundStage();
+		p2.addCardToPlayerPile(validCard);
+		players.add(p1);
+		players.add(p2);
+		
+		Game game = new Game(players, new HashSet<Spectator>());
+		game.setCurrentPlayer(p1);
+		
+		LiFoStack liFo = new LiFoStack();
+		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		game.setLiFoStack(liFo);
+		
+		//Game is not initialized
+		Assert.assertEquals(false, gameValidation.isValidPushCardToLiFoStack(game, p1, validCard));
+		
+		game.setInitialized();	
+		//Everything ok
+		Assert.assertEquals(true, gameValidation.isValidPushCardToLiFoStack(game, p1, validCard));
+		
+		p1.resetRoundStage();
+		//Player is in wrong roud stage
+		Assert.assertEquals(false, gameValidation.isValidPushCardToLiFoStack(game, p1, validCard));
+		p1.addRoundStage();
+		
+		p1.removeCardFromPlayerPile(validCard);
+		//Player has not card validCard
+		Assert.assertEquals(false, gameValidation.isValidPushCardToLiFoStack(game, p1, validCard));
+		p1.addCardToPlayerPile(validCard);
+		
+		p1.givePlayerSkipCard();
+		//Player has skip card
+		Assert.assertEquals(false, gameValidation.isValidPushCardToLiFoStack(game, p1, notValidCard));
 	}
 	
 	@Test
