@@ -234,6 +234,68 @@ public class GameValidationTest {
 
 	@Test
 	public void testIsValidLaySkipCard() throws Exception {
+		Card skipCard = new Card(Color.NONE, CardValue.SKIP);
+		Card otherCard = new Card(Color.BLUE, CardValue.EIGHT);
+
+		HashSet<Player> players = new HashSet<>();
+		Player p1 = new Player("P1");
+		p1.addCardToPlayerPile(otherCard);
+		p1.addCardToPlayerPile(skipCard);
+		p1.addRoundStage();
+		Player p2 = new Player("P2");
+		p2.addCardToPlayerPile(otherCard);
+		players.add(p1);
+		players.add(p2);
+
+		Game game = new Game(players, new HashSet<Spectator>());
+		game.setCurrentPlayer(p1);
+
+		LiFoStack liFo = new LiFoStack();
+		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		game.setLiFoStack(liFo);
+
+		// Game is not initialized
+		Assert.assertEquals(false, gameValidation.isValidLaySkipCard(p1, p2, game));
+		game.setInitialized();
+		;
+
+		// Everything ok
+		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
+
+		p1.removeCardFromPlayerPile(skipCard);
+		// Player p1 has no skip card
+		Assert.assertEquals(false, gameValidation.isValidLaySkipCard(p1, p2, game));
+		p1.addCardToPlayerPile(skipCard);
+		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
+
+		p1.resetRoundStage();
+		// Player p1 is in wrong round stage
+		Assert.assertEquals(false, gameValidation.isValidLaySkipCard(p1, p2, game));
+		p1.addRoundStage();
+		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
+
+		p1.givePlayerSkipCard();
+		// Player p1 has skip card
+		Assert.assertEquals(false, gameValidation.isValidLaySkipCard(p1, p2, game));
+		p1.removeSkipCard();
+		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
+
+		p2.givePlayerSkipCard();
+		// Player p2 has skip card
+		Assert.assertEquals(false, gameValidation.isValidLaySkipCard(p1, p2, game));
+		p2.removeSkipCard();
+		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
+
+		p2.removeCardFromPlayerPile(otherCard);
+		// Player p2 has no cards
+		Assert.assertEquals(false, gameValidation.isValidLaySkipCard(p1, p2, game));
+		p2.addCardToPlayerPile(otherCard);
+		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
 		
+		p1.removeCardFromPlayerPile(otherCard);
+		//Player p1 has only skip card
+		Assert.assertEquals(false, gameValidation.isValidLaySkipCard(p1, p2, game));
+		p1.addCardToPlayerPile(otherCard);
+		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
 	}
 }

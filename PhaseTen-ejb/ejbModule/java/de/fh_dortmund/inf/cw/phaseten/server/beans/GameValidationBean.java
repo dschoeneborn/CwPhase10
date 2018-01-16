@@ -240,9 +240,11 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Card skipCard = new Card(Color.NONE, CardValue.SKIP);
 
-		if (playerHasCard(skipCard, currentPlayer)
+		if (g.isInitialized()
+				&& playerHasCard(skipCard, currentPlayer)
 				&& currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& playerIsCurrentPlayer(g, currentPlayer) && !currentPlayer.hasSkipCard()
+				&& playerIsCurrentPlayer(g, currentPlayer)
+				&& !currentPlayer.hasSkipCard()
 				&& !destinationPlayer.hasSkipCard()
 				&& !destinationPlayer.hasNoCards()
 				&& currentPlayer.getPlayerPile().getSize() > 1) {
