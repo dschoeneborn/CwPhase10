@@ -3,6 +3,7 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import javax.ejb.EJB;
@@ -19,6 +20,7 @@ import org.junit.Assert;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
@@ -96,34 +98,33 @@ public class GameValidationTest {
 		players.add(p2);
 		Game game = new Game(players, new HashSet<Spectator>());
 		game.setCurrentPlayer(p1);
-		
+
 		LiFoStack liFo = new LiFoStack();
 		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
 		game.setLiFoStack(liFo);
-		
-		//Game is not initialized
+
+		// Game is not initialized
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
-		
+
 		game.setInitialized();
 		// Everthing ok
 		Assert.assertEquals(true, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
-		
+
 		liFo.addCard(new Card(Color.NONE, CardValue.SKIP));
 		// SKIP on top of LiFo Stack
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
-		
+
 		liFo.addCard(new Card(Color.BLUE, CardValue.SEVEN));
 		p1.addRoundStage();
 		// Player in wrong stage
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
 	}
-	
+
 	@Test
-	public void testIsValidPushCardToLiFoStack() throws Exception
-	{
+	public void testIsValidPushCardToLiFoStack() throws Exception {
 		Card validCard = new Card(Color.RED, CardValue.EIGHT);
 		Card notValidCard = new Card(Color.NONE, CardValue.SKIP);
-		
+
 		HashSet<Player> players = new HashSet<>();
 		Player p1 = new Player("P1");
 		p1.addRoundStage();
@@ -133,41 +134,40 @@ public class GameValidationTest {
 		p2.addCardToPlayerPile(validCard);
 		players.add(p1);
 		players.add(p2);
-		
+
 		Game game = new Game(players, new HashSet<Spectator>());
 		game.setCurrentPlayer(p1);
-		
+
 		LiFoStack liFo = new LiFoStack();
 		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
 		game.setLiFoStack(liFo);
-		
-		//Game is not initialized
+
+		// Game is not initialized
 		Assert.assertEquals(false, gameValidation.isValidPushCardToLiFoStack(game, p1, validCard));
-		
-		game.setInitialized();	
-		//Everything ok
+
+		game.setInitialized();
+		// Everything ok
 		Assert.assertEquals(true, gameValidation.isValidPushCardToLiFoStack(game, p1, validCard));
-		
+
 		p1.resetRoundStage();
-		//Player is in wrong roud stage
+		// Player is in wrong roud stage
 		Assert.assertEquals(false, gameValidation.isValidPushCardToLiFoStack(game, p1, validCard));
 		p1.addRoundStage();
-		
+
 		p1.removeCardFromPlayerPile(validCard);
-		//Player has not card validCard
+		// Player has not card validCard
 		Assert.assertEquals(false, gameValidation.isValidPushCardToLiFoStack(game, p1, validCard));
 		p1.addCardToPlayerPile(validCard);
-		
+
 		p1.givePlayerSkipCard();
-		//Player has skip card
+		// Player has skip card
 		Assert.assertEquals(false, gameValidation.isValidPushCardToLiFoStack(game, p1, notValidCard));
 	}
-	
+
 	@Test
-	public void testIsValidDrawCardFromPullStack() throws Exception
-	{
+	public void testIsValidDrawCardFromPullStack() throws Exception {
 		Card validCard = new Card(Color.RED, CardValue.EIGHT);
-		
+
 		HashSet<Player> players = new HashSet<>();
 		Player p1 = new Player("P1");
 		p1.addCardToPlayerPile(validCard);
@@ -175,46 +175,65 @@ public class GameValidationTest {
 		p2.addCardToPlayerPile(validCard);
 		players.add(p1);
 		players.add(p2);
-		
+
 		Game game = new Game(players, new HashSet<Spectator>());
 		game.setCurrentPlayer(p1);
-		
+
 		LiFoStack liFo = new LiFoStack();
 		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
 		game.setLiFoStack(liFo);
-		
-		//Game is not initialized
+
+		// Game is not initialized
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromPullStack(game, p1));
-		
-		game.setInitialized();	
-		//Everything ok
+
+		game.setInitialized();
+		// Everything ok
 		Assert.assertEquals(true, gameValidation.isValidDrawCardFromPullStack(game, p1));
-		
+
 		p1.addRoundStage();
-		//Player is in wrong round stage
+		// Player is in wrong round stage
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromPullStack(game, p1));
 		p1.resetRoundStage();
-		
+
 		p1.givePlayerSkipCard();
-		//Player has skip card
+		// Player has skip card
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromPullStack(game, p1));
 	}
-	
+
 	@Test
-	public void testIsValidLayStageToTable() throws Exception
-	{
-		
+	public void testIsValidLayStageToTable() throws Exception {
+		Card validCard = new Card(Color.RED, CardValue.EIGHT);
+
+		HashSet<Player> players = new HashSet<>();
+		Player p1 = new Player("P1");
+		p1.addRoundStage();
+		p1.addCardToPlayerPile(validCard);
+		Player p2 = new Player("P2");
+		p2.addCardToPlayerPile(validCard);
+		players.add(p1);
+		players.add(p2);
+
+		Game game = new Game(players, new HashSet<Spectator>());
+		game.setCurrentPlayer(p1);
+
+		LiFoStack liFo = new LiFoStack();
+		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		game.setLiFoStack(liFo);
+
+		ArrayList<DockPile> piles = new ArrayList<>();
+
+		// Game is not initialized
+		Assert.assertEquals(false, gameValidation.isValidLayStageToTable(game, p1, piles));
+		game.isInitialized();
+
+		p1.resetRoundStage();
+		// Player is in wrong round stage
+		Assert.assertEquals(false, gameValidation.isValidLayStageToTable(game, p1, piles));
+		p1.addRoundStage();
 	}
-	
+
 	@Test
-	public void testIsValidToAddCard() throws Exception
-	{
-		
-	}
-	
-	@Test
-	public void testIsValidLaySkipCard() throws Exception
-	{
+	public void testIsValidLaySkipCard() throws Exception {
 		
 	}
 }

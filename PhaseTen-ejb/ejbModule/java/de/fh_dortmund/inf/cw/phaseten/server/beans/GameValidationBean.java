@@ -124,7 +124,9 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		}
 
 		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
+				&& playerIsCurrentPlayer(g, p)
+				&& !p.hasSkipCard()
+				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
 				&& !p.playerLaidStage() && playerHasCards(cardsInPiles, p)) {
 			switch (p.getPhase()) {
 			case TWO_TRIPLES:
