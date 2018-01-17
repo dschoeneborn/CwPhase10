@@ -10,16 +10,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
-
-import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 /**
  * @author Dennis Schöneborn
@@ -29,7 +30,9 @@ import org.eclipse.persistence.annotations.CascadeOnDelete;
  * @author Björn Merschmeier
  * @author Robin Harbecke
  */
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "PILE_TYPE")
 public abstract class Pile implements Serializable {
 	private static final long serialVersionUID = 8249906555853503950L;
 
@@ -38,9 +41,8 @@ public abstract class Pile implements Serializable {
 	private long id;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	@JoinTable
+	@JoinColumn(name="PILE_ID")
 	@OrderColumn
-	@CascadeOnDelete
 	private List<Card> cards;
 
 	public Pile() {
