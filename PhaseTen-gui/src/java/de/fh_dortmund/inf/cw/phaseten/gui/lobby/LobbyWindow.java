@@ -46,15 +46,16 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 	private ServiceHandler serviceHandler;
 
 	protected ButtonPane buttonPane = new ButtonPane();
-	protected UserList userList = new UserList();
+	protected UserList userList;
 	protected StatusPanel statusPanel = new StatusPanel();
 	private JButton spectatorButton;
 	private JButton startGameButton;
 
 	public LobbyWindow(ServiceHandler serviceHandler, GuiManager guiManager)
 	{
-		super(WINDOW_NAME, serviceHandler, guiManager);
+		super(WINDOW_NAME, serviceHandler, guiManager);		
 		this.serviceHandler = serviceHandler;
+		this.userList = new UserList(this.serviceHandler);
 		this.setContentPane(this.setUI());
 		this.setResizable(false);
 		this.pack();

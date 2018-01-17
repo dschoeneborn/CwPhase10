@@ -22,13 +22,14 @@ public class TopRowPane extends JPanel
 	private DiscardCardPile discardPile;
 	
 	private PhaseCard phaseCard = new PhaseCard();
-	private UserList userList = new UserList();
+	private UserList userList;
 	
 	private ServiceHandler serviceHandler;
 	
 	public TopRowPane(ServiceHandler serviceHandler)
 	{
 		this.serviceHandler = serviceHandler;
+		this.userList = new UserList(this.serviceHandler);
 		this.drawPile = new DrawCardPilePane(this.serviceHandler);
 		this.discardPile =  new DiscardCardPile(this.serviceHandler);
 		this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));

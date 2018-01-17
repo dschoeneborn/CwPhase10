@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.PlayerListEntryGUI;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.SpectatorListEntryGui;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.UserListEntry;
@@ -25,9 +26,11 @@ public class UserList extends JPanel{
 	protected DefaultListModel<UserListEntry> listModel = new DefaultListModel<UserListEntry>();
 	protected JList<UserListEntry> list;
 	protected JScrollPane listScroller;
+	protected ServiceHandler serviceHandler;
 	
-	public UserList() {
+	public UserList(ServiceHandler serviceHandler) {
 		super();		
+		this.serviceHandler = serviceHandler;
 		this.list = new JList<UserListEntry>(this.listModel);
 		this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.list.setCellRenderer(new UserListRenderer());
@@ -42,7 +45,7 @@ public class UserList extends JPanel{
 	public void updateData(Collection<PlayerGuiData> collection, Collection<String> collection2) {
 		this.listModel.removeAllElements();
 		for (PlayerGuiData player : collection) {
-			this.listModel.addElement(new PlayerListEntryGUI(player));
+			this.listModel.addElement(new PlayerListEntryGUI(player,this.serviceHandler));
 		}
 		for (String spectator : collection2) {
 			this.listModel.addElement(new SpectatorListEntryGui(spectator));
