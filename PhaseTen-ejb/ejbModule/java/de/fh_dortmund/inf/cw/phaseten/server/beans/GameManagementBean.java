@@ -156,6 +156,7 @@ public class GameManagementBean implements GameManagementLocal {
 			}
 
 			player.setPlayerLaidStage(true);
+			player.addPhase();
 		}
 		else {
 			throw new MoveNotValidException();
@@ -177,6 +178,7 @@ public class GameManagementBean implements GameManagementLocal {
 			game.getLiFoStack().addCard(card);
 			player.removeCardFromPlayerPile(card);
 
+			game = player.getGame();
 			putNotVisibleLiFoStackCardsShuffledUnderPullStack(game);
 
 			player.resetRoundStage();
@@ -384,7 +386,8 @@ public class GameManagementBean implements GameManagementLocal {
 				entityManager.remove(toDelete);
 			}
 
-			for (DockPile pile : game.getOpenPiles()) {
+			List<DockPile> openPiles = new ArrayList<>(game.getOpenPiles());
+			for (DockPile pile : openPiles) {
 				game.getOpenPiles().remove(pile);
 				entityManager.remove(pile);
 			}
@@ -421,18 +424,7 @@ public class GameManagementBean implements GameManagementLocal {
 			Collection<Card> remainingCards = player.getPlayerPile().getCopyOfCardsList();
 
 			for (Card remainingCard : remainingCards) {
-				if (remainingCard.getCardValue().getValue() >= 5) {
-					player.addNegativePoints(5);
-				}
-				else if (remainingCard.getCardValue().getValue() >= 12) {
-					player.addNegativePoints(10);
-				}
-				else if (remainingCard.getCardValue() == CardValue.SKIP) {
-					player.addNegativePoints(15);
-				}
-				else if (remainingCard.getCardValue() == CardValue.WILD) {
-					player.addNegativePoints(20);
-				}
+				player.addNegativePoints(remainingCard.getRoundEndValue());
 			}
 		}
 	}

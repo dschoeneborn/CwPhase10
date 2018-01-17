@@ -20,6 +20,7 @@ public class GameGuiData implements Serializable {
 	private Collection<String> spectators;
 	private Card liFoStackTop;
 	private Collection<OpenPileGuiData> openPiles;
+	private PlayerGuiData currentPlayer;
 
 	/**
 	 * Constructor for GameGuiData.java
@@ -30,12 +31,18 @@ public class GameGuiData implements Serializable {
 	 * @param openPiles
 	 */
 	public GameGuiData(Collection<PlayerGuiData> players, Collection<String> spectators, Card liFoStackTop,
-			Collection<OpenPileGuiData> openPiles) {
+			Collection<OpenPileGuiData> openPiles, PlayerGuiData currentPlayer) {
 		super();
 		this.players = players;
 		this.spectators = spectators;
 		this.liFoStackTop = liFoStackTop;
 		this.openPiles = openPiles;
+		this.currentPlayer = currentPlayer;
+	}
+
+	public PlayerGuiData getCurrentPlayer()
+	{
+		return currentPlayer;
 	}
 
 	public Collection<PlayerGuiData> getPlayers() {
@@ -67,6 +74,6 @@ public class GameGuiData implements Serializable {
 		}
 
 		return new GameGuiData(PlayerGuiData.from(game.getPlayers()), spectatorNames, game.getLiFoStack().showCard(),
-				OpenPileGuiData.from(game.getOpenPiles()));
+				OpenPileGuiData.from(game.getOpenPiles()), PlayerGuiData.from(game.getCurrentPlayer()));
 	}
 }

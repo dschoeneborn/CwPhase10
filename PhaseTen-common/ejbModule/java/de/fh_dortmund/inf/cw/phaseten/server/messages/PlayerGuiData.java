@@ -17,10 +17,19 @@ public class PlayerGuiData implements Serializable {
 
 	private int phase;
 	private String name;
+	private long id;
+	private int negativePoints;
 
-	public PlayerGuiData(String playerName, int phase) {
+	public PlayerGuiData(String playerName, int phase, long id, int negativePoints) {
 		this.phase = phase;
 		this.name = playerName;
+		this.negativePoints = negativePoints;
+		this.id = id;
+	}
+
+	public long getId()
+	{
+		return id;
 	}
 
 	public int getPhase() {
@@ -31,8 +40,13 @@ public class PlayerGuiData implements Serializable {
 		return name;
 	}
 
+	public int getNegativePoints()
+	{
+		return negativePoints;
+	}
+
 	public static PlayerGuiData from(Player player) {
-		return new PlayerGuiData(player.getName(), player.getPhase().getValue());
+		return new PlayerGuiData(player.getName(), player.getPhase().getValue(), player.getId(), player.getNegativePoints());
 	}
 
 	public static Collection<PlayerGuiData> from(Collection<Player> players) {

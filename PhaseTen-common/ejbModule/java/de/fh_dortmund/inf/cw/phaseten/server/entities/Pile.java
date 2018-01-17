@@ -19,6 +19,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
+import org.eclipse.persistence.annotations.CascadeOnDelete;
+
 /**
  * @author Dennis Schöneborn
  * @author Marc Mettke
@@ -38,6 +40,7 @@ public abstract class Pile implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinTable
 	@OrderColumn
+	@CascadeOnDelete
 	private List<Card> cards;
 
 	public Pile() {

@@ -28,7 +28,6 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Marc Mettke
@@ -244,14 +243,6 @@ public class GameManagementTest {
 		Assert.assertTrue(messagePlayer1 instanceof ObjectMessage);
 		Assert.assertTrue(messageGame1 instanceof ObjectMessage);
 		Assert.assertTrue(((ObjectMessage) messageGame1).getObject() instanceof GameGuiData);
-	}
-
-	// @Test
-	public void testLaySkipCardInfrontOfPlayer() {
-		// TODO - BM - 31.12.2017 - Die GameValidationBean muss weggemockt werden oder
-		// das komplette Spiel muss mit allen Spielern aufgebaut werden, damit dieser
-		// Test funktioniert
-		throw new NotImplementedException();
 	}
 
 	/**
