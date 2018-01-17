@@ -172,16 +172,16 @@ public class GameValidationTest {
 	@Test
 	public void testGameValidation() {
 		Player t = new Player("Tim");
-		Card tCardTwo = new Card(Color.BLUE, CardValue.TWO);
-		Card tCardFour1 = new Card(Color.BLUE, CardValue.FOUR);
-		Card tCardFour2 = new Card(Color.BLUE, CardValue.FOUR);
-		Card tCardFive1 = new Card(Color.BLUE, CardValue.FIVE);
-		Card tCardFive2 = new Card(Color.BLUE, CardValue.FIVE);
-		Card tCardSix = new Card(Color.BLUE, CardValue.SIX);
-		Card tCardSeven = new Card(Color.BLUE, CardValue.SEVEN);
-		Card tCardNine = new Card(Color.BLUE, CardValue.NINE);
-		Card tCardTwelve = new Card(Color.BLUE, CardValue.TWELVE);
-		Card tCardSkip = new Card(Color.NONE, CardValue.SKIP);
+		Card tCardTwo = new Card(Color.BLUE, CardValue.TWO,24);
+		Card tCardFour1 = new Card(Color.BLUE, CardValue.FOUR,25);
+		Card tCardFour2 = new Card(Color.BLUE, CardValue.FOUR,26);
+		Card tCardFive1 = new Card(Color.BLUE, CardValue.FIVE,27);
+		Card tCardFive2 = new Card(Color.BLUE, CardValue.FIVE,28);
+		Card tCardSix = new Card(Color.BLUE, CardValue.SIX,29);
+		Card tCardSeven = new Card(Color.BLUE, CardValue.SEVEN,30);
+		Card tCardNine = new Card(Color.BLUE, CardValue.NINE,31);
+		Card tCardTwelve = new Card(Color.BLUE, CardValue.TWELVE,32);
+		Card tCardSkip = new Card(Color.NONE, CardValue.SKIP,33);
 		t.addCardToPlayerPile(tCardTwo);
 		t.addCardToPlayerPile(tCardFour1);
 		t.addCardToPlayerPile(tCardFour2);
@@ -194,16 +194,16 @@ public class GameValidationTest {
 		t.addCardToPlayerPile(tCardSkip);
 
 		Player b = new Player("Björn");
-		Card bCardOne = new Card(Color.BLUE, CardValue.ONE);
-		Card bCardFour = new Card(Color.BLUE, CardValue.FOUR);
-		Card bCardSix = new Card(Color.BLUE, CardValue.SIX);
-		Card bCardSeven = new Card(Color.BLUE, CardValue.SEVEN);
-		Card bCardNine1 = new Card(Color.BLUE, CardValue.NINE);
-		Card bCardNine2 = new Card(Color.BLUE, CardValue.NINE);
-		Card bCardEleven1 = new Card(Color.BLUE, CardValue.ELEVEN);
-		Card bCardEleven2 = new Card(Color.BLUE, CardValue.ELEVEN);
-		Card bCardTwelve = new Card(Color.BLUE, CardValue.TWELVE);
-		Card bCardWild = new Card(Color.NONE, CardValue.WILD);
+		Card bCardOne = new Card(Color.BLUE, CardValue.ONE,34);
+		Card bCardFour = new Card(Color.BLUE, CardValue.FOUR,35);
+		Card bCardSix = new Card(Color.BLUE, CardValue.SIX,36);
+		Card bCardSeven = new Card(Color.BLUE, CardValue.SEVEN,37);
+		Card bCardNine1 = new Card(Color.BLUE, CardValue.NINE,38);
+		Card bCardNine2 = new Card(Color.BLUE, CardValue.NINE,39);
+		Card bCardEleven1 = new Card(Color.BLUE, CardValue.ELEVEN,40);
+		Card bCardEleven2 = new Card(Color.BLUE, CardValue.ELEVEN,41);
+		Card bCardTwelve = new Card(Color.BLUE, CardValue.TWELVE,42);
+		Card bCardWild = new Card(Color.NONE, CardValue.WILD,43);
 		b.addCardToPlayerPile(bCardOne);
 		b.addCardToPlayerPile(bCardFour);
 		b.addCardToPlayerPile(bCardSix);
@@ -222,56 +222,56 @@ public class GameValidationTest {
 		Game g = new Game(players, new HashSet<Spectator>());
 
 		PullStack pullStack = new PullStack();
-		Card pullStackSeven1 = new Card(Color.BLUE, CardValue.SEVEN);
+		Card pullStackSeven1 = new Card(Color.BLUE, CardValue.SEVEN, 0);
 		pullStack.addCard(pullStackSeven1);
-		Card pullStackEleven1 = new Card(Color.BLUE, CardValue.ELEVEN);
+		Card pullStackEleven1 = new Card(Color.BLUE, CardValue.ELEVEN, 1);
 		pullStack.addCard(pullStackEleven1);
-		Card pullStackFour1 = new Card(Color.BLUE, CardValue.FOUR);
+		Card pullStackFour1 = new Card(Color.BLUE, CardValue.FOUR, 2);
 		pullStack.addCard(pullStackFour1);
-		Card pullStackNine1 = new Card(Color.BLUE, CardValue.NINE);
+		Card pullStackNine1 = new Card(Color.BLUE, CardValue.NINE,3);
 		pullStack.addCard(pullStackNine1);
-		Card pullStackTwelve1 = new Card(Color.BLUE, CardValue.TWELVE);
+		Card pullStackTwelve1 = new Card(Color.BLUE, CardValue.TWELVE, 4);
 		pullStack.addCard(pullStackTwelve1);
-		Card pullStackTen1 = new Card(Color.BLUE, CardValue.TEN);
+		Card pullStackTen1 = new Card(Color.BLUE, CardValue.TEN, 5);
 		pullStack.addCard(pullStackTen1);
-		Card pullStackWild1 = new Card(Color.NONE, CardValue.WILD);
+		Card pullStackWild1 = new Card(Color.NONE, CardValue.WILD,6);
 		pullStack.addCard(pullStackWild1);
-		Card pullStackTwo1 = new Card(Color.BLUE, CardValue.TWO);
+		Card pullStackTwo1 = new Card(Color.BLUE, CardValue.TWO,7);
 		pullStack.addCard(pullStackTwo1);
-		Card pullStackFour2 = new Card(Color.BLUE, CardValue.FOUR);
+		Card pullStackFour2 = new Card(Color.BLUE, CardValue.FOUR,8);
 		pullStack.addCard(pullStackFour2);
-		Card pullStackThree1 = new Card(Color.BLUE, CardValue.THREE);
+		Card pullStackThree1 = new Card(Color.BLUE, CardValue.THREE,9);
 		pullStack.addCard(pullStackThree1);
-		Card pullStackFive1 = new Card(Color.BLUE, CardValue.FIVE);
+		Card pullStackFive1 = new Card(Color.BLUE, CardValue.FIVE,10);
 		pullStack.addCard(pullStackFive1);
-		Card pullStackSix1 = new Card(Color.BLUE, CardValue.SIX);
+		Card pullStackSix1 = new Card(Color.BLUE, CardValue.SIX,11);
 		pullStack.addCard(pullStackSix1);
-		Card pullStackOne1 = new Card(Color.BLUE, CardValue.ONE);
+		Card pullStackOne1 = new Card(Color.BLUE, CardValue.ONE,12);
 		pullStack.addCard(pullStackOne1);
-		Card pullStackThree2 = new Card(Color.BLUE, CardValue.THREE);
+		Card pullStackThree2 = new Card(Color.BLUE, CardValue.THREE,13);
 		pullStack.addCard(pullStackThree2);
-		Card pullStackWild2 = new Card(Color.NONE, CardValue.WILD);
+		Card pullStackWild2 = new Card(Color.NONE, CardValue.WILD,14);
 		pullStack.addCard(pullStackWild2);
-		Card pullStackSix2 = new Card(Color.BLUE, CardValue.SIX);
+		Card pullStackSix2 = new Card(Color.BLUE, CardValue.SIX,15);
 		pullStack.addCard(pullStackSix2);
-		Card pullStackTwo2 = new Card(Color.BLUE, CardValue.TWO);
+		Card pullStackTwo2 = new Card(Color.BLUE, CardValue.TWO,16);
 		pullStack.addCard(pullStackTwo2);
-		Card pullStackSkip1 = new Card(Color.NONE, CardValue.SKIP);
+		Card pullStackSkip1 = new Card(Color.NONE, CardValue.SKIP,17);
 		pullStack.addCard(pullStackSkip1);
-		Card pullStackSeven2 = new Card(Color.BLUE, CardValue.SEVEN);
+		Card pullStackSeven2 = new Card(Color.BLUE, CardValue.SEVEN,18);
 		pullStack.addCard(pullStackSeven2);
-		Card pullStackTwo3 = new Card(Color.BLUE, CardValue.TWO);
+		Card pullStackTwo3 = new Card(Color.BLUE, CardValue.TWO,19);
 		pullStack.addCard(pullStackTwo3);
-		Card pullStackTen2 = new Card(Color.BLUE, CardValue.TEN);
+		Card pullStackTen2 = new Card(Color.BLUE, CardValue.TEN,20);
 		pullStack.addCard(pullStackTen2);
-		Card pullStackSeven3 = new Card(Color.BLUE, CardValue.SEVEN);
+		Card pullStackSeven3 = new Card(Color.BLUE, CardValue.SEVEN,21);
 		pullStack.addCard(pullStackSeven3);
-		Card pullStackSkip2 = new Card(Color.NONE, CardValue.SKIP);
+		Card pullStackSkip2 = new Card(Color.NONE, CardValue.SKIP,22);
 		pullStack.addCard(pullStackSkip2);
 		g.setPullstack(pullStack);
 
 		LiFoStack lifoStack = new LiFoStack();
-		Card lifoStackTwelve = new Card(Color.BLUE, CardValue.TWELVE);
+		Card lifoStackTwelve = new Card(Color.BLUE, CardValue.TWELVE,23);
 		lifoStack.addCard(lifoStackTwelve);
 		g.setLiFoStack(lifoStack);
 		g.setCurrentPlayer(t);
@@ -556,8 +556,6 @@ public class GameValidationTest {
 		layCardToLiFoStack(t, pullStackFour2, g, lifoStack);
 		// T: 4 auf LIFO
 
-		Assert.assertEquals(0, t.getPlayerPile().getCopyOfCardsList().size());
-		Assert.assertEquals(1, b.getPlayerPile().getCopyOfCardsList().size());
 	}
 
 	// TODO - BM - 13.01.2018 - Es müssen noch die einzelnen Phasen getestet werden

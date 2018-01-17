@@ -20,12 +20,8 @@ public abstract class Stack extends Pile {
 		if (this.isEmpty()) {
 			return null;
 		}
-
-		String before = this.toString();
-
 		Card temp = getLast();
 		removeCard(temp);
-		String after = this.toString();
 		return temp;
 	}
 }

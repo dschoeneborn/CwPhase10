@@ -56,6 +56,12 @@ public class Card implements Serializable {
 
 	}
 
+	public Card(Color color, CardValue cardValue, int id) {
+		this(color, cardValue);
+
+		this.id = id;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -74,12 +80,32 @@ public class Card implements Serializable {
 		return cardValue;
 	}
 
-
 	/**
 	 * @return the minus points of the card at the end of the round
 	 */
 	public int getRoundEndValue() {
-		return 0;//TODO Implement
+		switch (cardValue) {
+		case ONE:
+		case TWO:
+		case THREE:
+		case FOUR:
+		case FIVE:
+		case SIX:
+		case SEVEN:
+		case EIGHT:
+		case NINE:
+			return 5;
+		case TEN:
+		case ELEVEN:
+		case TWELVE:
+			return 10;
+		case SKIP:
+			return 15;
+		case WILD:
+			return 25;
+		default:
+			return 5;
+		}
 	}
 
 	@Override
@@ -95,7 +121,7 @@ public class Card implements Serializable {
 			return false;
 		if (color != other.color)
 			return false;
-		if(id != other.id)
+		if (id != other.id)
 			return false;
 		return true;
 	}

@@ -20,7 +20,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 /**
  * @author Dennis Schöneborn
@@ -67,7 +66,7 @@ public class Game implements Serializable {
 	@OneToMany(mappedBy = "game")
 	private List<Spectator> spectators;
 
-	@Transient
+	@Column
 	private boolean gameInitialized = false;
 
 	private Game()

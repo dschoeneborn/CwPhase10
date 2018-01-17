@@ -24,6 +24,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
@@ -364,28 +365,32 @@ public class GameManagementBean implements GameManagementLocal {
 	private void deleteOldCards(Game game) {
 		if (game != null) {
 			if (game.getPullStack() != null) {
-				deleteCards(game.getPullStack().getCopyOfCardsList());
+				PullStack toDelete = game.getPullStack();
+				game.setPullstack(null);
+				entityManager.remove(toDelete);
 			}
 
 			if (game.getLiFoStack() != null) {
-				deleteCards(game.getLiFoStack().getCopyOfCardsList());
+				LiFoStack toDelete = game.getLiFoStack();
+				game.setLiFoStack(null);
+				entityManager.remove(toDelete);
 			}
 
 			for (Player p : game.getPlayers()) {
-				deleteCards(p.getPlayerPile().getCopyOfCardsList());
+				PlayerPile toDelete = p.getPlayerPile();
+				PlayerPile newPile = new PlayerPile();
+				entityManager.persist(newPile);
+				p.setPlayerPile(newPile);
+				entityManager.remove(toDelete);
 			}
 
 			for (DockPile pile : game.getOpenPiles()) {
-				deleteCards(pile.getCopyOfCardsList());
+				game.getOpenPiles().remove(pile);
+				entityManager.remove(pile);
 			}
 		}
 	}
 
-	private void deleteCards(Collection<Card> cards) {
-		for (Card card : cards) {
-			entityManager.remove(card);
-		}
-	}
 
 	/**
 	 * @author Björn Merschmeier

@@ -99,6 +99,10 @@ public class Player implements Serializable {
 		return playerPile;
 	}
 
+	public void setPlayerPile(PlayerPile playerPile) {
+		this.playerPile = playerPile;
+	}
+
 	public void addCardToPlayerPile(Card c) {
 		playerPile.addCard(c);
 	}
