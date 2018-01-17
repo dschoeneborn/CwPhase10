@@ -43,7 +43,7 @@ public abstract class Pile implements Serializable {
 	}
 
 	public Collection<Card> getCards() {
-		return new ArrayList<Card>(cards);
+		return new ArrayList<>(cards);
 	}
 
 	public boolean addCard(Card card)
@@ -62,7 +62,7 @@ public abstract class Pile implements Serializable {
 	public boolean addAll(Collection<Card> notVisibleCards)
 	{
 		boolean canAddCards = true;
-		
+
 		for(Card c : notVisibleCards)
 		{
 			if(!this.canAddCard(c))
@@ -70,12 +70,12 @@ public abstract class Pile implements Serializable {
 				canAddCards = false;
 			}
 		}
-		
+
 		if(canAddCards)
 		{
 			cards.addAll(notVisibleCards);
 		}
-		
+
 		return canAddCards;
 	}
 
@@ -86,13 +86,17 @@ public abstract class Pile implements Serializable {
 			LinkedList<Card> newCards = new LinkedList<>(cards);
 			newCards.addFirst(card);
 			cards = newCards;
-			
+
 			return true;
 		}
 		else
 		{
 			return false;
 		}
+	}
+
+	public void clearCards() {
+		this.cards.clear();
 	}
 
 	public boolean isEmpty()
@@ -104,7 +108,7 @@ public abstract class Pile implements Serializable {
 	{
 		return cards.get(i);
 	}
-	
+
 	public void setCard(int i, Card c)
 	{
 		cards.set(i, c);
@@ -114,10 +118,15 @@ public abstract class Pile implements Serializable {
 	{
 		cards.remove(i);
 	}
-	
-	public void removeCard(Card c)
+
+	public boolean removeCard(Card c)
 	{
-		cards.remove(c);
+		return cards.remove(c);
+	}
+
+	public boolean containsCard(Card card)
+	{
+		return this.cards.contains(card);
 	}
 
 	/**

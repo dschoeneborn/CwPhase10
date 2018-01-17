@@ -24,10 +24,10 @@ public class UserList extends JPanel{
 	
 	protected DefaultListModel<UserListEntry> listModel = new DefaultListModel<UserListEntry>();
 	protected JList<UserListEntry> list;
-	protected JScrollPane listScroller;
+	protected JScrollPane listScroller;	
 	
 	public UserList() {
-		super();		
+		super();				
 		this.list = new JList<UserListEntry>(this.listModel);
 		this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.list.setCellRenderer(new UserListRenderer());
@@ -46,6 +46,8 @@ public class UserList extends JPanel{
 		}
 		for (String spectator : collection2) {
 			this.listModel.addElement(new SpectatorListEntryGui(spectator));
-		}		
+		}
+		this.revalidate();
+		this.repaint();
 	}
 }

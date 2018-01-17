@@ -13,10 +13,7 @@ import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
  *
  */
 public abstract class GuiWindow extends GuiFrame
-{
-	/**
-	 * 
-	 */
+{	
 	private static final long serialVersionUID = 2505128038796360096L;
 	
 	private GuiManager guiManager;

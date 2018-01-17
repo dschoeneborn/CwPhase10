@@ -13,8 +13,8 @@ import javax.swing.ListCellRenderer;
 public class UserListRenderer implements ListCellRenderer<UserListEntry> {
 	public Component getListCellRendererComponent(JList<? extends UserListEntry> list, UserListEntry value, int index, boolean isSelected,
 			boolean cellHasFocus) {
-		if (value instanceof PlayerListEntryGUI) {
-			return (PlayerListEntryGUI) value;
+		if (value instanceof CardDropPlayerListEntryGUI) {
+			return (CardDropPlayerListEntryGUI) value;
 		}
 		if (value instanceof SpectatorListEntryGui) {
 			return (SpectatorListEntryGui) value;

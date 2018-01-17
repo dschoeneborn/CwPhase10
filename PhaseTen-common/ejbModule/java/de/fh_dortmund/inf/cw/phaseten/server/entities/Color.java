@@ -5,6 +5,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 /**
  * @author Dennis Schöneborn
+ * @author Sven Krefeld
  *
  */
 public enum Color {
@@ -30,5 +31,20 @@ public enum Color {
 		}
 
 		return chatMessageType;
+	}
+
+	public java.awt.Color getRGBColor() {
+		switch (value) {
+		case 1:
+			return new java.awt.Color(227, 24, 54);
+		case 2:
+			return new java.awt.Color(0, 83, 155);
+		case 3:
+			return new java.awt.Color(253, 184, 19);
+		case 4:
+			return new java.awt.Color(0, 132, 62);
+		default:
+			return new java.awt.Color(0, 0, 0);
+		}
 	}
 }

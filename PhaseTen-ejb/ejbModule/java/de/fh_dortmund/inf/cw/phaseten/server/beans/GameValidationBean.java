@@ -96,7 +96,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		Player currentPlayer = g.getCurrentPlayer();
 
 		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, player) && currentPlayer.getRoundStage() == RoundStage.PULL
+				&& playerIsCurrentPlayer(g, player)
+				&& currentPlayer.getRoundStage() == RoundStage.PULL
 				&& !currentPlayer.hasSkipCard()) {
 			pullCardAllowed = true;
 		}
@@ -123,7 +124,9 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		}
 
 		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, p) && !p.hasSkipCard() && p.getRoundStage() == RoundStage.PUT_AND_PUSH
+				&& playerIsCurrentPlayer(g, p)
+				&& !p.hasSkipCard()
+				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
 				&& !p.playerLaidStage() && playerHasCards(cardsInPiles, p)) {
 			switch (p.getPhase()) {
 			case TWO_TRIPLES:
@@ -238,9 +241,11 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Card skipCard = new Card(Color.NONE, CardValue.SKIP);
 
-		if (playerHasCard(skipCard, currentPlayer)
+		if (g.isInitialized()
+				&& playerHasCard(skipCard, currentPlayer)
 				&& currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& playerIsCurrentPlayer(g, currentPlayer) && !currentPlayer.hasSkipCard()
+				&& playerIsCurrentPlayer(g, currentPlayer)
+				&& !currentPlayer.hasSkipCard()
 				&& !destinationPlayer.hasSkipCard()
 				&& !destinationPlayer.hasNoCards()
 				&& currentPlayer.getPlayerPile().getCards().size() > 1) {
