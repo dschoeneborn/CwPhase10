@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.top_row;
 
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -7,6 +7,8 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
@@ -25,17 +27,32 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscarding
  * @author Sven Krefeld
  *
  */
-public class LiFoStackPane extends CardPilePane {
+public class DiscardCardPile extends CardPilePane {
 	private static final long serialVersionUID = 7330764386204801790L;
 	
 	protected ServiceHandler serviceHandler;
 	
-	public LiFoStackPane(ServiceHandler serviceHandler) {
+	public DiscardCardPile(ServiceHandler serviceHandler) {
 		this.serviceHandler = serviceHandler;
 		this.setDropTarget(new DropTarget(this, new CardDropTargetListener()));
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent evt) { 
+				super.mouseClicked(evt);
+				try {
+					DiscardCardPile.this.serviceHandler.takeCardFromLiFoStack();
+				} catch (MoveNotValidException e) {
+					System.out.println("Move not valide");				
+				} catch (NotLoggedInException e) {
+					System.out.println("Not logged in");
+				} catch (GameNotInitializedException e) {
+					System.out.println("Game not initialized");
+				}
+			}
+		});
 	}
 
-	class CardDropTargetListener implements DropTargetListener {//TODO change listener to default card listener
+	class CardDropTargetListener implements DropTargetListener {
 		@Override
 		public void dropActionChanged(DropTargetDragEvent dtde) {
 
@@ -47,7 +64,7 @@ public class LiFoStackPane extends CardPilePane {
 			Card card;
 			try {
 				card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
-				LiFoStackPane.this.serviceHandler.layCardToLiFoStack(card.getId());
+				DiscardCardPile.this.serviceHandler.layCardToLiFoStack(card.getId());
 			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | TakeCardBeforeDiscardingException e) {				
 			} catch (MoveNotValidException e) {
 				System.out.println("Move not valide");				
@@ -55,8 +72,7 @@ public class LiFoStackPane extends CardPilePane {
 				System.out.println("Not logged in");
 			} catch (GameNotInitializedException e) {
 				System.out.println("Game not initialized");
-			}					
-			return;
+			}									
 		}
 
 		@Override

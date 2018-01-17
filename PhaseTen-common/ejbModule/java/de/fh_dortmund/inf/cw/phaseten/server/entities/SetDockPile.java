@@ -48,7 +48,7 @@ public class SetDockPile extends DockPile {
 	 */
 	@Override
 	public boolean addCard(Card card) {
-		if (card.getCardValue().equals(this.cardValue)) {
+		if (card.getCardValue().equals(this.cardValue) || card.getCardValue().equals(CardValue.WILD)) {
 			this.cards.add(card);
 			return true;
 		}

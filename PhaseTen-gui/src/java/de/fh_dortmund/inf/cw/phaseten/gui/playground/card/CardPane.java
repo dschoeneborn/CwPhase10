@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.card;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,6 +16,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
  */
 public class CardPane extends JPanel {
 	private static final long serialVersionUID = 667877245670448219L;
+	
+	public static final Dimension cardSize = new Dimension(80, 130);
 	
 	private CardValue cardValue;
 	private Color color;
@@ -38,7 +40,7 @@ public class CardPane extends JPanel {
 	}
 
 	protected void init() {
-		this.setPreferredSize(new Dimension(80, 130));
+		this.setPreferredSize(CardPane.cardSize);
 		this.setMinimumSize(this.getPreferredSize());
 		this.setMaximumSize(this.getPreferredSize());
 	}

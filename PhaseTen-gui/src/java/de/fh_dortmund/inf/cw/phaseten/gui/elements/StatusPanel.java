@@ -38,9 +38,11 @@ public class StatusPanel extends JPanel{
 	}
 
 	public void updateData(User user)
-	{
+	{		
 		this.statusLabel.setText("TODO - Status setzen");
 		this.nameLabel.setText(user.getLoginName());
-		this.coinsLabel.setText(user.getCoins() + "");
+		this.coinsLabel.setText(user.getCoins() + "Coins");
+		this.revalidate();
+		this.repaint();
 	}
 }

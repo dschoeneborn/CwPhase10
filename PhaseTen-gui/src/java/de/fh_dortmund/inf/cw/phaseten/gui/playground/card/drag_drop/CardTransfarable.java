@@ -1,4 +1,4 @@
-package de.fh_dortmund.inf.cw.phaseten.gui.playground;
+package de.fh_dortmund.inf.cw.phaseten.gui.playground.card.drag_drop;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -10,8 +10,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
  * @author Robin Harbecke
  *
  */
-class CardTransfarable implements Transferable {
-	protected static final DataFlavor cardFlavor = new DataFlavor(Card.class, "Card Object");
+public class CardTransfarable implements Transferable {
+	public static final DataFlavor cardFlavor = new DataFlavor(Card.class, "Card Object");
 
 	protected static final DataFlavor[] supportedFlavors = { cardFlavor };
 
