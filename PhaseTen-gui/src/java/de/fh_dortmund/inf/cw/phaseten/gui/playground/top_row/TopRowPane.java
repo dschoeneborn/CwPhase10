@@ -7,7 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
-import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
+import de.fh_dortmund.inf.cw.phaseten.gui.playground.user.UserList;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
