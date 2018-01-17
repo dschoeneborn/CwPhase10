@@ -21,8 +21,7 @@ public class CardDropPlayerListEntryGUI extends PlayerListEntryGUI implements IC
 	
 	public CardDropPlayerListEntryGUI(PlayerGuiData player,ServiceHandler serviceHandler) {
 		super(player);		
-		this.serviceHandler = serviceHandler;
-		this.player = player;		
+		this.serviceHandler = serviceHandler;			
 		this.setTransferHandler(new TransferHandler("baseCard"));
 		this.setDropTarget(new DropTarget(this, new CardDropTargetListener(this)));		
 	}
