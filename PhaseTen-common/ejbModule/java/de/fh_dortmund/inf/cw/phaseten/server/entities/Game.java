@@ -61,7 +61,7 @@ public class Game implements Serializable {
 	private LiFoStack liFoStack;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(unique = true)
+	@JoinColumn(name = "GAME_ID")
 	private List<DockPile> openPiles;
 
 	@OneToMany(mappedBy = "game")
@@ -69,19 +69,19 @@ public class Game implements Serializable {
 
 	@Transient
 	private boolean gameInitialized = false;
-	
+
 	private Game()
 	{
-		openPiles = new ArrayList<DockPile>();
-		spectators = new ArrayList<Spectator>();
+		openPiles = new ArrayList<>();
+		spectators = new ArrayList<>();
 	}
 
 	/**
-	 * @param arrayList2 
-	 * @param discardPile 
-	 * @param pullStack2 
-	 * @param hashSet 
-	 * @param arrayList 
+	 * @param arrayList2
+	 * @param discardPile
+	 * @param pullStack2
+	 * @param hashSet
+	 * @param arrayList
 	 *
 	 */
 	public Game(Set<Player> players, Set<Spectator> spectators, PullStack pullStack2, LiFoStack discardPile)
@@ -192,7 +192,7 @@ public class Game implements Serializable {
 		spectator.removeGame();
 		this.spectators.remove(spectator);
 	}
-	
+
 	public void removePlayer(Player player) {
 		player.removeGame();
 		this.players.remove(player);

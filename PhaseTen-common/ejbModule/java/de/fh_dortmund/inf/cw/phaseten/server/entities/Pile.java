@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 
 /**
  * @author Dennis Schöneborn
@@ -36,13 +37,14 @@ public abstract class Pile implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinTable
+	@OrderColumn
 	private List<Card> cards;
 
 	public Pile() {
 		cards = new ArrayList<>();
 	}
 
-	public Collection<Card> getCards() {
+	public Collection<Card> getCopyOfCardsList() {
 		return new ArrayList<>(cards);
 	}
 
@@ -144,4 +146,10 @@ public abstract class Pile implements Serializable {
 	 * @param card
 	 */
 	public abstract boolean canAddCard(Card card);
+
+	protected Card getLast()
+	{
+		LinkedList<Card> newCards = new LinkedList<>(cards);
+		return newCards.getLast();
+	}
 }

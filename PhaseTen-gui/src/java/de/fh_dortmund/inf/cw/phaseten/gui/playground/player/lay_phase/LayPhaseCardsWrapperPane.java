@@ -48,7 +48,7 @@ public class LayPhaseCardsWrapperPane extends JPanel{
 	}
 
 	public DockPile getLayDockPile() {
-		Collection<Card> cards = this.currentPile.dockPile.getCards();
+		Collection<Card> cards = this.currentPile.dockPile.getCopyOfCardsList();
 		Card realCard = this.getRealCard(cards);
 		if(realCard == null) return null;
 		DockPile resultDockPile;
@@ -87,7 +87,7 @@ public class LayPhaseCardsWrapperPane extends JPanel{
 	}
 
 	public Collection<Card> getCardsOnTempPile(){
-		return this.currentPile.getDockPile().getCards();
+		return this.currentPile.getDockPile().getCopyOfCardsList();
 	}
 
 	public boolean removeCardFromTempPile(Card card) {
@@ -95,7 +95,7 @@ public class LayPhaseCardsWrapperPane extends JPanel{
 	}
 
 	public void updateData(Collection<Card> allCards) {
-		for (Card card : this.currentPile.dockPile.getCards()) {
+		for (Card card : this.currentPile.dockPile.getCopyOfCardsList()) {
 			if(!allCards.contains(card)) {
 				this.currentPile.dockPile.removeCard(card);
 			}

@@ -155,7 +155,7 @@ public class Player implements Serializable {
 	public void givePlayerSkipCard() {
 		this.playerHasSkipCard = true;
 	}
-	
+
 	public void removeSkipCard() {
 		this.playerHasSkipCard = false;
 	}
@@ -165,7 +165,7 @@ public class Player implements Serializable {
 	}
 
 	public boolean hasNoCards() {
-		return this.playerPile.getCards().size() == 0;
+		return this.playerPile.getCopyOfCardsList().size() == 0;
 	}
 
 	public int getNegativePoints() {

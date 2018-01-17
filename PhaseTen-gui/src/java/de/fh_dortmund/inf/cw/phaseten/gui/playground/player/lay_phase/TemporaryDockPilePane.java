@@ -2,6 +2,8 @@ package de.fh_dortmund.inf.cw.phaseten.gui.playground.player.lay_phase;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.Collection;
+
 import javax.swing.BorderFactory;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
@@ -15,37 +17,38 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
  * @author Robin Harbecke
  *
  */
-public class TemporaryDockPilePane extends PilePane{	
-	private static final long serialVersionUID = 1783687628149961426L;	
+public class TemporaryDockPilePane extends PilePane{
+	private static final long serialVersionUID = 1783687628149961426L;
 
 	protected PlayerCardsPane playerCardsPane;
 	protected TemporaryDockPile dockPile = new TemporaryDockPile();
 	protected ServiceHandler serviceHandler;
-	
+
 	public TemporaryDockPilePane(ServiceHandler serviceHandler,PlayerCardsPane playerCardsPane) {
 		this.serviceHandler = serviceHandler;
 		this.playerCardsPane = playerCardsPane;
-		this.setPreferredSize(new Dimension(CardPane.cardSize.width*5+50, CardPane.cardSize.height+30));		
+		this.setPreferredSize(new Dimension(CardPane.cardSize.width*5+50, CardPane.cardSize.height+30));
 		this.setMinimumSize(this.getPreferredSize());
 		this.setMaximumSize(this.getPreferredSize());
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		this.updateData();
 	}
-	
+
+	@Override
 	public void handleCardDrop(Card card) {
 		this.dockPile.addCard(card);
 		this.playerCardsPane.updateData();
 	}
-	
-	public TemporaryDockPile getDockPile() {		
+
+	public TemporaryDockPile getDockPile() {
 		return this.dockPile;
 	}
 
 	@Override
-	protected Iterable<Card> getCards() {
-		return this.dockPile.getCards();
+	protected Collection<Card> getCards() {
+		return this.dockPile.getCopyOfCardsList();
 	}
-	
+
 	@Override
 	protected CardPane getCardPane(Card card) {
 		return new DragableCardPane(card);

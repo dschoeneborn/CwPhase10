@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
@@ -21,9 +21,11 @@ public abstract class Stack extends Pile {
 			return null;
 		}
 
-		Card temp = this.getCard(this.getCards().size() - 1);
-		this.removeCard(this.getCards().size() - 1);
+		String before = this.toString();
 
+		Card temp = getLast();
+		removeCard(temp);
+		String after = this.toString();
 		return temp;
 	}
 }

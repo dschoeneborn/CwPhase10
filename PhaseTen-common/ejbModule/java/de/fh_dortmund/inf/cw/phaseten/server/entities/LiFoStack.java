@@ -20,29 +20,29 @@ import javax.persistence.Entity;
 @Entity
 public class LiFoStack extends Stack {
 	private static final long serialVersionUID = -1006154816006779657L;
-	
+
 	public LiFoStack()
 	{
 		super();
 	}
 
 	public Card showCard() {
-		if (this.getCards().isEmpty()) {
+		if (this.getCopyOfCardsList().isEmpty()) {
 			return null;
 		}
-		return new LinkedList<>(this.getCards()).getLast();
+		return new LinkedList<>(this.getCopyOfCardsList()).getLast();
 	}
 
 	public Collection<Card> getNotVisibleCards() {
-		List<Card> result = new ArrayList<Card>();
-		
-		while(this.getCards().size() > 2)
+		List<Card> result = new ArrayList<>();
+
+		while(this.getCopyOfCardsList().size() > 2)
 		{
-			Card currentCard = new LinkedList<Card>(this.getCards()).getFirst();
-			this.getCards().remove(currentCard);
+			Card currentCard = new LinkedList<>(this.getCopyOfCardsList()).getFirst();
+			this.removeCard(currentCard);
 			result.add(currentCard);
 		}
-			
+
 		return result;
 	}
 

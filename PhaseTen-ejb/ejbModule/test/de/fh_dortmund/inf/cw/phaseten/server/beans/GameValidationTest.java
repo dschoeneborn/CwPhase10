@@ -318,7 +318,7 @@ public class GameValidationTest {
 		pullFromLiFo(b, g, lifoStack);
 		// B: 9 von LIFO
 
-		Assert.assertTrue(b.getPlayerPile().getCards().contains(tCardNine));
+		Assert.assertTrue(b.getPlayerPile().containsCard(tCardNine));
 
 		Collection<DockPile> pilesInCollection = new ArrayList<>();
 		DockPile phase1b1 = new SetDockPile(CardValue.NINE);
@@ -358,7 +358,7 @@ public class GameValidationTest {
 		Assert.assertFalse(gameValidation.isValidToAddCard(g, t, phase1b1, tCardTwo));
 
 		pullFromLiFo(t, g, lifoStack);
-		Assert.assertTrue(t.getPlayerPile().getCards().contains(bCardTwelve));
+		Assert.assertTrue(t.getPlayerPile().containsCard(bCardTwelve));
 		// T: 12 von LIFO
 
 		layCardToLiFoStack(t, tCardSix, g, lifoStack);
@@ -556,8 +556,8 @@ public class GameValidationTest {
 		layCardToLiFoStack(t, pullStackFour2, g, lifoStack);
 		// T: 4 auf LIFO
 
-		Assert.assertEquals(0, t.getPlayerPile().getCards().size());
-		Assert.assertEquals(1, b.getPlayerPile().getCards().size());
+		Assert.assertEquals(0, t.getPlayerPile().getCopyOfCardsList().size());
+		Assert.assertEquals(1, b.getPlayerPile().getCopyOfCardsList().size());
 	}
 
 	// TODO - BM - 13.01.2018 - Es müssen noch die einzelnen Phasen getestet werden
@@ -734,7 +734,7 @@ public class GameValidationTest {
 	}
 
 	// TODO - BM - 13.01.2018 - Es müssen noch die einzelnen Phasen getestet werden
-	
+
 	/**
 	 * TODO Add JavaDoc
 	 *
@@ -776,11 +776,11 @@ public class GameValidationTest {
 	private void setNextPlayer(Game game) {
 		Player nextPlayer = game.getNextPlayer();
 		game.setCurrentPlayer(nextPlayer);
-	
+
 		if (nextPlayer.hasSkipCard()) {
 			nextPlayer.removeSkipCard();
 			setNextPlayer(game);
-	
+
 		}
 		nextPlayer.resetRoundStage();
 	}
@@ -795,7 +795,7 @@ public class GameValidationTest {
 	 * @param g
 	 * @param lifoStack
 	 */
-	
+
 	private void laySkipCard(Player player, Card card, Player destination, Game g, LiFoStack lifoStack) {
 		Assert.assertTrue(gameValidation.isValidLaySkipCard(player, destination, g));
 		player.getPlayerPile().removeCard(card);

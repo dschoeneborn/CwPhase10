@@ -38,17 +38,21 @@ public class PullStack extends Stack {
 					}
 				}
 
-				addCard(new Card(Color.NONE, CardValue.SKIP));
-				addCard(new Card(Color.NONE, CardValue.SKIP));
-				addCard(new Card(Color.NONE, CardValue.SKIP));
-				addCard(new Card(Color.NONE, CardValue.SKIP));
-
-				addCard(new Card(Color.NONE, CardValue.WILD));
-				addCard(new Card(Color.NONE, CardValue.WILD));
-				addCard(new Card(Color.NONE, CardValue.WILD));
-				addCard(new Card(Color.NONE, CardValue.WILD));
 			}
 		}
+		addCard(new Card(Color.NONE, CardValue.SKIP));
+		addCard(new Card(Color.NONE, CardValue.SKIP));
+		addCard(new Card(Color.NONE, CardValue.SKIP));
+		addCard(new Card(Color.NONE, CardValue.SKIP));
+
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
 	}
 
 	/**
@@ -57,7 +61,7 @@ public class PullStack extends Stack {
 	public void shuffle() {
 		Random random = ThreadLocalRandom.current();
 
-		for (int i = getCards().size() - 1; i > 0; i--) {
+		for (int i = getCopyOfCardsList().size() - 1; i > 0; i--) {
 			int index = random.nextInt(i + 1);
 
 			Card a = getCard(index);
@@ -73,5 +77,15 @@ public class PullStack extends Stack {
 	@Override
 	public boolean canAddCard(Card card) {
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Card c : this.getCopyOfCardsList()) {
+			sb.append(c.toString());
+			sb.append(System.lineSeparator());
+		}
+		return sb.toString();
 	}
 }

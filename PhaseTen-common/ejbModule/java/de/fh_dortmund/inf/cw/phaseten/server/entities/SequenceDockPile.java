@@ -1,9 +1,10 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,10 +18,11 @@ import javax.persistence.Enumerated;
  */
 
 @Entity
+@DiscriminatorValue( value="SDP" )
 public class SequenceDockPile extends DockPile {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8478624573278422943L;
 
@@ -33,7 +35,7 @@ public class SequenceDockPile extends DockPile {
 	private CardValue maximum;
 
 	/**
-	 * 
+	 *
 	 */
 	public SequenceDockPile() {
 		super();
@@ -41,7 +43,7 @@ public class SequenceDockPile extends DockPile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile#dock(de.fh_dortmund.
 	 * inf.cw.phaseten.server.entities.Card)
@@ -75,7 +77,7 @@ public class SequenceDockPile extends DockPile {
 			addedCard = true;
 		} else if (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD) {
 			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
-			
+
 			minimum = CardValue.getCardValue(minimum.getValue() - 1);
 
 			addFirst(card);
@@ -83,7 +85,7 @@ public class SequenceDockPile extends DockPile {
 			addedCard = true;
 		} else if (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD) {
 			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
-			
+
 			maximum = CardValue.getCardValue(maximum.getValue() + 1);
 
 			super.addCard(card);
@@ -106,7 +108,7 @@ public class SequenceDockPile extends DockPile {
 	public boolean canAddCard(Card card)
 	{
 		//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
-		
+
 		return (minimum == null || card.getCardValue().getValue() < minimum.getValue()
 				|| maximum == null || card.getCardValue().getValue() > maximum.getValue()
 				|| (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD)

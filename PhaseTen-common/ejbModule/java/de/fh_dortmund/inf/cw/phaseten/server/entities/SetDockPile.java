@@ -4,8 +4,12 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 /**
  * @author Dennis Schöneborn
@@ -14,6 +18,9 @@ import javax.persistence.Enumerated;
  * @author Sebastian Seitz
  * @author Björn Merschmeier
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorValue( value="SETDP" )
 public class SetDockPile extends DockPile {
 	private static final long serialVersionUID = -5890944285337742574L;
 

@@ -221,7 +221,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	@Override
 	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
-			NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
+	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
 		gameManagement.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, cardId);
 
 	}
@@ -326,7 +326,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	@Override
 	public Collection<Card> getCards() throws NotLoggedInException {
-		return getOrCreateCurrentPlayer().getPlayerPile().getCards();
+		return getOrCreateCurrentPlayer().getPlayerPile().getCopyOfCardsList();
 	}
 
 	@Override
@@ -348,7 +348,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 * @author Tim Prange
 	 * @return
 	 */
-	private Player getOrCreateCurrentPlayer() throws NotLoggedInException 
+	private Player getOrCreateCurrentPlayer() throws NotLoggedInException
 	{
 		if(currentUser == null)
 		{

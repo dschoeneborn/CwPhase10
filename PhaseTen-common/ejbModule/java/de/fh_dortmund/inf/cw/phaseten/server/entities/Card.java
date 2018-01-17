@@ -13,7 +13,7 @@ import javax.persistence.Id;
 
 /**
  * Card Entity.
- * 
+ *
  * @author Dennis Schöneborn
  * @author Daniela
  * @author Marc Mettke
@@ -30,6 +30,11 @@ public class Card implements Serializable {
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private Color color;
+
+	@Override
+	public String toString() {
+		return "Card [id=" + id + ", color=" + color.name() + ", cardValue=" + cardValue.getWrittenValue() + "]";
+	}
 
 	@Column(nullable = false)
 	@Basic(optional = false)
@@ -69,9 +74,9 @@ public class Card implements Serializable {
 		return cardValue;
 	}
 
-	
+
 	/**
-	 * @return the minus points of the card at the end of the round 
+	 * @return the minus points of the card at the end of the round
 	 */
 	public int getRoundEndValue() {
 		return 0;//TODO Implement
@@ -89,6 +94,8 @@ public class Card implements Serializable {
 		if (cardValue != other.cardValue)
 			return false;
 		if (color != other.color)
+			return false;
+		if(id != other.id)
 			return false;
 		return true;
 	}

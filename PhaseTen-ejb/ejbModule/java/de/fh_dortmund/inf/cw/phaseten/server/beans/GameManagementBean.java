@@ -146,9 +146,10 @@ public class GameManagementBean implements GameManagementLocal {
 		Game game = player.getGame();
 		if (gameValidation.isValidLayStageToTable(game, player, piles)) {
 			for (DockPile pile : piles) {
+				entityManager.persist(pile);
 				game.addOpenPile(pile);
 
-				for (Card card : pile.getCards()) {
+				for (Card card : pile.getCopyOfCardsList()) {
 					player.removeCardFromPlayerPile(card);
 				}
 			}
@@ -174,9 +175,9 @@ public class GameManagementBean implements GameManagementLocal {
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
 			game.getLiFoStack().addCard(card);
 			player.removeCardFromPlayerPile(card);
-			
+
 			putNotVisibleLiFoStackCardsShuffledUnderPullStack(game);
-			
+
 			player.resetRoundStage();
 			setNextPlayer(game);
 		}
@@ -266,7 +267,7 @@ public class GameManagementBean implements GameManagementLocal {
 	private Card findCard(Player player, long cardId) {
 		Card foundCard = null;
 
-		for (Card c : player.getPlayerPile().getCards()) {
+		for (Card c : player.getPlayerPile().getCopyOfCardsList()) {
 			if (c.getId() == cardId) {
 				foundCard = c;
 				break;
@@ -349,7 +350,7 @@ public class GameManagementBean implements GameManagementLocal {
 		PullStack pullStack = new PullStack();
 		pullStack.initializeCards();
 		pullStack.shuffle();
-		saveNewCards(pullStack.getCards());
+		saveNewCards(pullStack.getCopyOfCardsList());
 
 		game.setPullstack(pullStack);
 	}
@@ -363,19 +364,19 @@ public class GameManagementBean implements GameManagementLocal {
 	private void deleteOldCards(Game game) {
 		if (game != null) {
 			if (game.getPullStack() != null) {
-				deleteCards(game.getPullStack().getCards());
+				deleteCards(game.getPullStack().getCopyOfCardsList());
 			}
 
 			if (game.getLiFoStack() != null) {
-				deleteCards(game.getLiFoStack().getCards());
+				deleteCards(game.getLiFoStack().getCopyOfCardsList());
 			}
 
 			for (Player p : game.getPlayers()) {
-				deleteCards(p.getPlayerPile().getCards());
+				deleteCards(p.getPlayerPile().getCopyOfCardsList());
 			}
 
 			for (DockPile pile : game.getOpenPiles()) {
-				deleteCards(pile.getCards());
+				deleteCards(pile.getCopyOfCardsList());
 			}
 		}
 	}
@@ -412,7 +413,7 @@ public class GameManagementBean implements GameManagementLocal {
 		List<Player> players = new ArrayList<>(game.getPlayers());
 
 		for (Player player : players) {
-			Collection<Card> remainingCards = player.getPlayerPile().getCards();
+			Collection<Card> remainingCards = player.getPlayerPile().getCopyOfCardsList();
 
 			for (Card remainingCard : remainingCards) {
 				if (remainingCard.getCardValue().getValue() >= 5) {
