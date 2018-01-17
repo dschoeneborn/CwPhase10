@@ -27,14 +27,16 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.CardsToPileAction;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.AIManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
-import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;;
 
 /**
  * @author Marc Mettke
@@ -56,6 +58,9 @@ public class GameManagementBean implements GameManagementLocal {
 
 	@EJB
 	GameValidationLocal gameValidation;
+	
+	@EJB 
+	AIManagementLocal aiManagment;
 
 	@Override
 	public void requestGameMessage(Player p) throws GameNotInitializedException {
@@ -89,14 +94,18 @@ public class GameManagementBean implements GameManagementLocal {
 	public void takeCardFromPullstack(Player player) throws MoveNotValidException {
 		Game game = player.getGame();
 		if (gameValidation.isValidDrawCardFromPullStack(game, player)) {
-			Card drawnCard = game.getPullStack().pullTopCard();
-			player.addCardToPlayerPile(drawnCard);
-			player.addRoundStage();
+			internalTakeCardFromPullstack(player, game);
 		}
 		else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
+	}
+	
+	private void internalTakeCardFromPullstack(Player player, Game game) {
+		Card drawnCard = game.getPullStack().pullTopCard();
+		player.addCardToPlayerPile(drawnCard);
+		player.addRoundStage();
 	}
 
 	/**
@@ -107,14 +116,18 @@ public class GameManagementBean implements GameManagementLocal {
 	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException {
 		Game game = player.getGame();
 		if (gameValidation.isValidDrawCardFromLiFoStack(game, player)) {
-			Card drawnCard = game.getLiFoStack().pullTopCard();
-			player.addCardToPlayerPile(drawnCard);
-			player.addRoundStage();
+			internalTakeCardFromLiFoStack(player, game);
 		}
 		else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
+	}
+	
+	private void internalTakeCardFromLiFoStack(Player player, Game game) {
+		Card drawnCard = game.getLiFoStack().pullTopCard();
+		player.addCardToPlayerPile(drawnCard);
+		player.addRoundStage();
 	}
 
 	/**
@@ -128,13 +141,17 @@ public class GameManagementBean implements GameManagementLocal {
 		Game game = player.getGame();
 		DockPile dockPile = entityManager.find(DockPile.class, dockPileId);
 		if (gameValidation.isValidToAddCard(game, player, dockPile, card)) {
-			dockPile.addCard(card);
-			player.removeCardFromPlayerPile(card);
+			internalAddToPileOnTable(player, game, card, dockPile);
 		}
 		else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
+	}
+	
+	private void internalAddToPileOnTable(Player player, Game game, Card card, DockPile dockPile) {
+		dockPile.addCard(card);
+		player.removeCardFromPlayerPile(card);
 	}
 
 	/**
@@ -146,23 +163,27 @@ public class GameManagementBean implements GameManagementLocal {
 			throws MoveNotValidException, GameNotInitializedException {
 		Game game = player.getGame();
 		if (gameValidation.isValidLayStageToTable(game, player, piles)) {
-			for (DockPile pile : piles) {
-				entityManager.persist(pile);
-				game.addOpenPile(pile);
-
-				for (Card card : pile.getCopyOfCardsList()) {
-					player.removeCardFromPlayerPile(card);
-				}
-			}
-
-			player.setPlayerLaidStage(true);
-			player.addPhase();
+			internalLayPhaseToTable(player, piles, game);
 		}
 		else {
 			throw new MoveNotValidException();
 		}
 
 		updateClient(player);
+	}
+	
+	private void internalLayPhaseToTable(Player player, Collection<DockPile> piles, Game game) {
+		for (DockPile pile : piles) {
+			entityManager.persist(pile);
+			game.addOpenPile(pile);
+
+			for (Card card : pile.getCopyOfCardsList()) {
+				player.removeCardFromPlayerPile(card);
+			}
+		}
+
+		player.setPlayerLaidStage(true);
+		player.addPhase();
 	}
 
 	/**
@@ -175,13 +196,7 @@ public class GameManagementBean implements GameManagementLocal {
 		Card card = findCard(player, cardId);
 		Game game = player.getGame();
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
-			game.getLiFoStack().addCard(card);
-			player.removeCardFromPlayerPile(card);
-
-			game = player.getGame();
-			putNotVisibleLiFoStackCardsShuffledUnderPullStack(game);
-
-			player.resetRoundStage();
+			internalLayCardToLiFoStack(player, game, card);
 			setNextPlayer(game);
 		}
 		else {
@@ -189,6 +204,16 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 
 		updateClient(player);
+	}
+	
+	private void internalLayCardToLiFoStack(Player player, Game game, Card card) {
+		game.getLiFoStack().addCard(card);
+		player.removeCardFromPlayerPile(card);
+
+		game = player.getGame();
+		putNotVisibleLiFoStackCardsShuffledUnderPullStack(game);
+
+		player.resetRoundStage();
 	}
 
 	@Override
@@ -292,8 +317,10 @@ public class GameManagementBean implements GameManagementLocal {
 
 		if (game.getLiFoStack().showCard().getCardValue() == CardValue.SKIP) {
 			setNextPlayer(game);
-		}
-
+		} else if(game.getCurrentPlayer().getIsAI()) {
+			aiTurn(game, game.getCurrentPlayer());
+			setNextPlayer(game);
+		} 
 	}
 
 	/**
@@ -397,20 +424,77 @@ public class GameManagementBean implements GameManagementLocal {
 
 	/**
 	 * @author Björn Merschmeier
+	 * @author Marc Mettke
 	 * @param game
 	 */
 	private void setNextPlayer(Game game) {
-		Player nextPlayer = game.getNextPlayer();
-		game.setCurrentPlayer(nextPlayer);
-
-		if (nextPlayer.hasSkipCard()) {
-			nextPlayer.removeSkipCard();
-			setNextPlayer(game);
+		// Removed recursion to prevent stack overflow when only ai player are playing
+		while(true) {
+			Player nextPlayer = game.getNextPlayer();
+			game.setCurrentPlayer(nextPlayer);
+			
+			// end loop when the next player does not have any cards left
+			if (nextPlayer.hasNoCards()) {
+				countPoints(game);
+				initNextRound(game);
+				break;
+			} else if(nextPlayer.hasSkipCard()) {
+				nextPlayer.removeSkipCard();
+			}
+			// don't end loop as long as ai players are taking their turns
+			// if there are only ai players than this loop will go on till one of them won
+			else if(nextPlayer.getIsAI()) {
+				aiTurn(game, nextPlayer);
+			}
+			// end loop if a valid next player is found (not ai and not skipped) 
+			else if(!nextPlayer.hasSkipCard() ) { 
+				break; 
+			}
 		}
-		else if (nextPlayer.hasNoCards()) {
-			countPoints(game);
-			initNextRound(game);
+	}
+	
+	private void aiTurn(Game game, Player player) {
+		// take card
+		switch (aiManagment.takeCard(player, game)) {
+			case DISCARD_PILE: {
+				internalTakeCardFromLiFoStack(player, game);
+			}
+			case DRAWER_PILE: {
+				internalTakeCardFromPullstack(player, game);
+			}
 		}
+		
+		// do moves
+		List<CardsToPileAction> actions;
+		do {
+			//get moves
+			actions = aiManagment.cardsToPile(player,game);
+			
+			Collection<DockPile> piles = new ArrayList<DockPile>();
+			for(CardsToPileAction action : actions) {
+				// lay out phase
+				if(!action.isDockPileAlreadyExisting()) {
+					DockPile dockPile = action.getDockpile();
+					for(Card card : action.getCards()) {
+						dockPile.addCard(card);
+					}
+					piles.add(dockPile);
+				} 
+				// add card to existing DockPile
+				else {
+					for(Card card : action.getCards()) {
+						internalAddToPileOnTable(player, game, card, action.getDockpile());
+					}
+				}
+			}
+			if(piles.size() > 0) {
+				internalLayPhaseToTable(player, piles, game);						
+			}
+		} while(actions.size() > 0);
+		
+		// discard card
+		Card card = aiManagment.discardCard(player, game);
+		internalLayCardToLiFoStack(player, game, card);
 	}
 
 	/**

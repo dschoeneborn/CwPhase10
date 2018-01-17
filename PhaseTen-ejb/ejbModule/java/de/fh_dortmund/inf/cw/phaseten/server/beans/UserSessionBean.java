@@ -370,4 +370,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 		return userManagement.getOrCreateSpectator(currentUser);
 	}
 
+	@Override
+	public void addAI() throws NoFreeSlotException {
+		this.lobbyManagement.addAI();
+	}
+
 }

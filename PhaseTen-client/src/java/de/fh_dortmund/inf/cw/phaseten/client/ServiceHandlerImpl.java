@@ -250,4 +250,9 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void addAI() throws NoFreeSlotException {
+		userSessionRemote.addAI();
+	}
 }

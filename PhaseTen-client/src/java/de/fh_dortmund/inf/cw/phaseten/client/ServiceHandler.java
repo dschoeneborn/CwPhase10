@@ -31,6 +31,8 @@ public interface ServiceHandler extends MessageListener {
 	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException;
 
 	void enterLobbyAsSpectator() throws NotLoggedInException;
+	
+	void addAI() throws NoFreeSlotException;
 
 	void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException;
 

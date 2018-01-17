@@ -170,4 +170,19 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 			return l;
 		}
 	}
+
+	@Override
+	public void addAI() throws NoFreeSlotException {
+		Lobby l = getOrCreateLobby();
+
+		if (l.isFull()) {
+			throw new NoFreeSlotException();
+		}
+		Player player = new Player("AI-" + System.currentTimeMillis());
+		player = entityManager.merge(player);
+		player.setIsAI(true);
+		l.addPlayer(player);
+
+		sendLobbyMessage();
+	}
 }

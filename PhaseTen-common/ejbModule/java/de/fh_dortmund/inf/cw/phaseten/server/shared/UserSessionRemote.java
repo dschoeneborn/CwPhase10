@@ -38,6 +38,8 @@ public interface UserSessionRemote extends UserSession {
 	 * @author Tim Prange
 	 */
 	void enterLobbyAsSpectator() throws NotLoggedInException;
+	
+	void addAI() throws NoFreeSlotException;
 
 	/**
 	 * TODO Add JavaDoc
