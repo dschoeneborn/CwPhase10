@@ -1,6 +1,5 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground.card;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
@@ -8,6 +7,7 @@ import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 
 /**
  * @author Robin Harbecke
@@ -56,9 +56,9 @@ public class CardPane extends JPanel {
 			java.awt.Graphics2D gr = (java.awt.Graphics2D) graphics;
 
 			int cardWidth = this.getWidth(), cardHeight = this.getHeight();
-			gr.setColor(Color.RED);
+			gr.setColor(Color.RED.getRGBColor());
 			gr.fillRect(x, y, cardWidth, cardHeight);
-			gr.setColor(Color.BLACK);
+			gr.setColor(java.awt.Color.BLACK);
 			gr.drawRect(x, y, cardWidth - 1, cardHeight - 1);
 		} else {
 			// Vorderseite
@@ -70,13 +70,13 @@ public class CardPane extends JPanel {
 			java.awt.Graphics2D gr = (java.awt.Graphics2D) graphics;
 
 			int cardWidth = this.getWidth(), cardHeight = this.getHeight();
-			gr.setColor(Color.WHITE);
+			gr.setColor(java.awt.Color.WHITE);
 			gr.fillRect(x, y, cardWidth, cardHeight);
-			gr.setColor(Color.BLACK);
+			gr.setColor(java.awt.Color.BLACK);
 			gr.drawRect(x, y, cardWidth - 1, cardHeight - 1);
 			Font font = new Font("Georgia", Font.BOLD, 20);
 			gr.setFont(font);
-			gr.setColor(color);
+			gr.setColor(color.getRGBColor());
 
 			gr.drawString(cardValue.getShorthandValue(), x + 6, y + 20);
 			if (cardValue.getValue() == 10 || cardValue.getValue() == 11 || cardValue.getValue() == 12
@@ -113,7 +113,7 @@ public class CardPane extends JPanel {
 		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.RED) return Color.RED;
 		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.GREEN) return Color.GREEN;
 		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.YELLOW) return Color.YELLOW;
-		return Color.BLACK;
+		return Color.NONE;
 		
 	}
 }
