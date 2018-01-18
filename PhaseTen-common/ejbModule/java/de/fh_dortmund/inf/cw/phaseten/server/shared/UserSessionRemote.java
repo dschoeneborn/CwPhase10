@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import javax.ejb.Remote;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
@@ -149,5 +150,14 @@ public interface UserSessionRemote extends UserSession {
 	 * @author Tim Prange
 	 */
 	void requestLobbyMessage();
+
+	/**
+	 * @author Björn Merschmeier
+	 * @return
+	 * @throws NotLoggedInException 
+	 */
+	Collection<Card> getCards() throws NotLoggedInException;
+
+	void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException;
 
 }

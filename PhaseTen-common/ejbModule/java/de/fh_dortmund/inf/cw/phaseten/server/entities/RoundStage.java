@@ -4,8 +4,8 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
  * @author Björn Merschmeier
  */
 public enum RoundStage {
-	PULL(0), PUT_AND_PUSH(1);
-	
+	PULL(0), PUT_AND_PUSH(1), FINISHED(2);
+
 	private int value;
 
 	private RoundStage(int value) {

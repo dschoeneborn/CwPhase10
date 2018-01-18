@@ -20,6 +20,12 @@ public class GameManagementTest {
 	@EJB
 	GameManagementBean gameManagment;
 
+	@EJB
+	UserSessionBean userSession1;
+
+	@EJB
+	UserSessionBean userSession2;
+
 	@Module
 	public PersistenceUnit persistence() {
 		PersistenceUnit unit = new PersistenceUnit("PhaseTenDB");
@@ -38,8 +44,8 @@ public class GameManagementTest {
 	}
 
 	@Test
-	public void testSendGameMessage() throws Exception {
+	public void testSendGameMessage() throws Exception
+	{
 
 	}
-
 }

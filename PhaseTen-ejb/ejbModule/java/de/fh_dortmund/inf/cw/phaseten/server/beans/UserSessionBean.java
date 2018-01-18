@@ -6,8 +6,10 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans;
 import java.util.Collection;
 
 import javax.ejb.EJB;
+import javax.ejb.Remove;
 import javax.ejb.Stateful;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
@@ -219,7 +221,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	@Override
 	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
-			NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
+	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
 		gameManagement.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, cardId);
 
 	}
@@ -322,14 +324,40 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	}
 
+	@Override
+	public Collection<Card> getCards() throws NotLoggedInException {
+		return getOrCreateCurrentPlayer().getPlayerPile().getCopyOfCardsList();
+	}
+
+	@Override
+	@Remove
+	public void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException {
+		if(currentUser != null)
+		{
+			userManagement.unregister(currentUser, password);
+		}
+		else
+		{
+			throw new NotLoggedInException();
+		}
+	}
+
 	/**
 	 * TODO Add JavaDoc
 	 *
 	 * @author Tim Prange
 	 * @return
 	 */
-	private Player getOrCreateCurrentPlayer() {
-		return userManagement.getOrCreatePlayer(currentUser);
+	private Player getOrCreateCurrentPlayer() throws NotLoggedInException
+	{
+		if(currentUser == null)
+		{
+			throw new NotLoggedInException();
+		}
+		else
+		{
+			return userManagement.getOrCreatePlayer(currentUser);
+		}
 	}
 
 	/**

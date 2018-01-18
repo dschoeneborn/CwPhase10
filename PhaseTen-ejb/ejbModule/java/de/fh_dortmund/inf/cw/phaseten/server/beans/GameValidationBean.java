@@ -43,7 +43,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		boolean pullCardAllowed = true;
 
 		if (!g.isInitialized()
-				|| g.getLiFoStack().showCard().getCardValue() == CardValue.SKIP 
+				|| g.getLiFoStack().showCard().getCardValue() == CardValue.SKIP
 				|| !playerIsCurrentPlayer(g, player)
 				|| player.getRoundStage() != RoundStage.PULL) {
 			pullCardAllowed = false;
@@ -69,9 +69,9 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		if (g.isInitialized()
 				&& playerIsCurrentPlayer(g, player)
 				&& (player.getRoundStage() == RoundStage.PUT_AND_PUSH
-						|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP))
+				|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP))
 				&& playerHasCard(c, player)
-				&& (!player.hasSkipCard() 
+				&& (!player.hasSkipCard()
 						|| (player.hasSkipCard() && c.getCardValue() == CardValue.SKIP)))
 		{
 			pushCardToLiFoStackAllowed = true;
@@ -120,7 +120,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		ArrayList<Card> cardsInPiles = new ArrayList<>();
 
 		for (DockPile pile : piles) {
-			cardsInPiles.addAll(pile.getCards());
+			cardsInPiles.addAll(pile.getCopyOfCardsList());
 		}
 
 		if (g.isInitialized()
@@ -184,16 +184,16 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		boolean addCardAllowed = false;
 
 		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, p) 
-				&& !p.hasSkipCard() 
+				&& playerIsCurrentPlayer(g, p)
+				&& !p.hasSkipCard()
 				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& p.getPlayerPile().getSize() > 1 
-				&& p.playerLaidStage() && playerHasCard(c, p)) 
+				&& p.getPlayerPile().getCopyOfCardsList().size() > 1
+				&& p.playerLaidStage() && playerHasCard(c, p))
 		{
 			if (pile instanceof SetDockPile) {
 				SetDockPile setDockPile = (SetDockPile) pile;
 
-				if (setDockPile.getCardValue() == c.getCardValue())
+				if (setDockPile.getCardValue() == c.getCardValue() || c.getCardValue() == CardValue.WILD)
 				{
 					addCardAllowed = true;
 				}
@@ -202,6 +202,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 			{
 				SequenceDockPile sequenceDockPile = (SequenceDockPile) pile;
 
+				//TODO: Beachten, dass auch mehrere Wilds hintereinander gesetzt werden können, das ist derzeit noch ein Problem!
 				if ((sequenceDockPile.getMinimum().getValue() - 1 == c.getCardValue().getValue()
 						|| sequenceDockPile.getMaximum().getValue() + 1 == c.getCardValue().getValue()
 						|| c.getCardValue() == CardValue.WILD) && !pileIsFull(sequenceDockPile))
@@ -247,7 +248,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 				&& !currentPlayer.hasSkipCard()
 				&& !destinationPlayer.hasSkipCard()
 				&& !destinationPlayer.hasNoCards()
-				&& currentPlayer.getPlayerPile().getSize() > 1) {
+				&& currentPlayer.getPlayerPile().getCopyOfCardsList().size() > 1) {
 			canLaySkipCard = true;
 		}
 
@@ -316,7 +317,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	private boolean playerHasCard(Card card, Player p) {
 		boolean playerHasCard = false;
 
-		for (Card c : p.getPlayerPile().getCards()) {
+		for (Card c : p.getPlayerPile().getCopyOfCardsList()) {
 			if (c.getCardValue() == card.getCardValue() && c.getColor() == card.getColor()) {
 				playerHasCard = true;
 				break;
@@ -427,7 +428,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * @return cardReadyorPhase8
 	 */
 	private boolean areCardsReadyForPhase8(List<DockPile> piles) {
-		return (piles.size() == 1 && piles.get(0) instanceof SetDockPile && piles.get(0).getSize() == 7);
+		return (piles.size() == 1 && piles.get(0) instanceof SetDockPile && piles.get(0).getCopyOfCardsList().size() == 7);
 	}
 
 	/**
@@ -463,7 +464,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * @return pileIsSet
 	 */
 	private boolean pileIsSet(DockPile pile, int i) {
-		return (pile instanceof SetDockPile && pile.getSize() == i);
+		return (pile instanceof SetDockPile && pile.getCopyOfCardsList().size() == i);
 	}
 
 	/**
@@ -475,7 +476,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * @return pileIsSequence
 	 */
 	private boolean pileIsSequence(DockPile pile, int i) {
-		return (pile instanceof SequenceDockPile && pile.getSize() == i);
+		return (pile instanceof SequenceDockPile && pile.getCopyOfCardsList().size() == i);
 	}
 
 	/**

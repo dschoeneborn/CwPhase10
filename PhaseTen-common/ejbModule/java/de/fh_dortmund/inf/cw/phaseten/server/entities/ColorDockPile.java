@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
-import java.util.ArrayList;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,17 +19,18 @@ import javax.persistence.Enumerated;
  * @author Robin Harbecke
  */
 @Entity
+@DiscriminatorValue( value="CDP" )
 public class ColorDockPile extends DockPile {
 	private static final long serialVersionUID = -8155115717024180700L;
-	
-	
+
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
 	@Basic(optional = false)
 	private Color color;
 
 	private ColorDockPile() {
-		this.cards = new ArrayList<>();
+		super();
 	}
 
 	public ColorDockPile(Color color) {
@@ -43,7 +44,7 @@ public class ColorDockPile extends DockPile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile#dock(de.fh_dortmund.
 	 * inf.cw.phaseten.server.entities.Card)
@@ -53,13 +54,9 @@ public class ColorDockPile extends DockPile {
 	 * @author Robin Harbecke
 	 */
 	@Override
-	public boolean addCard(Card card) {
-		if (card.getColor().equals(this.color) || card.getCardValue().equals(CardValue.WILD)) {
-			this.cards.add(card);
-			return true;
-		}
-
-		return false;
+	public boolean canAddCard(Card card)
+	{
+		return card.getColor().equals(this.color) || card.getCardValue() == CardValue.WILD;
 	}
 
 }

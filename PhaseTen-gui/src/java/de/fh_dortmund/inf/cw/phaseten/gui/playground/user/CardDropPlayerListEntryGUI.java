@@ -12,18 +12,18 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 
 /**
- * @author Robin Harbecke 
+ * @author Robin Harbecke
  */
-public class CardDropPlayerListEntryGUI extends PlayerListEntryGUI implements ICardDropTarget{	
+public class CardDropPlayerListEntryGUI extends PlayerListEntryGUI implements ICardDropTarget{
 	private static final long serialVersionUID = 1356010565441425778L;
-	
-	protected ServiceHandler serviceHandler;	
-	
-	public CardDropPlayerListEntryGUI(PlayerGuiData player,ServiceHandler serviceHandler) {
-		super(player);		
-		this.serviceHandler = serviceHandler;			
+
+	protected ServiceHandler serviceHandler;
+
+	public CardDropPlayerListEntryGUI(PlayerGuiData player, boolean isCurrentPlayer, ServiceHandler serviceHandler) {
+		super(player, isCurrentPlayer);
+		this.serviceHandler = serviceHandler;
 		this.setTransferHandler(new TransferHandler("baseCard"));
-		this.setDropTarget(new DropTarget(this, new CardDropTargetListener(this)));		
+		this.setDropTarget(new DropTarget(this, new CardDropTargetListener(this)));
 	}
 
 	@Override
@@ -31,6 +31,6 @@ public class CardDropPlayerListEntryGUI extends PlayerListEntryGUI implements IC
 		if(card.getCardValue().equals(CardValue.SKIP)){
 			//TODO this.serviceHandler.laySkipCardForPlayer(this.player,card.id);
 		}
-		
-	}	
+
+	}
 }

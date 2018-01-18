@@ -24,6 +24,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
@@ -76,8 +77,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	@Override
-	public void sendGameMessage(Player p)
-	{
+	public void sendGameMessage(Player p) {
 		sendGameMessage(GameGuiData.from(p.getGame()));
 	}
 
@@ -147,14 +147,16 @@ public class GameManagementBean implements GameManagementLocal {
 		Game game = player.getGame();
 		if (gameValidation.isValidLayStageToTable(game, player, piles)) {
 			for (DockPile pile : piles) {
+				entityManager.persist(pile);
 				game.addOpenPile(pile);
 
-				for (Card card : pile.getCards()) {
+				for (Card card : pile.getCopyOfCardsList()) {
 					player.removeCardFromPlayerPile(card);
 				}
 			}
 
 			player.setPlayerLaidStage(true);
+			player.addPhase();
 		}
 		else {
 			throw new MoveNotValidException();
@@ -168,12 +170,17 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @throws GameNotInitializedException
 	 */
 	@Override
-	public void layCardToLiFoStack(Player player, long cardId) throws MoveNotValidException, GameNotInitializedException {
+	public void layCardToLiFoStack(Player player, long cardId)
+			throws MoveNotValidException, GameNotInitializedException {
 		Card card = findCard(player, cardId);
 		Game game = player.getGame();
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
 			game.getLiFoStack().addCard(card);
 			player.removeCardFromPlayerPile(card);
+
+			game = player.getGame();
+			putNotVisibleLiFoStackCardsShuffledUnderPullStack(game);
+
 			player.resetRoundStage();
 			setNextPlayer(game);
 		}
@@ -241,9 +248,17 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	@Override
-	public boolean isInGame(Player p)
-	{
+	public boolean isInGame(Player p) {
 		return (p.getGame() != null);
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 * @param game
+	 */
+	private void putNotVisibleLiFoStackCardsShuffledUnderPullStack(Game game) {
+		game.getPullStack().addCards(game.getLiFoStack().getNotVisibleCards());
+		game.getPullStack().shuffle();
 	}
 
 	/**
@@ -252,19 +267,16 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param cardId
 	 * @return
 	 */
-	private Card findCard(Player player, long cardId)
-	{
+	private Card findCard(Player player, long cardId) {
 		Card foundCard = null;
-		
-		for(Card c : player.getPlayerPile().getCards())
-		{
-			if(c.getId() == cardId)
-			{
+
+		for (Card c : player.getPlayerPile().getCopyOfCardsList()) {
+			if (c.getId() == cardId) {
 				foundCard = c;
 				break;
 			}
 		}
-		
+
 		return foundCard;
 	}
 
@@ -303,21 +315,18 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void initializeFirstPlayer(Game game) {
-		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		List<Player> players = new ArrayList<>(game.getPlayers());
 
 		Random r = new Random();
 		int nextPlayer = 0;
 
-		
-		if(game.getLastRoundBeginner() == null)
-		{
+		if (game.getLastRoundBeginner() == null) {
 			nextPlayer = r.nextInt(players.size());
 		}
-		else
-		{
+		else {
 			nextPlayer = (players.indexOf(game.getLastRoundBeginner()) + 1) % players.size();
 		}
-		
+
 		game.setCurrentPlayer(players.get(nextPlayer));
 		game.setLastRoundBeginner(players.get(nextPlayer));
 	}
@@ -344,50 +353,47 @@ public class GameManagementBean implements GameManagementLocal {
 		PullStack pullStack = new PullStack();
 		pullStack.initializeCards();
 		pullStack.shuffle();
-		saveNewCards(pullStack.getCards());
+		saveNewCards(pullStack.getCopyOfCardsList());
 
 		game.setPullstack(pullStack);
 	}
 
-	private void saveNewCards(List<Card> cards) {
-		for(Card card : cards)
-		{
+	private void saveNewCards(Collection<Card> cards) {
+		for (Card card : cards) {
 			entityManager.persist(card);
 		}
 	}
 
-	private void deleteOldCards(Game game)
-	{		
-		if(game != null)
-		{
-			if(game.getPullStack() != null)
-			{
-				deleteCards(game.getPullStack().getCards());
+	private void deleteOldCards(Game game) {
+		if (game != null) {
+			if (game.getPullStack() != null) {
+				PullStack toDelete = game.getPullStack();
+				game.setPullstack(null);
+				entityManager.remove(toDelete);
 			}
-			
-			if(game.getLiFoStack() != null)
-			{
-				deleteCards(game.getLiFoStack().getCards());
+
+			if (game.getLiFoStack() != null) {
+				LiFoStack toDelete = game.getLiFoStack();
+				game.setLiFoStack(null);
+				entityManager.remove(toDelete);
 			}
-			
-			for(Player p : game.getPlayers())
-			{
-				deleteCards(p.getPlayerPile().getCards());
+
+			for (Player p : game.getPlayers()) {
+				PlayerPile toDelete = p.getPlayerPile();
+				PlayerPile newPile = new PlayerPile();
+				entityManager.persist(newPile);
+				p.setPlayerPile(newPile);
+				entityManager.remove(toDelete);
 			}
-			
-			for (DockPile pile : game.getOpenPiles())
-			{
-				deleteCards(pile.getCards());
+
+			List<DockPile> openPiles = new ArrayList<>(game.getOpenPiles());
+			for (DockPile pile : openPiles) {
+				game.getOpenPiles().remove(pile);
+				entityManager.remove(pile);
 			}
 		}
 	}
 
-	private void deleteCards(List<Card> cards) {
-		for(Card card : cards)
-		{
-			entityManager.remove(card);
-		}
-	}
 
 	/**
 	 * @author Björn Merschmeier
@@ -397,8 +403,8 @@ public class GameManagementBean implements GameManagementLocal {
 		Player nextPlayer = game.getNextPlayer();
 		game.setCurrentPlayer(nextPlayer);
 
-		if (nextPlayer.hasSkipCard())
-		{
+		if (nextPlayer.hasSkipCard()) {
+			nextPlayer.removeSkipCard();
 			setNextPlayer(game);
 		}
 		else if (nextPlayer.hasNoCards()) {
@@ -412,24 +418,13 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void countPoints(Game game) {
-		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		List<Player> players = new ArrayList<>(game.getPlayers());
 
 		for (Player player : players) {
-			List<Card> remainingCards = player.getPlayerPile().getCards();
+			Collection<Card> remainingCards = player.getPlayerPile().getCopyOfCardsList();
 
 			for (Card remainingCard : remainingCards) {
-				if (remainingCard.getCardValue().getValue() >= 5) {
-					player.addNegativePoints(5);
-				}
-				else if (remainingCard.getCardValue().getValue() >= 12) {
-					player.addNegativePoints(10);
-				}
-				else if (remainingCard.getCardValue() == CardValue.SKIP) {
-					player.addNegativePoints(15);
-				}
-				else if (remainingCard.getCardValue() == CardValue.WILD) {
-					player.addNegativePoints(20);
-				}
+				player.addNegativePoints(remainingCard.getRoundEndValue());
 			}
 		}
 	}
@@ -443,30 +438,26 @@ public class GameManagementBean implements GameManagementLocal {
 
 	private void sendGameMessage(GameGuiData game) {
 		Message message = jmsContext.createObjectMessage(game);
-		
+
 		String playersAndSpectators = ";-;-;";
-		
-		for(PlayerGuiData player : game.getPlayers())
-		{
+
+		for (PlayerGuiData player : game.getPlayers()) {
 			playersAndSpectators += player.getName();
 			playersAndSpectators += ";-;-;";
 		}
-		
-		for(String spectator : game.getSpectators())
-		{
+
+		for (String spectator : game.getSpectators()) {
 			playersAndSpectators += spectator;
 			playersAndSpectators += ";-;-;";
 		}
-		
-		try
-		{
+
+		try {
 			message.setStringProperty("userNames", playersAndSpectators);
 		}
-		catch (JMSException e)
-		{
+		catch (JMSException e) {
 			e.printStackTrace();
 		}
-		
+
 		jmsContext.createProducer().send(gameMessageTopic, message);
 	}
 }

@@ -7,25 +7,30 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
  * @author Robin Harbecke
  *
  */
-public class TemporaryDockPile extends DockPile{	
+public class TemporaryDockPile extends DockPile{
 	private static final long serialVersionUID = -164211083057026174L;
 
+	public void clear()
+	{
+		super.clearCards();
+	}
+
 	@Override
-	public boolean addCard(Card card) {
-		this.cards.add(card);
+	public boolean containsCard(Card card)
+	{
+		return super.containsCard(card);
+	}
+
+	@Override
+	public boolean removeCard(Card card)
+	{
+		return super.removeCard(card);
+	}
+
+	@Override
+	public boolean canAddCard(Card card)
+	{
 		return true;
-	}
-	
-	public void clear() {
-		this.cards.clear();
-	}
-	
-	public boolean containsCard(Card card) {
-		return this.cards.contains(card);
-	}
-	
-	public boolean removeCard(Card card) {
-		return this.cards.remove(card);
 	}
 
 }

@@ -23,13 +23,13 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.TakeCardAction;
  */
 public class SimpleAiBean implements IAIPlayer {
 	@Override
-	public TakeCardAction takeCard(Player player, Game game) {	
+	public TakeCardAction takeCard(Player player, Game game) {
 		Card discardCard = game.getLiFoStack().showCard();
-		
+
 		double ratingWithDiscardCard = getRatingWithExtraCard(player, game, discardCard);
 		double maxRatingWithDrawerCard = Double.MIN_VALUE;
 		double ratingWithDrawerCard;
-		
+
 		for(CardValue cardValue : CardValue.values() ) {
 			for(Color cardColor : Color.values()) {
 				Card card = new Card(cardColor, cardValue);
@@ -41,39 +41,39 @@ public class SimpleAiBean implements IAIPlayer {
 				}
 			}
 		}
-		
+
 		if(ratingWithDiscardCard >= maxRatingWithDrawerCard) {
-			return TakeCardAction.DISCARD_PILE;			
+			return TakeCardAction.DISCARD_PILE;
 		} else {
 			return TakeCardAction.DRAWER_PILE;
-		}		
+		}
 	}
-	
+
 	private double getRatingWithExtraCard(Player player, Game game, Card card) {
 		return RateCardsUtil.rateCards(
-				player.playerLaidStage(), 
-				player.getPhase(), 
+				player.playerLaidStage(),
+				player.getPhase(),
 				SimPile.from(
-					player.getPlayerPile(), 
-					card
-				), 
+						player.getPlayerPile(),
+						card
+						),
 				game
-		);
+				);
 	}
 
 	@Override
-	public List<CardsToPileAction> cardsToPile(Player player, Game game) {		
+	public List<CardsToPileAction> cardsToPile(Player player, Game game) {
 		if(!player.playerLaidStage()) {
-			return this.layPhase(player, game);			
+			return this.layPhase(player, game);
 		}else
-		{			
-			return this.putCardsToExistingPile(player, game);			
+		{
+			return this.putCardsToExistingPile(player, game);
 		}
-		
+
 	}
-	
+
 	private List<CardsToPileAction> layPhase(Player player, Game game) {
-		List<CardsToPileAction> actions = new ArrayList<CardsToPileAction>();
+		List<CardsToPileAction> actions = new ArrayList<>();
 		MissingResult rating = RateCardsForPhaseUtil.getPhaseResult(SimPile.from(player.getPlayerPile()), player.getPhase());
 		if(rating instanceof FoundPhaseResult) {
 			FoundPhaseResult foundPhase = (FoundPhaseResult) rating;
@@ -83,17 +83,17 @@ public class SimpleAiBean implements IAIPlayer {
 		}
 		return actions;
 	}
-	
+
 	private List<CardsToPileAction> putCardsToExistingPile(Player player, Game game) {
-		List<CardsToPileAction> actions = new ArrayList<CardsToPileAction>();
-		for (Card card : player.getPlayerPile().getCards()) {
+		List<CardsToPileAction> actions = new ArrayList<>();
+		for (Card card : player.getPlayerPile().getCopyOfCardsList()) {
 			for (DockPile pile: game.getOpenPiles()) {
-				if(pile.getSize() < (player.getPlayerPile().getCards().size()-1) && pile.canAddCard(card)){
+				if(pile.getCopyOfCardsList().size() < (player.getPlayerPile().getCopyOfCardsList().size()-1) && pile.canAddCard(card)){
 					actions.add(new CardsToPileAction(pile, Arrays.asList(card), true));
 				}
 			}
 		}
-		return actions;		
+		return actions;
 	}
 
 	@Override
@@ -101,26 +101,26 @@ public class SimpleAiBean implements IAIPlayer {
 		Card minCard = null;
 		double minCardRating = Double.MAX_VALUE;
 		double tmpRating = -1;
-		
-		for(Card card : player.getPlayerPile().getCards()) {
+
+		for(Card card : player.getPlayerPile().getCopyOfCardsList()) {
 			tmpRating = getRatingWithoutCard(player, game, card);
 			if( tmpRating < minCardRating ) {
 				minCardRating = tmpRating;
 				minCard = card;
 			}
-		}		
-		
+		}
+
 		return minCard;
 	}
-	
+
 	private double getRatingWithoutCard(Player player, Game game, Card card) {
 		return RateCardsUtil.rateCards(
-				player.playerLaidStage(), 
-				player.getPhase(), 
+				player.playerLaidStage(),
+				player.getPhase(),
 				SimPile.from(
-					player.getPlayerPile()
-				).removeCard(card), 
+						player.getPlayerPile()
+						).removeCard(card),
 				game
-		);
+				);
 	}
 }

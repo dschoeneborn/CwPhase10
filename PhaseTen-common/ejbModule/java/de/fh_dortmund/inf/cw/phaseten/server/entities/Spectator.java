@@ -64,9 +64,11 @@ public class Spectator implements Serializable {
 		return name;
 	}
 
-	/**
-	 * @param game the game to set
-	 */
+	protected void removeGame()
+	{
+		this.game = null;
+	}
+
 	protected void setGame(Game game) {
 		this.game = game;
 	}

@@ -70,7 +70,7 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		this.setVisible(true);
 		this.updated(null);
 	}
-	
+
 	/**
 	 * @author Sven Krefeld
 	 */

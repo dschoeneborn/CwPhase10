@@ -73,4 +73,6 @@ public interface ServiceHandler extends MessageListener {
 
 	void layCardToLiFoStack(long cardId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+
+	void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException;
 }

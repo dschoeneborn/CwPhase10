@@ -4,6 +4,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,9 +17,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 
 /**
  * @author Dennis Schöneborn
@@ -89,6 +87,7 @@ public class Lobby implements Serializable {
 
 	public void removePlayer(Player player) {
 		this.players.remove(player);
+		player.removeLobby();
 	}
 
 	public void removeSpectator(Spectator spectator) {
@@ -103,16 +102,28 @@ public class Lobby implements Serializable {
 		return spectators;
 	}
 
-	public Game startGame() throws NotEnoughPlayerException, NoFreeSlotException {
-		Game game = new Game(this.players, this.spectators);
-
-		players.clear();
-		spectators.clear();
-
-		return game;
+	public void preRemove() {
+		
+		removeSpectators();
+		removePlayers();
 	}
 
 	public long getId() {
 		return id;
+	}
+
+	public void removeSpectators() {
+		for(Spectator s : new ArrayList<>(spectators))
+		{
+			removeSpectator(s);
+		}
+	}
+	
+	private void removePlayers()
+	{
+		for(Player p: new ArrayList<>(players))
+		{
+			removePlayer(p);
+		}
 	}
 }

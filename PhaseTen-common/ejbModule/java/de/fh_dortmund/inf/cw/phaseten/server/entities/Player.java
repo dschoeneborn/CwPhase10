@@ -4,6 +4,7 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.io.Serializable;
+import java.util.NoSuchElementException;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -83,10 +84,6 @@ public class Player implements Serializable {
 		this.name = name;
 	}
 
-	public void removeGame() {
-		this.game = null;
-	}
-
 	public Game getGame() {
 		return game;
 	}
@@ -96,31 +93,21 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * @param lobby
-	 */
-	public void setLobby(Lobby lobby) {
-		this.lobby = lobby;
-	}
-
-	/**
-	 * Delete Lobby from Player
-	 */
-	public void removeLobby() {
-		this.lobby = null;
-	}
-
-	/**
 	 * @return playerPile
 	 */
 	public PlayerPile getPlayerPile() {
 		return playerPile;
 	}
 
+	public void setPlayerPile(PlayerPile playerPile) {
+		this.playerPile = playerPile;
+	}
+
 	public void addCardToPlayerPile(Card c) {
 		playerPile.addCard(c);
 	}
 
-	public void removeCardFromPlayerPile(Card c) {
+	public void removeCardFromPlayerPile(Card c) throws NoSuchElementException {
 		playerPile.removeCard(c);
 	}
 
@@ -172,9 +159,8 @@ public class Player implements Serializable {
 	public void givePlayerSkipCard() {
 		this.playerHasSkipCard = true;
 	}
-	
-	public void removeSkipCard()
-	{
+
+	public void removeSkipCard() {
 		this.playerHasSkipCard = false;
 	}
 
@@ -183,7 +169,7 @@ public class Player implements Serializable {
 	}
 
 	public boolean hasNoCards() {
-		return this.playerPile.getSize() == 0;
+		return this.playerPile.getCopyOfCardsList().size() == 0;
 	}
 
 	public int getNegativePoints() {
@@ -199,6 +185,24 @@ public class Player implements Serializable {
 	 */
 	protected void setGame(Game game) {
 		this.game = game;
+	}
+
+	protected void removeGame() {
+		this.game = null;
+	}
+
+	/**
+	 * @param lobby
+	 */
+	protected void setLobby(Lobby lobby) {
+		this.lobby = lobby;
+	}
+
+	/**
+	 * Delete Lobby from Player
+	 */
+	protected void removeLobby() {
+		this.lobby = null;
 	}
 
 }

@@ -54,7 +54,7 @@ public class User implements Serializable{
 	@JoinColumn(name = "PLAYER_ID", unique = true)
 	private Player player;
 
-	@OneToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn
 	private Spectator spectator;
 

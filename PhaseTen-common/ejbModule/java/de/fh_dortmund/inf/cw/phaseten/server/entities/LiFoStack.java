@@ -4,7 +4,9 @@
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.persistence.Entity;
 
@@ -19,25 +21,34 @@ import javax.persistence.Entity;
 public class LiFoStack extends Stack {
 	private static final long serialVersionUID = -1006154816006779657L;
 
-	public LiFoStack() {
-		this.cards = new ArrayList<>();
-	}
-
-	public void pushCard(Card card) {
-		this.cards.add(0, card);
+	public LiFoStack()
+	{
+		super();
 	}
 
 	public Card showCard() {
-		if (this.cards.isEmpty()) {
+		if (this.getCopyOfCardsList().isEmpty()) {
 			return null;
 		}
-		return new LinkedList<>(this.cards).getLast();
+		return new LinkedList<>(this.getCopyOfCardsList()).getLast();
+	}
+
+	public Collection<Card> getNotVisibleCards() {
+		List<Card> result = new ArrayList<>();
+
+		while(this.getCopyOfCardsList().size() > 2)
+		{
+			Card currentCard = new LinkedList<>(this.getCopyOfCardsList()).getFirst();
+			this.removeCard(currentCard);
+			result.add(currentCard);
+		}
+
+		return result;
 	}
 
 	@Override
-	public boolean addCard(Card card) {
-		this.cards.add(card);
-
+	public boolean canAddCard(Card card)
+	{
 		return true;
 	}
 }

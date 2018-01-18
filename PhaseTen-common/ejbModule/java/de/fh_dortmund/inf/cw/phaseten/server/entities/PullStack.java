@@ -3,6 +3,7 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
+import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,78 +17,75 @@ import javax.persistence.Entity;
  * @author Tim Prange
  */
 @Entity
-public class PullStack extends Stack
-{
+public class PullStack extends Stack {
 	private static final long serialVersionUID = 2117218073864785792L;
 
-	public PullStack()
-	{
+	public PullStack() {
+		super();
 	}
 
 	/**
 	 * @author Björn Merschmeier
-	 */
-	public void initializeCards()
-	{
-		for (Color color : Color.values())
-		{
-			for (CardValue value : CardValue.values())
-			{
-				if (!value.equals(CardValue.SKIP) && !value.equals(CardValue.WILD))
-				{
-					addCard(new Card(color, value));
-					addCard(new Card(color, value));
-				}
-			}
-			
-			addCard(new Card(Color.NONE, CardValue.SKIP));
-			addCard(new Card(Color.NONE, CardValue.SKIP));
-			addCard(new Card(Color.NONE, CardValue.SKIP));
-			addCard(new Card(Color.NONE, CardValue.SKIP));
-			
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-			addCard(new Card(Color.NONE, CardValue.WILD));
-		}
-	}
-	
-	/**
-	 * @author Björn Merschmeier
-	 */
-	public void shuffle()
-	{
-	    Random random = ThreadLocalRandom.current();
-	    
-	    for (int i = cards.size() - 1; i > 0; i--)
-	    {
-			int index = random.nextInt(i + 1);
-			
-			Card a = cards.get(index);
-			cards.set(index, cards.get(i));
-			cards.set(i, a);
-	    }
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Pile#addCard(de.fh_dortmund.
-	 * inf.cw.phaseten.server.entities.Card)
-	 */
-	/**
-	 * This Method automatically randomizes the cards when adding
-	 *
 	 * @author Tim Prange
 	 */
+	public void initializeCards() {
+		for (Color color : Color.values()) {
+			if (!color.equals(Color.NONE)) {
+				for (CardValue value : CardValue.values()) {
+					if (!value.equals(CardValue.SKIP) && !value.equals(CardValue.WILD)) {
+						addCard(new Card(color, value));
+						addCard(new Card(color, value));
+					}
+				}
+
+			}
+		}
+		addCard(new Card(Color.NONE, CardValue.SKIP));
+		addCard(new Card(Color.NONE, CardValue.SKIP));
+		addCard(new Card(Color.NONE, CardValue.SKIP));
+		addCard(new Card(Color.NONE, CardValue.SKIP));
+
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+		addCard(new Card(Color.NONE, CardValue.WILD));
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	public void shuffle() {
+		Random random = ThreadLocalRandom.current();
+
+		for (int i = getCopyOfCardsList().size() - 1; i > 0; i--) {
+			int index = random.nextInt(i + 1);
+
+			Card a = getCard(index);
+			setCard(index, getCard(i));
+			setCard(i, a);
+		}
+	}
+
+	public void addCards(Collection<Card> notVisibleCards) {
+		this.addAll(notVisibleCards);
+	}
+
 	@Override
-	public boolean addCard(Card card)
-	{
-		this.cards.add(card);
-		return false;
+	public boolean canAddCard(Card card) {
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Card c : this.getCopyOfCardsList()) {
+			sb.append(c.toString());
+			sb.append(System.lineSeparator());
+		}
+		return sb.toString();
 	}
 }

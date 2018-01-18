@@ -20,7 +20,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 /**
  * @author Dennis Schöneborn
@@ -52,36 +51,36 @@ public class Game implements Serializable {
 	@Column
 	private int lastRoundBeginner = -1;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false, unique = true)
 	private PullStack pullStack;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false, unique = true)
 	private LiFoStack liFoStack;
 
-	@OneToMany(cascade = CascadeType.PERSIST)
-	@JoinColumn(unique = true)
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "GAME_ID")
 	private List<DockPile> openPiles;
 
 	@OneToMany(mappedBy = "game")
 	private List<Spectator> spectators;
 
-	@Transient
+	@Column
 	private boolean gameInitialized = false;
-	
+
 	private Game()
 	{
-		openPiles = new ArrayList<DockPile>();
-		spectators = new ArrayList<Spectator>();
+		openPiles = new ArrayList<>();
+		spectators = new ArrayList<>();
 	}
 
 	/**
-	 * @param arrayList2 
-	 * @param discardPile 
-	 * @param pullStack2 
-	 * @param hashSet 
-	 * @param arrayList 
+	 * @param arrayList2
+	 * @param discardPile
+	 * @param pullStack2
+	 * @param hashSet
+	 * @param arrayList
 	 *
 	 */
 	public Game(Set<Player> players, Set<Spectator> spectators, PullStack pullStack2, LiFoStack discardPile)
@@ -186,6 +185,16 @@ public class Game implements Serializable {
 
 	public void setInitialized() {
 		gameInitialized = true;
+	}
+
+	public void removeSpectator(Spectator spectator) {
+		spectator.removeGame();
+		this.spectators.remove(spectator);
+	}
+
+	public void removePlayer(Player player) {
+		player.removeGame();
+		this.players.remove(player);
 	}
 
 	private void addPlayer(Player p) {

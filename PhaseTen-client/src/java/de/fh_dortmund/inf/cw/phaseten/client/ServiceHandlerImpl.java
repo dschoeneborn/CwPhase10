@@ -16,7 +16,6 @@ import javax.naming.NamingException;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
@@ -101,6 +100,12 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 		userSessionRemote.register(username, password);
 		
 		createNewGameQueueConsumerWithMessageSelector();
+	}
+	
+	@Override
+	public void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException
+	{
+		userSessionRemote.unregister(password);
 	}
 
 	@Override
@@ -193,8 +198,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 
 	@Override
 	public Collection<Card> getCards() throws NotLoggedInException {
-		Player currentPlayer = userSessionRemote.getOrCreatePlayer();
-		return currentPlayer.getPlayerPile().getCards();
+		return userSessionRemote.getCards();
 	}
 
 	public JMSConsumer getPlayerConsumer() {
