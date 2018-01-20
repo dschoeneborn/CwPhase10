@@ -33,7 +33,7 @@ public class CombinedPhaseElement extends PhaseElement{
 	
 	private static MissingResult getMissingResult(SimPile pile,PhaseElement phaseElementA,PhaseElement phaseElementB) {
 		MissingResult missingResultA = phaseElementA.getMissingCards(pile); 
-		MissingResult missingResultB = phaseElementA.getMissingCards(missingResultA.getRemainingPile());
+		MissingResult missingResultB = phaseElementB.getMissingCards(missingResultA.getRemainingPile());
 		if(missingResultA instanceof FoundPhaseResult && missingResultB instanceof FoundPhaseResult) {
 			Collection<SimPileAndPileElement> resultCollection = new ArrayList<>();
 			resultCollection.addAll(((FoundPhaseResult)missingResultA).getFoundPiles());
