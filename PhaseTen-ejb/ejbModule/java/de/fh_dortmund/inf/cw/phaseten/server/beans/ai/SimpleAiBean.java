@@ -28,7 +28,6 @@ public class SimpleAiBean implements IAIPlayer {
 
 		double ratingWithDiscardCard = getRatingWithExtraCard(player, game, discardCard);
 		double maxRatingWithDrawerCard = Double.MIN_VALUE;
-		double ratingWithDrawerCard;
 
 		for(CardValue cardValue : CardValue.values() ) {
 			for(Color cardColor : Color.values()) {
@@ -44,9 +43,11 @@ public class SimpleAiBean implements IAIPlayer {
 				
 				Card card = new Card(cardColor, cardValue);
 				if(!discardCard.equals(card)) {
-					ratingWithDrawerCard = getRatingWithExtraCard(player, game, card);
-					if(ratingWithDrawerCard > maxRatingWithDrawerCard) {
-						maxRatingWithDrawerCard = ratingWithDrawerCard;
+					if(maxRatingWithDrawerCard == Double.MIN_VALUE) {
+						maxRatingWithDrawerCard = getRatingWithExtraCard(player, game, card);						
+					} else {
+						maxRatingWithDrawerCard += getRatingWithExtraCard(player, game, card);
+						maxRatingWithDrawerCard /= 2;
 					}
 				}
 			}
