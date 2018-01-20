@@ -32,6 +32,16 @@ public class SimpleAiBean implements IAIPlayer {
 
 		for(CardValue cardValue : CardValue.values() ) {
 			for(Color cardColor : Color.values()) {
+				if(cardColor == Color.NONE && cardValue != CardValue.WILD && cardValue != CardValue.SKIP) {
+					continue;
+				}
+				if(cardColor != Color.NONE && cardValue == CardValue.WILD) {
+					continue;
+				}
+				if(cardColor != Color.NONE && cardValue == CardValue.SKIP) {
+					continue;
+				}
+				
 				Card card = new Card(cardColor, cardValue);
 				if(!discardCard.equals(card)) {
 					ratingWithDrawerCard = getRatingWithExtraCard(player, game, card);
