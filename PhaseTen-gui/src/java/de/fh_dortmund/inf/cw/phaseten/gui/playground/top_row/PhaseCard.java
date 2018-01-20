@@ -14,9 +14,7 @@ import javax.swing.JPanel;
  */
 public class PhaseCard extends JPanel{
 	private static final long serialVersionUID = -8351895741794896192L;
-	private int phase = 1;
-	private JLabel[] phasen = new JLabel[10];
-	
+		
 
 	public PhaseCard() {
 		this.setPreferredSize(new Dimension(200,200));
@@ -24,22 +22,20 @@ public class PhaseCard extends JPanel{
 		this.setMaximumSize(this.getPreferredSize());
 		this.setBackground(Color.green);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		for(int i=0; i<10; i++){
-			phasen[i] = new JLabel(getPhase(i+1), JLabel.LEFT);
 			
-			if(i == (phase-1)){
-				phasen[i].setForeground(Color.red);
-			} else phasen[i].setForeground(Color.black);
-			
-			add(phasen[i]);
-		}	
 	}
-	
-	public void updatePhase(int phaseUpdate){
-		phaseUpdate++; // ugly fix
-		phasen[this.phase-1].setForeground(Color.black);
-		this.phase = phaseUpdate;
-		phasen[this.phase-1].setForeground(Color.red);
+			
+	public void updatePhase(int newPhase){
+		this.removeAll();
+		for(int i=0; i<10; i++){			
+			JLabel label = new JLabel(getPhase(i+1), JLabel.LEFT);		
+			if(i == newPhase){
+				label.setForeground(Color.red);
+			} else {
+				label.setForeground(Color.black);				
+			}			
+			this.add(label);
+		}				
 		this.revalidate();
 		this.repaint();
 	}
@@ -58,7 +54,7 @@ public class PhaseCard extends JPanel{
 		case 8: return "8.   7 Karten einer Farbe";
 		case 9: return "9.   1 Fünfling + 1 Zwilling";
 		case 10: return "10. 1 Fünfling + 1 Drilling";
-		default: return "Diese Phase existiert nicht"; // sollte nicht erreicht werden
+		default: return "Diese Phase existiert nicht"; // should not be reached
 		}
 	}
 }
