@@ -37,7 +37,7 @@ public class CombinedPhaseElement extends PhaseElement{
 		if(missingResultA instanceof FoundPhaseResult && missingResultB instanceof FoundPhaseResult) {
 			Collection<SimPileAndPileElement> resultCollection = new ArrayList<>();
 			resultCollection.addAll(((FoundPhaseResult)missingResultA).getFoundPiles());
-			resultCollection.addAll(((FoundPhaseResult)missingResultA).getFoundPiles());
+			resultCollection.addAll(((FoundPhaseResult)missingResultB).getFoundPiles());
 			return new FoundPhaseResult(missingResultB.remainingPile,resultCollection);
 		}
 		return new MissingResult(missingResultA.missingCards+missingResultB.missingCards, missingResultB.remainingPile);
