@@ -1,10 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground.player.lay_phase;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Collection;
-
-import javax.swing.BorderFactory;
 
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.CardPane;
@@ -29,8 +26,7 @@ public class TemporaryDockPilePane extends PilePane{
 		this.playerCardsPane = playerCardsPane;
 		this.setPreferredSize(new Dimension(CardPane.cardSize.width*5+50, CardPane.cardSize.height+30));
 		this.setMinimumSize(this.getPreferredSize());
-		this.setMaximumSize(this.getPreferredSize());
-		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+		this.setMaximumSize(this.getPreferredSize());		
 		this.updateData();
 	}
 
