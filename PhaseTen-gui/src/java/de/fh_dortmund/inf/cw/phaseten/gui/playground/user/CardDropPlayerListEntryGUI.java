@@ -9,6 +9,10 @@ import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.drag_drop.CardDropTarg
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.drag_drop.ICardDropTarget;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 
 /**
@@ -29,7 +33,17 @@ public class CardDropPlayerListEntryGUI extends PlayerListEntryGUI implements IC
 	@Override
 	public void handleCardDrop(Card card) {
 		if(card.getCardValue().equals(CardValue.SKIP)){
-			//TODO this.serviceHandler.laySkipCardForPlayer(this.player,card.id);
+			try {
+				this.serviceHandler.laySkipCardForPlayer(this.player.getId(),card.getId());
+			} catch (MoveNotValidException e) {
+				System.out.println("Move not valide");				
+			} catch (NotLoggedInException e) {
+				System.out.println("Not logged in");			
+			} catch (PlayerDoesNotExistsException e) {
+				System.out.println("Player does not exist");
+			} catch (GameNotInitializedException e) {
+				System.out.println("Game not initialized");
+			}
 		}
 
 	}
