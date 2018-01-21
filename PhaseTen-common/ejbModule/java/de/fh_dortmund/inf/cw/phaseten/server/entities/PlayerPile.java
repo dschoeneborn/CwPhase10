@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
@@ -13,11 +13,12 @@ import javax.persistence.Id;
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
+ * @author Björn Merschmeier
  */
 @Entity
 public class PlayerPile extends Pile {
 	private static final long serialVersionUID = -3026757589448841719L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -26,9 +27,19 @@ public class PlayerPile extends Pile {
 		super();
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
-	public boolean canAddCard(Card card)
-	{
+	public boolean canAddLastCard(Card card) {
+		return true;
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddFirstCard(Card card) {
 		return true;
 	}
 }

@@ -57,20 +57,6 @@ public interface GameValidation {
 	boolean isValidLayStageToTable(Game g, Player p, Collection<DockPile> piles);
 
 	/**
-	 * Validates if the given Player is allowed to add the given card to the given
-	 * pile
-	 *
-	 * @author Tim Prange
-	 * @author Björn Merschmeier
-	 * @param g the game to validated
-	 * @param p the player who wants to add a card
-	 * @param pile the pile the player wants to add the card
-	 * @param c the card the player wants to add
-	 * @return addCardAllowed
-	 */
-	boolean isValidToAddCard(Game g, Player p, Pile pile, Card c);
-
-	/**
 	 * Validated if the given user is allowed to lay a skip card to a given user
 	 *
 	 * @author Tim Prange
@@ -81,4 +67,32 @@ public interface GameValidation {
 	 * @return canLaySkipCard
 	 */
 	boolean isValidLaySkipCard(Player currentPlayer, Player destinationPlayer, Game g);
+
+
+	/**
+	 * Validates if the given Player is allowed to add the given card to the given
+	 * pile
+	 *
+	 * @author Björn Merschmeier
+	 * @param g the game to validated
+	 * @param p the player who wants to add a card
+	 * @param pile the pile the player wants to add the card
+	 * @param c the card the player wants to add
+	 * @return addCardAllowed
+	 */
+	boolean isValidToAddCardFirst(Game g, Player p, Pile pile, Card c);
+
+
+	/**
+	 * Validates if the given Player is allowed to add the given card to the given
+	 * pile
+	 *
+	 * @author Björn Merschmeier
+	 * @param g the game to validated
+	 * @param p the player who wants to add a card
+	 * @param pile the pile the player wants to add the card
+	 * @param c the card the player wants to add
+	 * @return addCardAllowed
+	 */
+	boolean isValidToAddCardLast(Game g, Player p, Pile pile, Card c);
 }

@@ -41,78 +41,64 @@ public class SequenceDockPile extends DockPile {
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile#dock(de.fh_dortmund.
-	 * inf.cw.phaseten.server.entities.Card)
-	 */
 	/**
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public boolean addCard(Card card) {
-		boolean addedCard = false;
+	public boolean addLast(Card card) {
+		boolean addedCard = super.addLast(card);
 
-		if (minimum == null || card.getCardValue().getValue() < minimum.getValue()) {
-			if (card.getCardValue() != CardValue.WILD) {
-				minimum = card.getCardValue();
-			} else {
-				minimum = CardValue.SIX;
-			}
-
-			if (maximum == null) {
-				maximum = minimum;
-			}
-
-			addFirst(card);
-
-			addedCard = true;
-		} else if (maximum == null || card.getCardValue().getValue() > maximum.getValue()) {
-			maximum = card.getCardValue();
-
-			super.addCard(card);
-
-			addedCard = true;
-		} else if (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD) {
-			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
-
-			minimum = CardValue.getCardValue(minimum.getValue() - 1);
-
-			addFirst(card);
-
-			addedCard = true;
-		} else if (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD) {
-			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
-
+		if(addedCard && maximum != null)
+		{
 			maximum = CardValue.getCardValue(maximum.getValue() + 1);
-
-			super.addCard(card);
-
-			addedCard = true;
+		}
+		else if(addedCard && maximum == null)
+		{
+			maximum = card.getCardValue();
+			minimum = maximum;
 		}
 
 		return addedCard;
 	}
 
-	public CardValue getMinimum() {
-		return minimum;
-	}
-
-	public CardValue getMaximum() {
-		return maximum;
-	}
-
 	@Override
-	public boolean canAddCard(Card card)
+	public boolean addFirst(Card card)
 	{
-		//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
+		boolean addedCard = super.addFirst(card);
 
-		return (minimum == null || card.getCardValue().getValue() < minimum.getValue()
-				|| maximum == null || card.getCardValue().getValue() > maximum.getValue()
-				|| (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD)
-				|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD));
+		if(addedCard && minimum != null)
+		{
+			minimum = CardValue.getCardValue(minimum.getValue() - 1);
+		}
+		else if(addedCard && minimum == null)
+		{
+			minimum = card.getCardValue();
+			maximum = minimum;
+		}
+
+		return addedCard;
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddLastCard(Card card) {
+		return card.getCardValue() != CardValue.SKIP
+				&&((maximum == null && card.getCardValue() != CardValue.WILD)
+						|| (maximum != null && card.getCardValue().getValue() > maximum.getValue() && maximum != CardValue.TWELVE)
+						|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD));
+	}
+
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddFirstCard(Card card) {
+		return card.getCardValue() != CardValue.SKIP
+				&& ((minimum == null && card.getCardValue() != CardValue.WILD)
+						|| (card.getCardValue().getValue() < minimum.getValue() && minimum != CardValue.ONE)
+						|| (card.getCardValue() == CardValue.WILD && minimum != CardValue.ONE));
+	}
 }

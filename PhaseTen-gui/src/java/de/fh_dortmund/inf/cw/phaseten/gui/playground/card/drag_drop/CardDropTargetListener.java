@@ -16,11 +16,11 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
  */
 public class CardDropTargetListener implements DropTargetListener {
 	ICardDropTarget dropTarget;
-	
+
 	public CardDropTargetListener(ICardDropTarget dropTarget) {
-		this.dropTarget = dropTarget;					
+		this.dropTarget = dropTarget;
 	}
-	
+
 	@Override
 	public void dropActionChanged(DropTargetDragEvent dtde) {
 
@@ -31,7 +31,7 @@ public class CardDropTargetListener implements DropTargetListener {
 		Transferable transfarable = dtde.getTransferable();
 		try {
 			Card card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
-			this.dropTarget.handleCardDrop(card);
+			this.dropTarget.handleCardDrop(card, dtde.getLocation());
 		} catch (UnsupportedFlavorException | IOException e) {
 			e.printStackTrace();
 		}

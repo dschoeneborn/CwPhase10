@@ -3,7 +3,6 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
-import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,26 +32,26 @@ public class PullStack extends Stack {
 			if (!color.equals(Color.NONE)) {
 				for (CardValue value : CardValue.values()) {
 					if (!value.equals(CardValue.SKIP) && !value.equals(CardValue.WILD)) {
-						addCard(new Card(color, value));
-						addCard(new Card(color, value));
+						addLast(new Card(color, value));
+						addLast(new Card(color, value));
 					}
 				}
 
 			}
 		}
-		addCard(new Card(Color.NONE, CardValue.SKIP));
-		addCard(new Card(Color.NONE, CardValue.SKIP));
-		addCard(new Card(Color.NONE, CardValue.SKIP));
-		addCard(new Card(Color.NONE, CardValue.SKIP));
+		addLast(new Card(Color.NONE, CardValue.SKIP));
+		addLast(new Card(Color.NONE, CardValue.SKIP));
+		addLast(new Card(Color.NONE, CardValue.SKIP));
+		addLast(new Card(Color.NONE, CardValue.SKIP));
 
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
 	}
 
 	/**
@@ -70,15 +69,6 @@ public class PullStack extends Stack {
 		}
 	}
 
-	public void addCards(Collection<Card> notVisibleCards) {
-		this.addAll(notVisibleCards);
-	}
-
-	@Override
-	public boolean canAddCard(Card card) {
-		return true;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -87,5 +77,21 @@ public class PullStack extends Stack {
 			sb.append(System.lineSeparator());
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddLastCard(Card card) {
+		return true;
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddFirstCard(Card card) {
+		return true;
 	}
 }

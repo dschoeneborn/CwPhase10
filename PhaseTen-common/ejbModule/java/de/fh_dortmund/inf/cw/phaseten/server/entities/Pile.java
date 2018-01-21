@@ -53,11 +53,41 @@ public abstract class Pile implements Serializable {
 		return new ArrayList<>(cards);
 	}
 
-	public boolean addCard(Card card)
+	public boolean addAllLast(Collection<Card> notVisibleCards)
 	{
-		if(canAddCard(card))
+		boolean canAddCards = true;
+
+		for(Card c : notVisibleCards)
 		{
-			cards.add(card);
+			if(!this.canAddLastCard(c))
+			{
+				canAddCards = false;
+				break;
+			}
+		}
+
+		if(canAddCards)
+		{
+			for(Card c : notVisibleCards)
+			{
+				if(!addLast(c))
+				{
+					throw new RuntimeException("Card is tried to be added to pile, but was not allowed");
+				}
+			}
+		}
+
+		return canAddCards;
+	}
+
+	public boolean addFirst(Card card)
+	{
+		if(this.canAddFirstCard(card))
+		{
+			LinkedList<Card> newCards = new LinkedList<>(cards);
+			newCards.addFirst(card);
+			cards = newCards;
+
 			return true;
 		}
 		else
@@ -66,34 +96,11 @@ public abstract class Pile implements Serializable {
 		}
 	}
 
-	public boolean addAll(Collection<Card> notVisibleCards)
+	public boolean addLast(Card card)
 	{
-		boolean canAddCards = true;
-
-		for(Card c : notVisibleCards)
+		if(canAddLastCard(card))
 		{
-			if(!this.canAddCard(c))
-			{
-				canAddCards = false;
-			}
-		}
-
-		if(canAddCards)
-		{
-			cards.addAll(notVisibleCards);
-		}
-
-		return canAddCards;
-	}
-
-	public boolean addFirst(Card card)
-	{
-		if(canAddCard(card))
-		{
-			LinkedList<Card> newCards = new LinkedList<>(cards);
-			newCards.addFirst(card);
-			cards = newCards;
-
+			cards.add(card);
 			return true;
 		}
 		else
@@ -150,7 +157,9 @@ public abstract class Pile implements Serializable {
 	 * @author Robin Harbecke
 	 * @param card
 	 */
-	public abstract boolean canAddCard(Card card);
+	public abstract boolean canAddLastCard(Card card);
+
+	public abstract boolean canAddFirstCard(Card card);
 
 	protected Card getLast()
 	{

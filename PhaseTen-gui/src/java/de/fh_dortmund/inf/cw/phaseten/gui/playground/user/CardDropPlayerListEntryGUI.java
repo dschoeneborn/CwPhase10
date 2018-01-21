@@ -1,5 +1,6 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground.user;
 
+import java.awt.Point;
 import java.awt.dnd.DropTarget;
 
 import javax.swing.TransferHandler;
@@ -31,14 +32,14 @@ public class CardDropPlayerListEntryGUI extends PlayerListEntryGUI implements IC
 	}
 
 	@Override
-	public void handleCardDrop(Card card) {
+	public void handleCardDrop(Card card, Point p) {
 		if(card.getCardValue().equals(CardValue.SKIP)){
 			try {
 				this.serviceHandler.laySkipCardForPlayer(this.player.getId(),card.getId());
 			} catch (MoveNotValidException e) {
-				System.out.println("Move not valide");				
+				System.out.println("Move not valide");
 			} catch (NotLoggedInException e) {
-				System.out.println("Not logged in");			
+				System.out.println("Not logged in");
 			} catch (PlayerDoesNotExistsException e) {
 				System.out.println("Player does not exist");
 			} catch (GameNotInitializedException e) {

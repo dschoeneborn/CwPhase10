@@ -9,7 +9,6 @@ import javax.ejb.Stateless;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
@@ -180,7 +179,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public boolean isValidToAddCard(Game g, Player p, Pile pile, Card c) {
+	public boolean isValidToAddCardFirst(Game g, Player p, Pile pile, Card c) {
 		boolean addCardAllowed = false;
 
 		if (g.isInitialized()
@@ -190,34 +189,34 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 				&& p.getPlayerPile().getCopyOfCardsList().size() > 1
 				&& p.playerLaidStage() && playerHasCard(c, p))
 		{
-			if (pile instanceof SetDockPile) {
-				SetDockPile setDockPile = (SetDockPile) pile;
-
-				if (setDockPile.getCardValue() == c.getCardValue() || c.getCardValue() == CardValue.WILD)
-				{
-					addCardAllowed = true;
-				}
-			}
-			else if (pile instanceof SequenceDockPile)
+			if(pile instanceof DockPile)
 			{
-				SequenceDockPile sequenceDockPile = (SequenceDockPile) pile;
-
-				//TODO: Beachten, dass auch mehrere Wilds hintereinander gesetzt werden können, das ist derzeit noch ein Problem!
-				if ((sequenceDockPile.getMinimum().getValue() - 1 == c.getCardValue().getValue()
-						|| sequenceDockPile.getMaximum().getValue() + 1 == c.getCardValue().getValue()
-						|| c.getCardValue() == CardValue.WILD) && !pileIsFull(sequenceDockPile))
-				{
-					addCardAllowed = true;
-				}
+				DockPile dockPile = (DockPile) pile;
+				addCardAllowed = dockPile.canAddFirstCard(c);
 			}
-			else if (pile instanceof ColorDockPile)
-			{
-				ColorDockPile colorDockPile = (ColorDockPile) pile;
+		}
 
-				if (colorDockPile.getColor() == c.getColor())
-				{
-					addCardAllowed = true;
-				}
+		return addCardAllowed;
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean isValidToAddCardLast(Game g, Player p, Pile pile, Card c) {
+		boolean addCardAllowed = false;
+
+		if (g.isInitialized()
+				&& playerIsCurrentPlayer(g, p)
+				&& !p.hasSkipCard()
+				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
+				&& p.getPlayerPile().getCopyOfCardsList().size() > 1
+				&& p.playerLaidStage() && playerHasCard(c, p))
+		{
+			if(pile instanceof DockPile)
+			{
+				DockPile dockPile = (DockPile) pile;
+				addCardAllowed = dockPile.canAddLastCard(c);
 			}
 		}
 
@@ -325,20 +324,6 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 		}
 
 		return playerHasCard;
-	}
-
-	/**
-	 * Validates if a given pile is "full" which means all cards from one to twelve
-	 * are in that given pile
-	 *
-	 * @author Tim Prange
-	 * @author Björn Merschmeier
-	 * @param sequenceDockPile the pile to check
-	 * @return pileIsFull
-	 */
-	private boolean pileIsFull(SequenceDockPile sequenceDockPile) {
-		// TODO needs to include wildcards
-		return (sequenceDockPile.getMinimum() == CardValue.ONE && sequenceDockPile.getMaximum() == CardValue.TWELVE);
 	}
 
 	/**

@@ -5,7 +5,7 @@ import javax.ejb.Local;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 
 /**
- * 
+ *
  * @author Björn Merschmeier
  *
  */
