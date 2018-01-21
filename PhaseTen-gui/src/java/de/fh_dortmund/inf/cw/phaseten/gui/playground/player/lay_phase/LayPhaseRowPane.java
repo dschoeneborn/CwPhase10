@@ -57,8 +57,6 @@ public class LayPhaseRowPane extends JPanel{
 			DockPile newPile = wrapper.getLayDockPile();
 			if(newPile != null) {
 				cardPiles.add(newPile);				
-			}else {
-				return;
 			}			
 		}	
 		try {

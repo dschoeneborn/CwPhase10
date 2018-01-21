@@ -46,7 +46,7 @@ public class TopRowPane extends JPanel
 	{
 		this.userList.updateData(game.getPlayers(), game.getSpectators(), game.getCurrentPlayer());
 		this.discardPile.updateData(game.getLiFoStackTop());
-		this.phaseCard.updatePhase(0);//TODO Get Phase
+		this.phaseCard.updatePhase(game.getCurrentPlayer().getPhase());
 		this.revalidate();
 		this.repaint();
 	}
