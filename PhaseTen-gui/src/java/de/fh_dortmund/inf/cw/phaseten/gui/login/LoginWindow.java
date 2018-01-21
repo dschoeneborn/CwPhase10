@@ -1,6 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.login;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -21,6 +23,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenExce
 /**
  * @author Marc Mettke
  * @author Björn Merschmeier
+ * @author Sven Krefeld
  */
 public class LoginWindow extends GuiWindow implements ActionListener {
 	
@@ -54,6 +57,7 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 		super(LOGINWINDOW_NAME, serviceHandler, guiManager);
 		this.serviceHandler = serviceHandler;
 		this.setContentPane(this.setUI());
+		this.setPreferredSize(new Dimension(385, 250));
 		this.setResizable(false);
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,8 +92,8 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 	        usernameLogin = new JTextField("", 15);
 	        passwordLogin = new JTextField("", 15);
 	        usernameRegister = new JTextField("", 15);
-	        passwordRegister = new JTextField("", 15);
-	        passwordWdhRegister = new JTextField("", 15);
+	        passwordRegister = new JPasswordField("", 15);
+	        passwordWdhRegister = new JPasswordField("", 15);
 	        statusLabel = new JLabel();
 	        
 	        panel.add(new JLabel(USERNAME + ": "));
