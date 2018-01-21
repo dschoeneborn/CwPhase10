@@ -27,8 +27,8 @@ public class PhaseCard extends JPanel{
 			
 	public void updatePhase(int newPhase){
 		this.removeAll();
-		for(int i=0; i<10; i++){			
-			JLabel label = new JLabel(getPhase(i+1), JLabel.LEFT);		
+		for(int i=1; i<=10; i++){			
+			JLabel label = new JLabel(getPhase(i), JLabel.LEFT);		
 			if(i == newPhase){
 				label.setForeground(Color.red);
 			} else {
