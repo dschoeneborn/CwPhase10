@@ -332,6 +332,10 @@ public class GameManagementBean implements GameManagementLocal {
 		initializeFirstPlayer(game);
 		giveCardsToPlayers(game);
 
+		for(Player player : game.getPlayers()) {
+			player.setPlayerLaidStage(false);
+		}
+		
 		if (game.getLiFoStack().showCard().getCardValue() == CardValue.SKIP) {
 			setNextPlayer(game);
 		} else if(game.getCurrentPlayer().getIsAI()) {
