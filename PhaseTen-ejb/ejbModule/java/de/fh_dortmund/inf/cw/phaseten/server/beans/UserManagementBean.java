@@ -69,6 +69,7 @@ public class UserManagementBean implements UserManagementLocal {
 				throw new EntityExistsException();
 			}
 			catch (NoResultException e) {
+				user.setCoins(500);
 				em.persist(user);
 			}
 		}
@@ -145,8 +146,10 @@ public class UserManagementBean implements UserManagementLocal {
 		}
 		else {
 			foundPlayer = new Player(currentUser.getLoginName());
+			foundPlayer.setUser(currentUser);
 			currentUser.setPlayer(foundPlayer);
 			em.persist(currentUser);
+			foundPlayer = em.merge(foundPlayer);
 		}
 		em.flush();
 

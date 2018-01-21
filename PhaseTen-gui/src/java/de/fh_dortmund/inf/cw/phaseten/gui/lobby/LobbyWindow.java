@@ -19,6 +19,7 @@ import de.fh_dortmund.inf.cw.phaseten.gui.GuiWindow;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.StatusPanel;
 import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InsufficientCoinSupplyException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
@@ -50,6 +51,7 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 	private static final String PLAYER_DOES_NOT_EXISTS = "Player does not exits";
 	private static final String PLAYER_NOT_LOGGED_IN = "Player is not logged in";
 	private static final String NOT_ENOUGH_PLAYER = "Not enough player to start a new game";
+	private static final String NOT_ENOUGH_COINS = "Not enough coins to start game. 50 are required";
 
 	private ServiceHandler serviceHandler;
 
@@ -210,6 +212,9 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 			errorLabel.setText(PLAYER_NOT_LOGGED_IN);
 			errorLabel.setForeground(Color.RED);
 			this.getGuiManager().showLoginGui();
+		} catch (InsufficientCoinSupplyException e) {
+			errorLabel.setText(NOT_ENOUGH_COINS);
+			errorLabel.setForeground(Color.RED);
 		}
 	}
 

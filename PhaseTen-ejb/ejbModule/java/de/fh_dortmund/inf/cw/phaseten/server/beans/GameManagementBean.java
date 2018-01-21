@@ -3,6 +3,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -27,12 +28,14 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Stage;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.CardsToPileAction;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.AIManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
@@ -59,8 +62,14 @@ public class GameManagementBean implements GameManagementLocal {
 	@EJB
 	GameValidationLocal gameValidation;
 	
+	@EJB
+	private CoinManagementLocal coinManagment;
+	
 	@EJB 
 	AIManagementLocal aiManagment;
+
+	@EJB
+	private UserManagementLocal userManagement;
 
 	@Override
 	public void requestGameMessage(Player p) throws GameNotInitializedException {
@@ -310,6 +319,14 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void initNextRound(Game game) {
+		for(Player player : game.getPlayers()) {
+			if(player.getPhase() == Stage.FINISHED) {
+				game.setFinished();
+				cashPlayerOut(game);
+				return;
+			}
+		}
+		
 		initializePullstack(game);
 		initializeLiFoStack(game);
 		initializeFirstPlayer(game);
@@ -321,6 +338,32 @@ public class GameManagementBean implements GameManagementLocal {
 			aiTurn(game, game.getCurrentPlayer());
 			setNextPlayer(game);
 		} 
+	}
+
+	private void cashPlayerOut(Game game) {
+		List<Player> ranking = new LinkedList<>();
+		int i = 0;
+		for(Player player : game.getPlayers()) {
+			i = 0;
+			for(Player rankedPlayer : ranking) {
+				if(rankedPlayer.getNegativePoints() > player.getNegativePoints() ) {
+					break;
+				}
+				i++;
+			}
+			
+			ranking.add(i, player);
+		}
+		int coins = ranking.size() * 50;
+		int divisor = 0;
+	    for (i = 1; i < ranking.size(); i++) divisor += i;
+		i = 1;
+		for(Player player : ranking) {
+			if(!player.getIsAI()) {
+				coinManagment.increaseCoins(player.getUser(), coins / divisor * (ranking.size() - i));
+			}
+			i++;
+		}
 	}
 
 	/**
