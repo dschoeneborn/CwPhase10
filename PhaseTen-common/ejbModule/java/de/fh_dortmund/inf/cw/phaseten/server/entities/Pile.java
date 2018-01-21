@@ -90,9 +90,7 @@ public abstract class Pile implements Serializable {
 	{
 		if(canAddCard(card))
 		{
-			LinkedList<Card> newCards = new LinkedList<>(cards);
-			newCards.addFirst(card);
-			cards = newCards;
+			cards.add(0, card);
 
 			return true;
 		}

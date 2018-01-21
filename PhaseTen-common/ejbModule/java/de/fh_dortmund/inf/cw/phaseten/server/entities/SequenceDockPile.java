@@ -56,6 +56,7 @@ public class SequenceDockPile extends DockPile {
 		boolean addedCard = false;
 
 		if (minimum == null || card.getCardValue().getValue() < minimum.getValue()) {
+			addedCard = addFirst(card);
 			if (card.getCardValue() != CardValue.WILD) {
 				minimum = card.getCardValue();
 			} else {
@@ -65,32 +66,19 @@ public class SequenceDockPile extends DockPile {
 			if (maximum == null) {
 				maximum = minimum;
 			}
-
-			addFirst(card);
-
-			addedCard = true;
 		} else if (maximum == null || card.getCardValue().getValue() > maximum.getValue()) {
+			addedCard = super.addCard(card);
 			maximum = card.getCardValue();
-
-			super.addCard(card);
-
-			addedCard = true;
 		} else if (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD) {
 			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
 
+			addedCard = addFirst(card);
 			minimum = CardValue.getCardValue(minimum.getValue() - 1);
-
-			addFirst(card);
-
-			addedCard = true;
 		} else if (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD) {
 			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
 
+			addedCard = super.addCard(card);
 			maximum = CardValue.getCardValue(maximum.getValue() + 1);
-
-			super.addCard(card);
-
-			addedCard = true;
 		}
 
 		return addedCard;
