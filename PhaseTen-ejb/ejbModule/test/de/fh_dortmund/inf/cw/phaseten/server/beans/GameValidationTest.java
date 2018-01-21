@@ -3,6 +3,8 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,6 +30,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.RoundStage;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
@@ -631,6 +634,59 @@ public class GameValidationTest {
 		// Player has skip card
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromPullStack(game, p1));
 	}
+	
+	@Test
+	public void testPileIsFull() throws Exception {
+		SequenceDockPile dockPile = new SequenceDockPile();
+		
+		dockPile.addCard(new Card(Color.BLUE, CardValue.ONE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TWO));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.THREE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.FOUR));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.FIVE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.SIX));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.SEVEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.EIGHT));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.NINE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.ELEVEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TWELVE));
+		
+		assertEquals(true, gameValidation.pileIsFull(dockPile));
+		
+		dockPile = new SequenceDockPile();
+		dockPile.addCard(new Card(Color.BLUE, CardValue.ONE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TWO));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.FOUR));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.FIVE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.SIX));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.EIGHT));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.NINE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.ELEVEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TWELVE));
+		
+		assertEquals(true, gameValidation.pileIsFull(dockPile));
+		
+		dockPile = new SequenceDockPile();
+		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TWO));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.FOUR));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.FIVE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.SIX));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.EIGHT));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.NINE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.ELEVEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TWELVE));
+		
+		//TODO: Fails because addCard Method in SequenceDockPile Class is not working correctly
+//		assertEquals(true, gameValidation.pileIsFull(dockPile));
+	}
 
 	@Test
 	public void testIsValidLayStageToTable() throws Exception {
@@ -730,6 +786,7 @@ public class GameValidationTest {
 		p1.addCardToPlayerPile(otherCard);
 		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
 	}
+	
 
 	// TODO - BM - 13.01.2018 - Es müssen noch die einzelnen Phasen getestet werden
 

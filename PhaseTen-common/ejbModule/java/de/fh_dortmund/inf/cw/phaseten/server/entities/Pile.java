@@ -135,6 +135,11 @@ public abstract class Pile implements Serializable {
 	{
 		return this.cards.contains(card);
 	}
+	
+	public int getSize()
+	{
+		return cards.size();
+	}
 
 	/**
 	 * TODO Add JavaDoc
