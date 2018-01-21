@@ -137,10 +137,10 @@ public abstract class Pile implements Serializable {
 	}
 
 	/**
-	 * TODO Add JavaDoc
+	 * Returns the id of the pile.
 	 *
 	 * @author Tim Prange
-	 * @return
+	 * @return id
 	 */
 	public long getId() {
 		return id;
