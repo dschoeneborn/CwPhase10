@@ -28,6 +28,8 @@ public interface LobbyManagementLocal extends LobbyManagement {
 	 * @return
 	 */
 	public Collection<PlayerGuiData> getPlayersForGui();
+	
+	void addAI() throws NoFreeSlotException;
 
 	Collection<String> getSpectatorNamesForGui();
 

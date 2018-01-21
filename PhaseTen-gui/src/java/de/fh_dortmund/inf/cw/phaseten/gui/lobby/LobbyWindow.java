@@ -33,12 +33,14 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserver {
 	private static final long serialVersionUID = -3411026015858719190L;
 
+	private static final String ACTIONCOMMAND_ADD_AI = "addai";
 	private static final String ACTIONCOMMAND_SPECTATE = "spectate";
 	private static final String ACTIONCOMMAND_PLAY = "play";
 	private static final String ACTIONCOMMAND_DISCONNECT = "disconnect";
 	private static final String ACTIONCOMMAND_START = "start";
 
 	private static final String WINDOW_NAME = "Phaseten | Lobby";
+	private static final String ADD_AI = "Add AI";
 	private static final String SPECTATE = "Zuschauen";
 	private static final String JOIN = "Beitreten";
 	private static final String DISCONNECT = "Verlassen";
@@ -54,6 +56,7 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 	protected ButtonPane buttonPane = new ButtonPane();
 	protected UserList userList;
 	protected StatusPanel statusPanel = new StatusPanel();
+	private JButton addAiButton;
 	private JButton spectatorButton;
 	private JButton startGameButton;
 	private JLabel infoLabel = new JLabel();
@@ -82,6 +85,9 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
+		addAiButton = new JButton(ADD_AI);
+		addAiButton.setActionCommand(ACTIONCOMMAND_ADD_AI);
+		addAiButton.addActionListener(this);
 		spectatorButton = new JButton(SPECTATE);
 		spectatorButton.setActionCommand(ACTIONCOMMAND_SPECTATE);
 		spectatorButton.addActionListener(this);
@@ -93,7 +99,9 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(this.statusPanel)
-						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(spectatorButton)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+								.addComponent(addAiButton)								
+								.addComponent(spectatorButton)
 								.addComponent(startGameButton).addComponent(errorLabel))
 						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(infoLabel)
 								.addComponent(this.userList))));
@@ -101,7 +109,7 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		layout.linkSize(SwingConstants.HORIZONTAL, userList, statusPanel);
 
 		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(this.userList).addComponent(infoLabel)
-				.addComponent(spectatorButton).addComponent(startGameButton).addComponent(errorLabel)
+				.addComponent(addAiButton).addComponent(spectatorButton).addComponent(startGameButton).addComponent(errorLabel)
 				.addComponent(this.statusPanel));
 
 		return panel;
@@ -143,8 +151,20 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		case ACTIONCOMMAND_START:
 			startGame();
 			break;
+		case ACTIONCOMMAND_ADD_AI:
+			addAI();
 		default:
 			break;
+		}
+	}
+
+	private void addAI() {
+		try {
+			serviceHandler.addAI();
+		} catch (NoFreeSlotException exception) {
+			errorLabel.setText(NO_FREE_SLOT_AVAILABLE);
+			errorLabel.setForeground(Color.RED);
+			startGameButton.setEnabled(false);
 		}
 	}
 

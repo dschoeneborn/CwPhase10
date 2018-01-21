@@ -58,7 +58,7 @@ public class AIManagmentTest {
 	    LiFoStack discardPile = new LiFoStack();
 	    discardPile.addCard(new Card(Color.GREEN, CardValue.EIGHT));
 		Game game = new Game(new HashSet<>(), new HashSet<>(), new PullStack(), discardPile);
-		Assert.assertEquals(TakeCardAction.DRAWER_PILE, this.aiManagment.takeCard(player, game));
+		Assert.assertEquals(TakeCardAction.DISCARD_PILE, this.aiManagment.takeCard(player, game));
 	}
 	
 	@Test

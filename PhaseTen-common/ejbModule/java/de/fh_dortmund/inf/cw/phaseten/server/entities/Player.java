@@ -68,11 +68,15 @@ public class Player implements Serializable {
 	@Column(nullable = false)
 	private int negativePoints;
 
+	@Column(nullable = false)
+	private boolean isAI;
+
 	private Player() {
 		this.playerPile = new PlayerPile();
 		this.phase = Stage.TWO_TRIPLES;
 		playerLaidStage = false;
 		playerHasSkipCard = false;
+		isAI = false;
 		roundStage = RoundStage.PULL;
 	}
 
@@ -178,6 +182,14 @@ public class Player implements Serializable {
 
 	public void addNegativePoints(int i) {
 		negativePoints += i;
+	}
+	
+	public boolean getIsAI() {
+		return isAI;
+	}
+	
+	public void setIsAI(boolean isAI) {
+		this.isAI = isAI;
 	}
 
 	/**

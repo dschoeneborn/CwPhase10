@@ -28,15 +28,26 @@ public class SimpleAiBean implements IAIPlayer {
 
 		double ratingWithDiscardCard = getRatingWithExtraCard(player, game, discardCard);
 		double maxRatingWithDrawerCard = Double.MIN_VALUE;
-		double ratingWithDrawerCard;
 
 		for(CardValue cardValue : CardValue.values() ) {
 			for(Color cardColor : Color.values()) {
+				if(cardColor == Color.NONE && cardValue != CardValue.WILD && cardValue != CardValue.SKIP) {
+					continue;
+				}
+				if(cardColor != Color.NONE && cardValue == CardValue.WILD) {
+					continue;
+				}
+				if(cardColor != Color.NONE && cardValue == CardValue.SKIP) {
+					continue;
+				}
+				
 				Card card = new Card(cardColor, cardValue);
 				if(!discardCard.equals(card)) {
-					ratingWithDrawerCard = getRatingWithExtraCard(player, game, card);
-					if(ratingWithDrawerCard > maxRatingWithDrawerCard) {
-						maxRatingWithDrawerCard = ratingWithDrawerCard;
+					if(maxRatingWithDrawerCard == Double.MIN_VALUE) {
+						maxRatingWithDrawerCard = getRatingWithExtraCard(player, game, card);						
+					} else {
+						maxRatingWithDrawerCard += getRatingWithExtraCard(player, game, card);
+						maxRatingWithDrawerCard /= 2;
 					}
 				}
 			}
