@@ -2,7 +2,7 @@
 PhaseTen is a JEE implementation of the well known card game [Phase 10](https://en.wikipedia.org/wiki/Phase_10). The idea behind PhaseTen was to provide the classic Phase 10 game with some extras to players all around the world from there PC.
 
 ## Gameplay
-The gameplay of PhaseTen is as simple as the original one. As for Phase 10 the goal for PhaseTen is to absolvate all 10 Phases with a minimum of negativ poins. A detailed gameplay description in german language is provided at the [wiki](https://github.com/dschoeneborn/CwPhase10/wiki/Spielkonzept).
+The gameplay of PhaseTen is as simple as the original one. As for Phase 10 the goal for PhaseTen is to absolvate all 10 Phases with a minimum of negativ poins. One of the biggest improvements is that you can now play Phase 10 alone. For that purpose PhaseTen provides an artificial intelligence. A detailed gameplay description in german language is provided at the [wiki](https://github.com/dschoeneborn/CwPhase10/wiki/Spielkonzept).
 
 [TODO] Fancy video
 
