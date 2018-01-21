@@ -9,6 +9,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InsufficientCoinSupplyException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
@@ -28,7 +29,7 @@ public interface ServiceHandler extends MessageListener {
 
 	void requestLobbyMessage();
 
-	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException;
+	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException;
 
 	void enterLobbyAsSpectator() throws NotLoggedInException;
 	

@@ -69,6 +69,9 @@ public class Game implements Serializable {
 	@Column
 	private boolean gameInitialized = false;
 
+	@Column
+	private boolean gameFinished = false;
+
 	private Game()
 	{
 		openPiles = new ArrayList<>();
@@ -185,6 +188,14 @@ public class Game implements Serializable {
 
 	public void setInitialized() {
 		gameInitialized = true;
+	}
+
+	public boolean isFinished() {
+		return gameFinished;
+	}
+
+	public void setFinished() {
+		gameFinished = true;
 	}
 
 	public void removeSpectator(Spectator spectator) {

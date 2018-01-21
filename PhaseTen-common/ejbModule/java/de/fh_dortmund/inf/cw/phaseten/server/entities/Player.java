@@ -50,6 +50,9 @@ public class Player implements Serializable {
 	@JoinColumn
 	@ManyToOne()
 	private Lobby lobby;
+	
+	@OneToOne(mappedBy="player")
+	private User user;
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
@@ -94,6 +97,14 @@ public class Player implements Serializable {
 
 	public Lobby getLobby() {
 		return lobby;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	/**

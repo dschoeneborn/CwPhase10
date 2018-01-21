@@ -58,6 +58,10 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 		if (object instanceof GameGuiData) {
 			GameGuiData game = (GameGuiData) object;
 
+			if(game.isFinished()) {
+				getGuiManager().showLobbyGui();
+			}
+			
 			this.topRowPane.gameDataUpdated(game);
 			this.publicCardStackPane.gameDataUpdated(game);
 			this.pack();
