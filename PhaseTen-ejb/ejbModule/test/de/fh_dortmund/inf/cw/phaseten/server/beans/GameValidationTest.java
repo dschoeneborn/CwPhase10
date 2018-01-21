@@ -686,6 +686,23 @@ public class GameValidationTest {
 		
 		//TODO: Fails because addCard Method in SequenceDockPile Class is not working correctly
 //		assertEquals(true, gameValidation.pileIsFull(dockPile));
+		
+		dockPile = new SequenceDockPile();
+		dockPile.addCard(new Card(Color.BLUE, CardValue.ONE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TWO));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.FOUR));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.FIVE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.SIX));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.EIGHT));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.NINE));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.TEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.ELEVEN));
+		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
+		
+		//TODO: Fails because addCard Method in SequenceDockPile Class is not working correctly
+		assertEquals(true, gameValidation.pileIsFull(dockPile));
 	}
 
 	@Test
