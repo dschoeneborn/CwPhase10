@@ -231,7 +231,7 @@ public class GameManagementBean implements GameManagementLocal {
 		if (card.getCardValue() == CardValue.SKIP
 				&& gameValidation.isValidLaySkipCard(currentPlayer, destinationPlayer, game)) {
 			destinationPlayer.givePlayerSkipCard();
-			layCardToLiFoStack(currentPlayer, cardId);
+			layCardToLiFoStack(currentPlayer, game, card);
 			currentPlayer.resetRoundStage();
 			setNextPlayer(game);
 		}
