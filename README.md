@@ -14,7 +14,7 @@ Eine Spielphase definiert eine bestimmte Konstellation von Karten, welche ausgel
 Das Spiel ist beendet, sobald der erste Spieler alle 10 Phasen geschafft hat und die Runde beendet wurde. Sofern zwei Spieler in der gleichen Runde alle 10 Phasen schaffen, gewinnt die Person mit den geringsten Minuspunkten. Die Rangliste richtet sich generell primär nach der Phase und sekundär nach den Punkten.
 
 ## Joker- und Aussetzen-Karte
-Die Aussetzen-Karte darf nur als dritte Aktion abgeworfen werden. Dies bedeutet, dass keine Karte auf den Ablegestapel gelegt wird, sondern stattdessen die Aussetzen-Karte einer Person vorgelegt wird. Diese darf dann ihren n ̈achsten Zug nicht durchf ̈uhren und muss warten. Die Joker-Karte kann jede Zahl und Farbenkombination ersetzen. Sie darf sowohl zur Vervollst ̈andigung einer Phase verwendet, als auch an bereits ausgelegte Karten angelegt werden.
+Die Aussetzen-Karte darf nur als dritte Aktion abgeworfen werden. Dies bedeutet, dass keine Karte auf den Ablegestapel gelegt wird, sondern stattdessen die Aussetzen-Karte einer Person vorgelegt wird. Diese darf dann ihren nächsten Zug nicht durchführen und muss warten. Die Joker-Karte kann jede Zahl und Farbenkombination ersetzen. Sie darf sowohl zur Vervollständigung einer Phase verwendet, als auch an bereits ausgelegte Karten angelegt werden.
 
 ## Erweiterung
 Das Spiel wird erweitert um die Verwendung vonCoins. Diese Coins werden für die Teilnahme an einem Spiel benötigt und in Abhängigkeit von den Minuspunkten ausgezahlt. Der Spieler mit den wenigsten Minuspunkten bekommt dabei zum Spielende die meisten Coins und der mit den meisten Minuspunkten die wenigsten.
