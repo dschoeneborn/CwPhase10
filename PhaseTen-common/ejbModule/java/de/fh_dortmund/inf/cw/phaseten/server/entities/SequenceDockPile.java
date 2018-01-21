@@ -52,10 +52,10 @@ public class SequenceDockPile extends DockPile {
 		{
 			maximum = CardValue.getCardValue(maximum.getValue() + 1);
 		}
-		else if(addedCard && maximum == null)
+		else if(addedCard && maximum == null && card.getCardValue() != CardValue.WILD)
 		{
 			maximum = card.getCardValue();
-			minimum = maximum;
+			minimum = CardValue.getCardValue(card.getCardValue().getValue() - this.getCopyOfCardsList().size() + 1);
 		}
 
 		return addedCard;
@@ -70,10 +70,10 @@ public class SequenceDockPile extends DockPile {
 		{
 			minimum = CardValue.getCardValue(minimum.getValue() - 1);
 		}
-		else if(addedCard && minimum == null)
+		else if(addedCard && minimum == null && card.getCardValue() != CardValue.WILD)
 		{
 			minimum = card.getCardValue();
-			maximum = minimum;
+			maximum = CardValue.getCardValue(card.getCardValue().getValue() + this.getCopyOfCardsList().size() - 1);
 		}
 
 		return addedCard;
@@ -85,9 +85,9 @@ public class SequenceDockPile extends DockPile {
 	@Override
 	public boolean canAddLastCard(Card card) {
 		return card.getCardValue() != CardValue.SKIP
-				&&((maximum == null && card.getCardValue() != CardValue.WILD)
-						|| (maximum != null && card.getCardValue().getValue() > maximum.getValue() && maximum != CardValue.TWELVE)
-						|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD));
+				&&((maximum == null && card.getCardValue() != CardValue.WILD && this.getCopyOfCardsList().size() < 12)
+						|| (maximum != null && card.getCardValue().getValue() > maximum.getValue() && maximum != CardValue.TWELVE && this.getCopyOfCardsList().size() < 12)
+						|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD && this.getCopyOfCardsList().size() < 12));
 	}
 
 
@@ -97,8 +97,8 @@ public class SequenceDockPile extends DockPile {
 	@Override
 	public boolean canAddFirstCard(Card card) {
 		return card.getCardValue() != CardValue.SKIP
-				&& ((minimum == null && card.getCardValue() != CardValue.WILD)
-						|| (card.getCardValue().getValue() < minimum.getValue() && minimum != CardValue.ONE)
-						|| (card.getCardValue() == CardValue.WILD && minimum != CardValue.ONE));
+				&& ((minimum == null && card.getCardValue() != CardValue.WILD && this.getCopyOfCardsList().size() < 12)
+						|| (card.getCardValue().getValue() < minimum.getValue() && minimum != CardValue.ONE && this.getCopyOfCardsList().size() < 12)
+						|| (card.getCardValue() == CardValue.WILD && minimum != CardValue.ONE && this.getCopyOfCardsList().size() < 12));
 	}
 }

@@ -9,7 +9,7 @@
 		<property name="serverName" value="localhost" />
 		<property name="port" value="3306" />
 		<property name="databaseName" value="phaseten" />
-		<property name="user" value="root" />
+		<property name="user" value="phaseten" />
 		<property name="password" value="passwort" />
 	</jdbc-connection-pool>
 

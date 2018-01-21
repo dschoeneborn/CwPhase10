@@ -37,6 +37,8 @@ public class LayPhaseRowPane extends JPanel{
 		this.serviceHandler = serviceHandler;
 		this.playerCardsPane = playerCardsPane;
 		clearPiles();
+		this.add(this.leftLayPhaseCardsWrapperPane);
+		this.add(this.rightLayPhaseCardsWrapperPane);
 		this.layPhaseCardsWrapperPanes = new LayPhaseCardsWrapperPane[]{this.leftLayPhaseCardsWrapperPane,this.rightLayPhaseCardsWrapperPane};
 		this.sendDataButton.addActionListener(new ActionListener() {
 			@Override
@@ -45,8 +47,6 @@ public class LayPhaseRowPane extends JPanel{
 			}
 		});
 		this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
-		this.add(this.leftLayPhaseCardsWrapperPane);
-		this.add(this.rightLayPhaseCardsWrapperPane);
 		this.add(sendDataButton);
 	}
 
@@ -110,6 +110,12 @@ public class LayPhaseRowPane extends JPanel{
 	private void clearPiles()
 	{
 		List<Class<? extends DockPile>> dockPileTypes;
+		if(this.leftLayPhaseCardsWrapperPane != null && this.rightLayPhaseCardsWrapperPane != null)
+		{
+			this.remove(this.leftLayPhaseCardsWrapperPane);
+			this.remove(this.rightLayPhaseCardsWrapperPane);
+			this.remove(sendDataButton);
+		}
 		try {
 			dockPileTypes = new ArrayList<>(serviceHandler.getDockPileTypesForPlayer());
 			this.leftLayPhaseCardsWrapperPane = new LayPhaseCardsWrapperPane(this.serviceHandler, this.playerCardsPane, dockPileTypes.get(0));
@@ -123,5 +129,12 @@ public class LayPhaseRowPane extends JPanel{
 		{
 			System.out.println("User is not logged in!");
 		}
+		this.leftLayPhaseCardsWrapperPane.getCurrentPile().clearCards();
+		this.rightLayPhaseCardsWrapperPane.getCurrentPile().clearCards();
+		this.add(this.leftLayPhaseCardsWrapperPane);
+		this.add(this.rightLayPhaseCardsWrapperPane);
+		this.add(sendDataButton);
+		this.revalidate();
+		this.repaint();
 	}
 }
