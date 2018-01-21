@@ -1,8 +1,5 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground.card;
 
-import java.awt.Color;
-
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
@@ -21,7 +18,6 @@ public abstract class CardPilePane extends JPanel {
 		this.setPreferredSize(CardPane.cardSize);
 		this.setMinimumSize(this.getPreferredSize());
 		this.setMaximumSize(this.getPreferredSize());
-		this.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 		this.updateData(null);
 	}
 	
