@@ -34,7 +34,7 @@ public class IdenticalCards extends PhaseElement {
 		CardValue bestCardValue = null;
 		int bestCardCount = 0;
 		for (CardValue cardValue : cardCount.keySet()) {
-			if(cardValue != CardValue.WILD) {
+			if(cardValue != CardValue.WILD && cardValue !=  CardValue.SKIP) {
 				if(cardCount.get(cardValue) > bestCardCount) {
 					bestCardCount = cardCount.get(cardValue);
 					bestCardValue = cardValue;

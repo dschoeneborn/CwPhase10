@@ -50,6 +50,9 @@ public class Player implements Serializable {
 	@JoinColumn
 	@ManyToOne()
 	private Lobby lobby;
+	
+	@OneToOne(mappedBy="player")
+	private User user;
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
@@ -68,11 +71,15 @@ public class Player implements Serializable {
 	@Column(nullable = false)
 	private int negativePoints;
 
+	@Column(nullable = false)
+	private boolean isAI;
+
 	private Player() {
 		this.playerPile = new PlayerPile();
 		this.phase = Stage.TWO_TRIPLES;
 		playerLaidStage = false;
 		playerHasSkipCard = false;
+		isAI = false;
 		roundStage = RoundStage.PULL;
 	}
 
@@ -90,6 +97,14 @@ public class Player implements Serializable {
 
 	public Lobby getLobby() {
 		return lobby;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	/**
@@ -178,6 +193,14 @@ public class Player implements Serializable {
 
 	public void addNegativePoints(int i) {
 		negativePoints += i;
+	}
+	
+	public boolean getIsAI() {
+		return isAI;
+	}
+	
+	public void setIsAI(boolean isAI) {
+		this.isAI = isAI;
 	}
 
 	/**

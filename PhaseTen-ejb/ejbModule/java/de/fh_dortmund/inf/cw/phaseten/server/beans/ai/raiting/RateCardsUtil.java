@@ -18,6 +18,6 @@ public class RateCardsUtil {
 	}
 	
 	private static double rateCardsForPhase(SimPile playerPile,Stage phase) {
-		return 0;
+		return  RateCardsForPhaseUtil.rateCards(playerPile, phase);
 	}
 }

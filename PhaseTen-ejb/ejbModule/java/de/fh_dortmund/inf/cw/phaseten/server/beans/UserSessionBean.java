@@ -15,6 +15,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InsufficientCoinSupplyException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
@@ -23,6 +24,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsExcep
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
@@ -46,6 +48,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	@EJB
 	private GameManagementLocal gameManagement;
+	
+	@EJB
+	private CoinManagementLocal coinManagment;
 
 	@Override
 	public void login(String userName, String password) throws UserDoesNotExistException {
@@ -96,9 +101,14 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @author Marc Mettke
 	 */
 	@Override
-	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException {
+	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException {
+		if(currentUser == null) {
+			throw new NotLoggedInException();
+		}
+		this.coinManagment.decreaseCoins(currentUser, 50);
 		this.lobbyManagement.enterLobby(getOrCreateCurrentPlayer());
 
 	}
@@ -368,6 +378,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	private Spectator getOrCreateCurrentSpectator() {
 		return userManagement.getOrCreateSpectator(currentUser);
+	}
+
+	@Override
+	public void addAI() throws NoFreeSlotException {
+		this.lobbyManagement.addAI();
 	}
 
 }
