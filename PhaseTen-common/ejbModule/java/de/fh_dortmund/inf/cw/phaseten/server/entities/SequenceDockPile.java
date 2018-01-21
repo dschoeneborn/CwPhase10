@@ -53,15 +53,14 @@ public class SequenceDockPile extends DockPile {
 	 */
 	@Override
 	public boolean addCard(Card card) {
- 		boolean addedCard = false;
+ 		boolean addedCard = true;
 
 		if (minimum == null || card.getCardValue().getValue() < minimum.getValue()) {
-			addedCard = addFirst(card);
 			if (card.getCardValue() != CardValue.WILD) {
-				addFirst(card);
+				addedCard = addFirst(card);
 				minimum = card.getCardValue();
 			} else {
-				addFirst(card);
+				addedCard = addFirst(card);
 				minimum = CardValue.SIX;
 			}
 
