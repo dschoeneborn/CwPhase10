@@ -53,20 +53,21 @@ public class SequenceDockPile extends DockPile {
 	 */
 	@Override
 	public boolean addCard(Card card) {
-		boolean addedCard = false;
+ 		boolean addedCard = true;
 
 		if (minimum == null || card.getCardValue().getValue() < minimum.getValue()) {
-			addedCard = addFirst(card);
 			if (card.getCardValue() != CardValue.WILD) {
+				addedCard = addFirst(card);
 				minimum = card.getCardValue();
 			} else {
+				addedCard = addFirst(card);
 				minimum = CardValue.SIX;
 			}
 
 			if (maximum == null) {
 				maximum = minimum;
 			}
-		} else if (maximum == null || card.getCardValue().getValue() > maximum.getValue()) {
+		} else if (maximum == null || (card.getCardValue().getValue() > maximum.getValue() &&card.getCardValue() != CardValue.WILD)) {
 			addedCard = super.addCard(card);
 			maximum = card.getCardValue();
 		} else if (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD) {
@@ -99,8 +100,9 @@ public class SequenceDockPile extends DockPile {
 
 		return (minimum == null || card.getCardValue().getValue() < minimum.getValue()
 				|| maximum == null || card.getCardValue().getValue() > maximum.getValue()
-				|| (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD)
-				|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD));
+//				|| (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD)
+//				|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD)
+				);
 	}
 
 }

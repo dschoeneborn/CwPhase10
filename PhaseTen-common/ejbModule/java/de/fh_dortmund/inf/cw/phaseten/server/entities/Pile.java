@@ -133,12 +133,17 @@ public abstract class Pile implements Serializable {
 	{
 		return this.cards.contains(card);
 	}
+	
+	public int getSize()
+	{
+		return cards.size();
+	}
 
 	/**
-	 * TODO Add JavaDoc
+	 * Returns the id of the pile.
 	 *
 	 * @author Tim Prange
-	 * @return
+	 * @return id
 	 */
 	public long getId() {
 		return id;

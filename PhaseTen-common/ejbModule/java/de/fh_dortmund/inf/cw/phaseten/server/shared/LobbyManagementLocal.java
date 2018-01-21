@@ -12,6 +12,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 /**
  * @author Marc Mettke
  * @author Tim Prange
+ * @author Sebastian Seitz
  */
 @Local
 public interface LobbyManagementLocal extends LobbyManagement {
@@ -22,10 +23,10 @@ public interface LobbyManagementLocal extends LobbyManagement {
 	void enterLobby(Spectator spectator);
 
 	/**
-	 * TODO Add JavaDoc
+	 * Returns players.
 	 *
 	 * @author Tim Prange
-	 * @return
+	 * @return players
 	 */
 	public Collection<PlayerGuiData> getPlayersForGui();
 	
