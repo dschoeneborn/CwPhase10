@@ -11,6 +11,10 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerConfig;
+import javax.ejb.TimerService;
 import javax.inject.Inject;
 import javax.jms.JMSContext;
 import javax.jms.JMSException;
@@ -48,6 +52,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;;
  */
 @Stateless
 public class GameManagementBean implements GameManagementLocal {
+	
 	@Inject
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Game")
@@ -60,32 +65,27 @@ public class GameManagementBean implements GameManagementLocal {
 	private UserManagementLocal playerManagment;
 
 	@EJB
-	private GameValidationLocal gameValidation;
+	GameValidationLocal gameValidation;
 
 	@EJB
 	private CoinManagementLocal coinManagment;
 
 	@EJB
-	private AIManagementLocal aiManagment;
-
-	@EJB
-	private UserManagementLocal userManagement;
+	AIManagementLocal aiManagment;
 
 	@Override
 	public void requestGameMessage(Player p) throws GameNotInitializedException {
 		if (!p.getGame().isInitialized()) {
 			try {
 				Thread.sleep(3000);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (p.getGame().isInitialized()) {
 			sendGameMessage(p);
-		}
-		else {
+		} else {
 			throw new GameNotInitializedException();
 		}
 	}
@@ -202,8 +202,7 @@ public class GameManagementBean implements GameManagementLocal {
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
 			layCardToLiFoStack(player, game, card);
 			setNextPlayer(game);
-		}
-		else {
+		} else {
 			throw new MoveNotValidException();
 		}
 
@@ -234,8 +233,7 @@ public class GameManagementBean implements GameManagementLocal {
 			layCardToLiFoStack(currentPlayer, game, card);
 			currentPlayer.resetRoundStage();
 			setNextPlayer(game);
-		}
-		else {
+		} else {
 			throw new MoveNotValidException();
 		}
 
@@ -244,6 +242,7 @@ public class GameManagementBean implements GameManagementLocal {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagment#initGame(de.
 	 * fh_dortmund.inf.cw.phaseten.server.entities.Game)
 	 */
@@ -340,8 +339,8 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void initNextRound(Game game) {
-		for(Player player : game.getPlayers()) {
-			if(player.getPhase() == Stage.FINISHED) {
+		for (Player player : game.getPlayers()) {
+			if (player.getPhase() == Stage.FINISHED) {
 				game.setFinished();
 				cashPlayerOut(game);
 				return;
@@ -354,13 +353,13 @@ public class GameManagementBean implements GameManagementLocal {
 		initializeFirstPlayer(game);
 		giveCardsToPlayers(game);
 
-		for(Player player : game.getPlayers()) {
+		for (Player player : game.getPlayers()) {
 			player.setPlayerLaidStage(false);
 		}
-		
+
 		if (game.getLiFoStack().showCard().getCardValue() == CardValue.SKIP) {
 			setNextPlayer(game);
-		} else if(game.getCurrentPlayer().getIsAI()) {
+		} else if (game.getCurrentPlayer().getIsAI()) {
 			aiTurn(game, game.getCurrentPlayer());
 			setNextPlayer(game);
 		}
@@ -369,10 +368,10 @@ public class GameManagementBean implements GameManagementLocal {
 	private void cashPlayerOut(Game game) {
 		List<Player> ranking = new LinkedList<>();
 		int i = 0;
-		for(Player player : game.getPlayers()) {
+		for (Player player : game.getPlayers()) {
 			i = 0;
-			for(Player rankedPlayer : ranking) {
-				if(rankedPlayer.getNegativePoints() > player.getNegativePoints() ) {
+			for (Player rankedPlayer : ranking) {
+				if (rankedPlayer.getNegativePoints() > player.getNegativePoints()) {
 					break;
 				}
 				i++;
@@ -384,8 +383,8 @@ public class GameManagementBean implements GameManagementLocal {
 		int divisor = 0;
 		for (i = 1; i < ranking.size(); i++) divisor += i;
 		i = 1;
-		for(Player player : ranking) {
-			if(!player.getIsAI()) {
+		for (Player player : ranking) {
+			if (!player.getIsAI()) {
 				coinManagment.increaseCoins(player.getUser(), coins / divisor * (ranking.size() - i));
 			}
 			i++;
@@ -418,8 +417,7 @@ public class GameManagementBean implements GameManagementLocal {
 
 		if (game.getLastRoundBeginner() == null) {
 			nextPlayer = r.nextInt(players.size());
-		}
-		else {
+		} else {
 			nextPlayer = (players.indexOf(game.getLastRoundBeginner()) + 1) % players.size();
 		}
 
@@ -490,7 +488,6 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 	}
 
-
 	/**
 	 * @author Björn Merschmeier
 	 * @author Marc Mettke
@@ -498,7 +495,7 @@ public class GameManagementBean implements GameManagementLocal {
 	 */
 	private void setNextPlayer(Game game) {
 		// Removed recursion to prevent stack overflow when only ai player are playing
-		while(true) {
+		while (true) {
 			Player nextPlayer = game.getNextPlayer();
 			game.setCurrentPlayer(nextPlayer);
 
@@ -507,12 +504,12 @@ public class GameManagementBean implements GameManagementLocal {
 				countPoints(game);
 				initNextRound(game);
 				break;
-			} else if(nextPlayer.hasSkipCard()) {
+			} else if (nextPlayer.hasSkipCard()) {
 				nextPlayer.removeSkipCard();
 			}
 			// don't end loop as long as ai players are taking their turns
 			// if there are only ai players than this loop will go on till one of them won
-			else if(nextPlayer.getIsAI()) {
+			else if (nextPlayer.getIsAI()) {
 				aiTurn(game, nextPlayer);
 			}
 			// end loop if a valid next player is found (not ai and not skipped)
@@ -542,7 +539,7 @@ public class GameManagementBean implements GameManagementLocal {
 			Collection<DockPile> piles = new ArrayList<>();
 			for(CardsToPileAction action : actions) {
 				// lay out phase
-				if(!action.isDockPileAlreadyExisting()) {
+				if (!action.isDockPileAlreadyExisting()) {
 					DockPile dockPile = action.getDockpile();
 					for(Card card : action.getCards()) {
 						dockPile.addLast(card);
@@ -610,8 +607,7 @@ public class GameManagementBean implements GameManagementLocal {
 
 		try {
 			message.setStringProperty("userNames", playersAndSpectators);
-		}
-		catch (JMSException e) {
+		} catch (JMSException e) {
 			e.printStackTrace();
 		}
 
