@@ -97,7 +97,7 @@ public class GameValidationTest {
 		game.setCurrentPlayer(p1);
 
 		LiFoStack liFo = new LiFoStack();
-		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		liFo.addLast(new Card(Color.GREEN, CardValue.ELEVEN));
 		game.setLiFoStack(liFo);
 
 		// Game is not initialized
@@ -107,11 +107,11 @@ public class GameValidationTest {
 		// Everything ok
 		Assert.assertEquals(true, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
 
-		liFo.addCard(new Card(Color.NONE, CardValue.SKIP));
+		liFo.addLast(new Card(Color.NONE, CardValue.SKIP));
 		// SKIP on top of LiFo Stack
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
 
-		liFo.addCard(new Card(Color.BLUE, CardValue.SEVEN));
+		liFo.addLast(new Card(Color.BLUE, CardValue.SEVEN));
 		p1.addRoundStage();
 		// Player in wrong stage
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
@@ -226,56 +226,56 @@ public class GameValidationTest {
 
 		PullStack pullStack = new PullStack();
 		Card pullStackSeven1 = new Card(Color.BLUE, CardValue.SEVEN, 0);
-		pullStack.addCard(pullStackSeven1);
+		pullStack.addLast(pullStackSeven1);
 		Card pullStackEleven1 = new Card(Color.BLUE, CardValue.ELEVEN, 1);
-		pullStack.addCard(pullStackEleven1);
+		pullStack.addLast(pullStackEleven1);
 		Card pullStackFour1 = new Card(Color.BLUE, CardValue.FOUR, 2);
-		pullStack.addCard(pullStackFour1);
+		pullStack.addLast(pullStackFour1);
 		Card pullStackNine1 = new Card(Color.BLUE, CardValue.NINE,3);
-		pullStack.addCard(pullStackNine1);
+		pullStack.addLast(pullStackNine1);
 		Card pullStackTwelve1 = new Card(Color.BLUE, CardValue.TWELVE, 4);
-		pullStack.addCard(pullStackTwelve1);
+		pullStack.addLast(pullStackTwelve1);
 		Card pullStackTen1 = new Card(Color.BLUE, CardValue.TEN, 5);
-		pullStack.addCard(pullStackTen1);
+		pullStack.addLast(pullStackTen1);
 		Card pullStackWild1 = new Card(Color.NONE, CardValue.WILD,6);
-		pullStack.addCard(pullStackWild1);
+		pullStack.addLast(pullStackWild1);
 		Card pullStackTwo1 = new Card(Color.BLUE, CardValue.TWO,7);
-		pullStack.addCard(pullStackTwo1);
+		pullStack.addLast(pullStackTwo1);
 		Card pullStackFour2 = new Card(Color.BLUE, CardValue.FOUR,8);
-		pullStack.addCard(pullStackFour2);
+		pullStack.addLast(pullStackFour2);
 		Card pullStackThree1 = new Card(Color.BLUE, CardValue.THREE,9);
-		pullStack.addCard(pullStackThree1);
+		pullStack.addLast(pullStackThree1);
 		Card pullStackFive1 = new Card(Color.BLUE, CardValue.FIVE,10);
-		pullStack.addCard(pullStackFive1);
+		pullStack.addLast(pullStackFive1);
 		Card pullStackSix1 = new Card(Color.BLUE, CardValue.SIX,11);
-		pullStack.addCard(pullStackSix1);
+		pullStack.addLast(pullStackSix1);
 		Card pullStackOne1 = new Card(Color.BLUE, CardValue.ONE,12);
-		pullStack.addCard(pullStackOne1);
+		pullStack.addLast(pullStackOne1);
 		Card pullStackThree2 = new Card(Color.BLUE, CardValue.THREE,13);
-		pullStack.addCard(pullStackThree2);
+		pullStack.addLast(pullStackThree2);
 		Card pullStackWild2 = new Card(Color.NONE, CardValue.WILD,14);
-		pullStack.addCard(pullStackWild2);
+		pullStack.addLast(pullStackWild2);
 		Card pullStackSix2 = new Card(Color.BLUE, CardValue.SIX,15);
-		pullStack.addCard(pullStackSix2);
+		pullStack.addLast(pullStackSix2);
 		Card pullStackTwo2 = new Card(Color.BLUE, CardValue.TWO,16);
-		pullStack.addCard(pullStackTwo2);
+		pullStack.addLast(pullStackTwo2);
 		Card pullStackSkip1 = new Card(Color.NONE, CardValue.SKIP,17);
-		pullStack.addCard(pullStackSkip1);
+		pullStack.addLast(pullStackSkip1);
 		Card pullStackSeven2 = new Card(Color.BLUE, CardValue.SEVEN,18);
-		pullStack.addCard(pullStackSeven2);
+		pullStack.addLast(pullStackSeven2);
 		Card pullStackTwo3 = new Card(Color.BLUE, CardValue.TWO,19);
-		pullStack.addCard(pullStackTwo3);
+		pullStack.addLast(pullStackTwo3);
 		Card pullStackTen2 = new Card(Color.BLUE, CardValue.TEN,20);
-		pullStack.addCard(pullStackTen2);
+		pullStack.addLast(pullStackTen2);
 		Card pullStackSeven3 = new Card(Color.BLUE, CardValue.SEVEN,21);
-		pullStack.addCard(pullStackSeven3);
+		pullStack.addLast(pullStackSeven3);
 		Card pullStackSkip2 = new Card(Color.NONE, CardValue.SKIP,22);
-		pullStack.addCard(pullStackSkip2);
+		pullStack.addLast(pullStackSkip2);
 		g.setPullstack(pullStack);
 
 		LiFoStack lifoStack = new LiFoStack();
 		Card lifoStackTwelve = new Card(Color.BLUE, CardValue.TWELVE,23);
-		lifoStack.addCard(lifoStackTwelve);
+		lifoStack.addLast(lifoStackTwelve);
 		g.setLiFoStack(lifoStack);
 		g.setCurrentPlayer(t);
 		g.setInitialized();
@@ -325,15 +325,15 @@ public class GameValidationTest {
 
 		Collection<DockPile> pilesInCollection = new ArrayList<>();
 		DockPile phase1b1 = new SetDockPile(CardValue.NINE);
-		Assert.assertTrue(phase1b1.addCard(bCardNine1));
-		Assert.assertTrue(phase1b1.addCard(bCardNine2));
-		Assert.assertTrue(phase1b1.addCard(tCardNine));
-		Assert.assertFalse(phase1b1.addCard(bCardSeven));
+		Assert.assertTrue(phase1b1.addLast(bCardNine1));
+		Assert.assertTrue(phase1b1.addLast(bCardNine2));
+		Assert.assertTrue(phase1b1.addLast(tCardNine));
+		Assert.assertFalse(phase1b1.addLast(bCardSeven));
 
 		DockPile phase1b2 = new SetDockPile(CardValue.ELEVEN);
-		Assert.assertTrue(phase1b2.addCard(bCardEleven1));
-		Assert.assertTrue(phase1b2.addCard(bCardEleven2));
-		Assert.assertTrue(phase1b2.addCard(bCardWild));
+		Assert.assertTrue(phase1b2.addLast(bCardEleven1));
+		Assert.assertTrue(phase1b2.addLast(bCardEleven2));
+		Assert.assertTrue(phase1b2.addLast(bCardWild));
 
 		pilesInCollection.add(phase1b1);
 		pilesInCollection.add(phase1b2);
@@ -358,7 +358,8 @@ public class GameValidationTest {
 		layCardToLiFoStack(b, bCardTwelve, g, lifoStack);
 		// B: 12 auf LIFO
 
-		Assert.assertFalse(gameValidation.isValidToAddCard(g, t, phase1b1, tCardTwo));
+		Assert.assertFalse(gameValidation.isValidToAddCardFirst(g, t, phase1b1, tCardTwo));
+		Assert.assertFalse(gameValidation.isValidToAddCardLast(g, t, phase1b1, tCardTwo));
 
 		pullFromLiFo(t, g, lifoStack);
 		Assert.assertTrue(t.getPlayerPile().containsCard(bCardTwelve));
@@ -378,14 +379,14 @@ public class GameValidationTest {
 
 		Collection<DockPile> pilesInCollectionT = new ArrayList<>();
 		DockPile phase1t1 = new SetDockPile(CardValue.SEVEN);
-		Assert.assertTrue(phase1t1.addCard(bCardSeven));
-		Assert.assertTrue(phase1t1.addCard(tCardSeven));
-		Assert.assertTrue(phase1t1.addCard(pullStackSeven3));
+		Assert.assertTrue(phase1t1.addLast(bCardSeven));
+		Assert.assertTrue(phase1t1.addLast(tCardSeven));
+		Assert.assertTrue(phase1t1.addLast(pullStackSeven3));
 
 		DockPile phase1t2 = new SetDockPile(CardValue.TWELVE);
-		Assert.assertTrue(phase1t2.addCard(tCardTwelve));
-		Assert.assertTrue(phase1t2.addCard(bCardTwelve));
-		Assert.assertTrue(phase1t2.addCard(lifoStackTwelve));
+		Assert.assertTrue(phase1t2.addLast(tCardTwelve));
+		Assert.assertTrue(phase1t2.addLast(bCardTwelve));
+		Assert.assertTrue(phase1t2.addLast(lifoStackTwelve));
 
 		pilesInCollectionT.add(phase1t1);
 		pilesInCollectionT.add(phase1t2);
@@ -413,8 +414,8 @@ public class GameValidationTest {
 		pullFromPullStack(b, g, pullStack);
 		// B: 7 von Pull
 
-		Assert.assertTrue(gameValidation.isValidToAddCard(g, b, phase1t1, pullStackSeven2));
-		phase1t1.addCard(pullStackSeven2);
+		Assert.assertTrue(gameValidation.isValidToAddCardFirst(g, b, phase1t1, pullStackSeven2));
+		phase1t1.addLast(pullStackSeven2);
 		b.removeCardFromPlayerPile(pullStackSeven2);
 		// B: 7 Anlegen
 
@@ -442,8 +443,8 @@ public class GameValidationTest {
 		pullFromPullStack(t, g, pullStack);
 		// T: W von PULL
 
-		Assert.assertTrue(gameValidation.isValidToAddCard(g, t, phase1b2, pullStackWild2));
-		phase1b2.addCard(pullStackWild2);
+		Assert.assertTrue(gameValidation.isValidToAddCardFirst(g, t, phase1b2, pullStackWild2));
+		phase1b2.addLast(pullStackWild2);
 		t.removeCardFromPlayerPile(pullStackWild2);
 		// T: W an 11 anlegen
 
@@ -495,8 +496,8 @@ public class GameValidationTest {
 		pullFromPullStack(t, g, pullStack);
 		// T: W von PULL
 
-		Assert.assertTrue(gameValidation.isValidToAddCard(g, t, phase1b1, pullStackWild1));
-		phase1b1.addCard(pullStackWild1);
+		Assert.assertTrue(gameValidation.isValidToAddCardFirst(g, t, phase1b1, pullStackWild1));
+		phase1b1.addLast(pullStackWild1);
 		t.removeCardFromPlayerPile(pullStackWild1);
 		// T: W an 9
 
@@ -512,8 +513,8 @@ public class GameValidationTest {
 		pullFromPullStack(t, g, pullStack);
 		// T: 12 von PULL
 
-		Assert.assertTrue(gameValidation.isValidToAddCard(g, t, phase1t2, pullStackTwelve1));
-		phase1t2.addCard(pullStackTwelve1);
+		Assert.assertTrue(gameValidation.isValidToAddCardFirst(g, t, phase1t2, pullStackTwelve1));
+		phase1t2.addLast(pullStackTwelve1);
 		t.removeCardFromPlayerPile(pullStackTwelve1);
 		// T: 12 an 12 anlegen
 
@@ -523,8 +524,8 @@ public class GameValidationTest {
 		pullFromPullStack(b, g, pullStack);
 		// B: 9 von PULL
 
-		Assert.assertTrue(gameValidation.isValidToAddCard(g, b, phase1b1, pullStackNine1));
-		phase1b1.addCard(pullStackNine1);
+		Assert.assertTrue(gameValidation.isValidToAddCardFirst(g, b, phase1b1, pullStackNine1));
+		phase1b1.addLast(pullStackNine1);
 		b.removeCardFromPlayerPile(pullStackNine1);
 		// B: 9 anlegen an 9en
 
@@ -540,8 +541,8 @@ public class GameValidationTest {
 		pullFromPullStack(b, g, pullStack);
 		// B: 11 von PULL
 
-		Assert.assertTrue(gameValidation.isValidToAddCard(g, b, phase1b2, pullStackEleven1));
-		phase1b2.addCard(pullStackEleven1);
+		Assert.assertTrue(gameValidation.isValidToAddCardFirst(g, b, phase1b2, pullStackEleven1));
+		phase1b2.addLast(pullStackEleven1);
 		b.removeCardFromPlayerPile(pullStackEleven1);
 		// B: 11 an 11en anlegen
 
@@ -551,8 +552,8 @@ public class GameValidationTest {
 		pullFromPullStack(t, g, pullStack);
 		// T: 7 von PULL
 
-		Assert.assertTrue(gameValidation.isValidToAddCard(g, t, phase1t1, pullStackSeven1));
-		phase1t1.addCard(pullStackSeven1);
+		Assert.assertTrue(gameValidation.isValidToAddCardFirst(g, t, phase1t1, pullStackSeven1));
+		phase1t1.addLast(pullStackSeven1);
 		t.removeCardFromPlayerPile(pullStackSeven1);
 		// T: 7 an 7en anlegen
 
@@ -574,7 +575,7 @@ public class GameValidationTest {
 		game.setCurrentPlayer(p1);
 
 		LiFoStack liFo = new LiFoStack();
-		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		liFo.addLast(new Card(Color.GREEN, CardValue.ELEVEN));
 		game.setLiFoStack(liFo);
 
 		// Game is not initialized
@@ -584,11 +585,11 @@ public class GameValidationTest {
 		// Everything ok
 		Assert.assertEquals(true, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
 
-		liFo.addCard(new Card(Color.NONE, CardValue.SKIP));
+		liFo.addLast(new Card(Color.NONE, CardValue.SKIP));
 		// SKIP on top of LiFo Stack
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
 
-		liFo.addCard(new Card(Color.BLUE, CardValue.SEVEN));
+		liFo.addLast(new Card(Color.BLUE, CardValue.SEVEN));
 
 		pullFromLiFo(p1, game, liFo);
 		// Player in wrong stage
@@ -615,7 +616,7 @@ public class GameValidationTest {
 		game.setCurrentPlayer(p1);
 
 		LiFoStack liFo = new LiFoStack();
-		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		liFo.addLast(new Card(Color.GREEN, CardValue.ELEVEN));
 		game.setLiFoStack(liFo);
 
 		// Game is not initialized
@@ -634,75 +635,77 @@ public class GameValidationTest {
 		// Player has skip card
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromPullStack(game, p1));
 	}
-	
+
 	@Test
 	public void testPileIsFull() throws Exception {
 		SequenceDockPile dockPile = new SequenceDockPile();
-		
-		dockPile.addCard(new Card(Color.BLUE, CardValue.ONE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TWO));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.THREE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.FOUR));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.FIVE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.SIX));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.SEVEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.EIGHT));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.NINE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.ELEVEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TWELVE));
-		
-		assertEquals(true, gameValidation.pileIsFull(dockPile));
-		
+
+		dockPile.addLast(new Card(Color.BLUE, CardValue.ONE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TWO));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.THREE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.FOUR));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.FIVE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.SIX));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.SEVEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.EIGHT));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.NINE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.ELEVEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TWELVE));
+
+		assertEquals(true, pileIsFull(dockPile));
+
 		dockPile = new SequenceDockPile();
-		dockPile.addCard(new Card(Color.BLUE, CardValue.ONE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TWO));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.FOUR));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.FIVE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.SIX));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.EIGHT));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.NINE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.ELEVEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TWELVE));
-		
-		assertEquals(true, gameValidation.pileIsFull(dockPile));
-		
+		dockPile.addLast(new Card(Color.BLUE, CardValue.ONE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TWO));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.FOUR));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.FIVE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.SIX));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.EIGHT));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.NINE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.ELEVEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TWELVE));
+
+		assertEquals(true, pileIsFull(dockPile));
+
 		dockPile = new SequenceDockPile();
-		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TWO));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.FOUR));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.FIVE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.SIX));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.EIGHT));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.NINE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.ELEVEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TWELVE));
-		
-		//TODO: Fails because addCard Method in SequenceDockPile Class is not working correctly
-//		assertEquals(true, gameValidation.pileIsFull(dockPile));
-		
+		dockPile.addLast(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TWO));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.FOUR));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.FIVE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.SIX));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.EIGHT));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.NINE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.ELEVEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TWELVE));
+
+		assertEquals(true, pileIsFull(dockPile));
+
 		dockPile = new SequenceDockPile();
-		dockPile.addCard(new Card(Color.BLUE, CardValue.ONE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TWO));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.FOUR));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.FIVE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.SIX));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.EIGHT));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.NINE));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.TEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.ELEVEN));
-		dockPile.addCard(new Card(Color.BLUE, CardValue.WILD));
-		
-		//TODO: Fails because addCard Method in SequenceDockPile Class is not working correctly
-		assertEquals(true, gameValidation.pileIsFull(dockPile));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.ONE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TWO));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.FOUR));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.FIVE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.SIX));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.WILD));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.EIGHT));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.NINE));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.TEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.ELEVEN));
+		dockPile.addLast(new Card(Color.BLUE, CardValue.WILD));
+
+		assertEquals(true, pileIsFull(dockPile));
+	}
+
+	private boolean pileIsFull(SequenceDockPile dockPile) {
+		return dockPile.getCopyOfCardsList().size() == 12;
 	}
 
 	@Test
@@ -722,7 +725,7 @@ public class GameValidationTest {
 		game.setCurrentPlayer(p1);
 
 		LiFoStack liFo = new LiFoStack();
-		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		liFo.addLast(new Card(Color.GREEN, CardValue.ELEVEN));
 		game.setLiFoStack(liFo);
 
 		ArrayList<DockPile> piles = new ArrayList<>();
@@ -756,7 +759,7 @@ public class GameValidationTest {
 		game.setCurrentPlayer(p1);
 
 		LiFoStack liFo = new LiFoStack();
-		liFo.addCard(new Card(Color.GREEN, CardValue.ELEVEN));
+		liFo.addLast(new Card(Color.GREEN, CardValue.ELEVEN));
 		game.setLiFoStack(liFo);
 
 		// Game is not initialized
@@ -803,9 +806,7 @@ public class GameValidationTest {
 		p1.addCardToPlayerPile(otherCard);
 		Assert.assertEquals(true, gameValidation.isValidLaySkipCard(p1, p2, game));
 	}
-	
 
-	// TODO - BM - 13.01.2018 - Es müssen noch die einzelnen Phasen getestet werden
 
 	/**
 	 * TODO Add JavaDoc
@@ -819,14 +820,13 @@ public class GameValidationTest {
 	private void layCardToLiFoStack(Player player, Card card, Game g, LiFoStack lifoStack) {
 		Assert.assertTrue(gameValidation.isValidPushCardToLiFoStack(g, player, card));
 		player.removeCardFromPlayerPile(card);
-		lifoStack.addCard(card);
+		lifoStack.addLast(card);
 		player.addRoundStage();
 		Assert.assertEquals(RoundStage.FINISHED, player.getRoundStage());
 		setNextPlayer(g);
 	}
 
 	/**
-	 * TODO Add JavaDoc
 	 *
 	 * @author Tim Prange
 	 * @param player
@@ -841,7 +841,6 @@ public class GameValidationTest {
 	}
 
 	/**
-	 * TODO Add JavaDoc
 	 *
 	 * @author Tim Prange
 	 */
@@ -871,14 +870,13 @@ public class GameValidationTest {
 	private void laySkipCard(Player player, Card card, Player destination, Game g, LiFoStack lifoStack) {
 		Assert.assertTrue(gameValidation.isValidLaySkipCard(player, destination, g));
 		player.getPlayerPile().removeCard(card);
-		lifoStack.addCard(card);
+		lifoStack.addLast(card);
 		destination.givePlayerSkipCard();
 		player.addRoundStage();
 		setNextPlayer(g);
 	}
 
 	/**
-	 * TODO Add JavaDoc
 	 *
 	 * @author Tim Prange
 	 * @param t

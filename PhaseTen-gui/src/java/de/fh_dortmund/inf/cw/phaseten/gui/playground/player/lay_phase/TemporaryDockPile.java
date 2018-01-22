@@ -28,7 +28,13 @@ public class TemporaryDockPile extends DockPile{
 	}
 
 	@Override
-	public boolean canAddCard(Card card)
+	public boolean canAddLastCard(Card card)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canAddFirstCard(Card card)
 	{
 		return true;
 	}

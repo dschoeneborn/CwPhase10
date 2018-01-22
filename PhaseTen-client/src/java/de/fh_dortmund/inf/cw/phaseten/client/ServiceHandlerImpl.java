@@ -99,10 +99,10 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	@Override
 	public void register(String username, String password) throws UsernameAlreadyTakenException {
 		userSessionRemote.register(username, password);
-		
+
 		createNewGameQueueConsumerWithMessageSelector();
 	}
-	
+
 	@Override
 	public void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException
 	{
@@ -149,9 +149,9 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void addToPileOnTable(long cardId, long dockPileId)
+	public void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachToFront)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		userSessionRemote.addToPileOnTable(cardId, dockPileId);
+		userSessionRemote.addToPileOnTable(cardId, dockPileId, tryToAttachToFront);
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 
 	@Override
 	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
-			NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
+	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
 		userSessionRemote.laySkipCardForPlayer(destinationPlayerId, cardId);
 	}
 
@@ -236,6 +236,17 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 		}
 	}
 
+	@Override
+	public void addAI() throws NoFreeSlotException {
+		userSessionRemote.addAI();
+	}
+
+	@Override
+	public Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException
+	{
+		return userSessionRemote.getDockPileTypesForPlayer();
+	}
+
 	/**
 	 * @author Björn Merschmeier
 	 */
@@ -250,10 +261,5 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 		{
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void addAI() throws NoFreeSlotException {
-		userSessionRemote.addAI();
 	}
 }

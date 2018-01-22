@@ -53,10 +53,10 @@ public class AIManagmentTest {
 	@Test
 	public void testTakeCard() throws Exception {	
 		PlayerPile playerPile = new PlayerPile();
-		playerPile.addCard(new Card(Color.GREEN, CardValue.SEVEN));
+		playerPile.addLast(new Card(Color.GREEN, CardValue.SEVEN));
 		Player player = new Player("testPlayer");
 	    LiFoStack discardPile = new LiFoStack();
-	    discardPile.addCard(new Card(Color.GREEN, CardValue.EIGHT));
+	    discardPile.addLast(new Card(Color.GREEN, CardValue.EIGHT));
 		Game game = new Game(new HashSet<>(), new HashSet<>(), new PullStack(), discardPile);
 		Assert.assertEquals(TakeCardAction.DISCARD_PILE, this.aiManagment.takeCard(player, game));
 	}
@@ -64,10 +64,10 @@ public class AIManagmentTest {
 	@Test
 	public void testCardsToPile() throws Exception {	
 		PlayerPile playerPile = new PlayerPile();
-		playerPile.addCard(new Card(Color.GREEN, CardValue.SEVEN));
+		playerPile.addLast(new Card(Color.GREEN, CardValue.SEVEN));
 		Player player = new Player("testPlayer");
 	    LiFoStack discardPile = new LiFoStack();
-	    discardPile.addCard(new Card(Color.GREEN, CardValue.EIGHT));
+	    discardPile.addLast(new Card(Color.GREEN, CardValue.EIGHT));
 		Game game = new Game(new HashSet<>(), new HashSet<>(), new PullStack(), discardPile);
 		Assert.assertEquals(new ArrayList<>(), this.aiManagment.cardsToPile(player, game));
 	}

@@ -26,7 +26,7 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 	private static final long serialVersionUID = -8685207683648562278L;
 
 	protected TopRowPane topRowPane;
-	protected PublicCardStackPane publicCardStackPane;	
+	protected PublicCardStackPane publicCardStackPane;
 	protected PlayerCardsPane playerCardsPane;
 	protected StatusPanel statusPanel = new StatusPanel();
 
@@ -34,11 +34,11 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 		super("Phaseten | Game", serviceHandler, guiManager);
 		this.playerCardsPane =  new PlayerCardsPane(serviceHandler);
 		this.publicCardStackPane = new PublicCardStackPane(this.serviceHandler);
-		this.topRowPane = new TopRowPane(this.serviceHandler);		
+		this.topRowPane = new TopRowPane(this.serviceHandler);
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		this.add(this.topRowPane);
 		this.add(Box.createVerticalGlue());
-		this.add(this.publicCardStackPane);		
+		this.add(this.publicCardStackPane);
 		this.add(this.playerCardsPane);
 		this.add(this.statusPanel);
 		this.setResizable(false);
@@ -61,7 +61,7 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 			if(game.isFinished()) {
 				getGuiManager().showLobbyGui();
 			}
-			
+
 			this.topRowPane.gameDataUpdated(game);
 			this.publicCardStackPane.gameDataUpdated(game);
 			this.pack();

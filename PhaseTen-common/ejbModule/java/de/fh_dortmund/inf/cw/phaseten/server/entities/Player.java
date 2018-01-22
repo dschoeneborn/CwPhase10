@@ -119,7 +119,7 @@ public class Player implements Serializable {
 	}
 
 	public void addCardToPlayerPile(Card c) {
-		playerPile.addCard(c);
+		playerPile.addLast(c);
 	}
 
 	public void removeCardFromPlayerPile(Card c) throws NoSuchElementException {

@@ -7,7 +7,7 @@ import javax.interceptor.InvocationContext;
 
 /**
  * Filtert beim Registrieren und/oder einloggen Schimpfwörter heraus.
- * 
+ *
  * @author Daniela Kaiser
  *
  */
@@ -16,25 +16,27 @@ public class FilterUsermanagement {
 
 	@AroundInvoke
 	public Object filter(InvocationContext ctx) throws Exception {
-		insults = new LinkedList<String>();
+		insults = new LinkedList<>();
 		insults.add("schimpfwort");
 		insults.add("fieses schimpfwort");
 		insults.add("ganz fieses schimpfwort");
 
 		Object[] params = ctx.getParameters();
-		for (int i = 0; i < params.length; i++) {
-			if (params[i] instanceof String) {
-				params[i] = format((String) params[i]);
+		if(params != null)
+		{
+			for (int i = 0; i < params.length; i++) {
+				if (params[i] instanceof String) {
+					params[i] = format((String) params[i]);
+				}
 			}
+			ctx.setParameters(params);
 		}
-
-		ctx.setParameters(params);
 		return ctx.proceed();
 	}
 
 	/**
 	 * filtert Schimpfwörter.
-	 * 
+	 *
 	 * @param text
 	 * @return text
 	 */

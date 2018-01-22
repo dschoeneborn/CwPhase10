@@ -28,7 +28,7 @@ public class SetDockPile extends DockPile {
 	@Enumerated(EnumType.ORDINAL)
 	private CardValue cardValue;
 
-	private SetDockPile() {
+	public SetDockPile() {
 		super();
 	}
 
@@ -44,9 +44,69 @@ public class SetDockPile extends DockPile {
 		return cardValue;
 	}
 
+
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
-	public boolean canAddCard(Card card)
+	public boolean addFirst(Card c)
 	{
-		return card.getCardValue().equals(this.cardValue) || card.getCardValue().equals(CardValue.WILD);
+		boolean addedCard = super.addFirst(c);
+
+		if(addedCard && this.cardValue == null && c.getCardValue() != CardValue.WILD)
+		{
+			this.cardValue = c.getCardValue();
+		}
+
+		return addedCard;
 	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean addLast(Card c)
+	{
+		boolean addedCard = super.addLast(c);
+
+		if(addedCard && this.cardValue == null && c.getCardValue() != CardValue.WILD)
+		{
+			this.cardValue = c.getCardValue();
+		}
+
+		return addedCard;
+	}
+
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddLastCard(Card card)
+	{
+		return canAddCard(card);
+	}
+
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddFirstCard(Card card)
+	{
+		return canAddCard(card);
+	}
+
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	private boolean canAddCard(Card card)
+	{
+		return card.getCardValue() != CardValue.SKIP
+				&& ((this.cardValue != null && card.getCardValue() == this.cardValue)
+						|| card.getCardValue() == CardValue.WILD
+						|| this.cardValue == null);
+	}
+
 }

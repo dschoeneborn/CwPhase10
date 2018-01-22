@@ -3,15 +3,20 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
@@ -189,9 +194,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void addToPileOnTable(long cardId, long dockPileId)
+	public void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachToFront)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		gameManagement.addToPileOnTable(getOrCreateCurrentPlayer(), cardId, dockPileId);
+		gameManagement.addToPileOnTable(getOrCreateCurrentPlayer(), cardId, dockPileId, tryToAttachToFront);
 
 	}
 
@@ -367,8 +372,42 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	}
 
 	/**
-	 * Returns the current Player. If a current Player does not exist, a new one
-	 * will be created and returned.
+	 * @author Björn Merschmeier
+	 * @throws NotLoggedInException
+	 */
+	@Override
+	public Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException {
+		List<Class<? extends DockPile>> result = new ArrayList<>();
+
+		Player p = getOrCreateCurrentPlayer();
+
+		switch(p.getPhase())
+		{
+		case TWO_TRIPLES: result.add(SetDockPile.class); result.add(SetDockPile.class); break;
+		case TRIPLE_AND_SEQUENCE_OF_FOUR: result.add(SetDockPile.class); result.add(SequenceDockPile.class); break;
+		case QUADRUPLE_AND_SEQUENCE_OF_FOUR: result.add(SetDockPile.class); result.add(SequenceDockPile.class); break;
+		case SEQUENCE_OF_SEVEN: result.add(SequenceDockPile.class); break;
+		case SEQUENCE_OF_EIGHT: result.add(SequenceDockPile.class); break;
+		case SEQUENCE_OF_NINE: result.add(SequenceDockPile.class); break;
+		case TWO_QUADRUPLES: result.add(SetDockPile.class); result.add(SetDockPile.class); break;
+		case SEVEN_OF_ONE_COLOR: result.add(ColorDockPile.class); break;
+		case QUINTUPLE_AND_TWIN: result.add(SetDockPile.class); result.add(SetDockPile.class); break;
+		case QUINTUPLE_AND_TRIPLE: result.add(SetDockPile.class); result.add(SetDockPile.class); break;
+		default:
+			break;
+		}
+
+		return result;
+	}
+
+	@Override
+	public void addAI() throws NoFreeSlotException {
+		this.lobbyManagement.addAI();
+	}
+
+	/**
+	 * TODO Add JavaDoc
+	 * Returns the current Player. If a current Player does not exist, a new one will be created and returned.
 	 *
 	 * @author Tim Prange
 	 * @return current or new Player
@@ -390,11 +429,6 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	private Spectator getOrCreateCurrentSpectator() {
 		return userManagement.getOrCreateSpectator(currentUser);
-	}
-
-	@Override
-	public void addAI() throws NoFreeSlotException {
-		this.lobbyManagement.addAI();
 	}
 
 }

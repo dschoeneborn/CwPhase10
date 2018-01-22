@@ -190,7 +190,7 @@ public class GameManagementTest {
 
 		this.latchPlayer1 = new CountDownLatch(1);
 		this.latchGame1 = new CountDownLatch(1);
-		this.serviceHandler1.addToPileOnTable(card.getId(), dockPile.getId());
+		this.serviceHandler1.addToPileOnTable(card.getId(), dockPile.getId(), false);
 		this.latchPlayer1.await(30, TimeUnit.SECONDS);
 		this.latchGame1.await(30, TimeUnit.SECONDS);
 
@@ -209,9 +209,9 @@ public class GameManagementTest {
 		Collection<DockPile> piles = new ArrayList<>();
 
 		DockPile cards = new SetDockPile(CardValue.ONE);
-		cards.addCard(new Card(Color.BLUE, CardValue.ONE));
-		cards.addCard(new Card(Color.BLUE, CardValue.ONE));
-		cards.addCard(new Card(Color.BLUE, CardValue.ONE));
+		cards.addLast(new Card(Color.BLUE, CardValue.ONE));
+		cards.addLast(new Card(Color.BLUE, CardValue.ONE));
+		cards.addLast(new Card(Color.BLUE, CardValue.ONE));
 
 		piles.add(cards);
 

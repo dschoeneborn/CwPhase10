@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
@@ -8,8 +8,17 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities;
  * @author Björn Merschmeier
  */
 public enum Stage {
-	TWO_TRIPLES(1), TRIPLE_AND_SEQUENCE_OF_FOUR(2), QUADRUPLE_AND_SEQUENCE_OF_FOUR(3), SEQUENCE_OF_SEVEN(4), SEQUENCE_OF_EIGHT(5),
-	SEQUENCE_OF_NINE(6), TWO_QUADRUPLES(7), SEVEN_OF_ONE_COLOR(8), QUINTUPLE_AND_TWIN(9), QUINTUPLE_AND_TRIPLE(10), FINISHED(11);
+	TWO_TRIPLES(1),
+	TRIPLE_AND_SEQUENCE_OF_FOUR(2),
+	QUADRUPLE_AND_SEQUENCE_OF_FOUR(3),
+	SEQUENCE_OF_SEVEN(4),
+	SEQUENCE_OF_EIGHT(5),
+	SEQUENCE_OF_NINE(6),
+	TWO_QUADRUPLES(7),
+	SEVEN_OF_ONE_COLOR(8),
+	QUINTUPLE_AND_TWIN(9),
+	QUINTUPLE_AND_TRIPLE(10),
+	FINISHED(11);
 	private int value;
 
 	private Stage(int value) {

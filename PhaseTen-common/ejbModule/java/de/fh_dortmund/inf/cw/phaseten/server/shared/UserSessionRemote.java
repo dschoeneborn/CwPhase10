@@ -47,7 +47,7 @@ public interface UserSessionRemote extends UserSession {
 	 * @author Tim Prange
 	 */
 	void enterLobbyAsSpectator() throws NotLoggedInException;
-	
+
 	void addAI() throws NoFreeSlotException;
 
 	/**
@@ -96,7 +96,7 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
 	 * 
 	 */
-	void addToPileOnTable(long cardId, long dockPileId)
+	void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachToFront)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	/**
@@ -138,7 +138,7 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws PlayerDoesNotExistsException  If the player does not exist.
 	 */
 	void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException, NotLoggedInException,
-			PlayerDoesNotExistsException, GameNotInitializedException;
+	PlayerDoesNotExistsException, GameNotInitializedException;
 
 	/**
 	 * Player exits the lobby.
@@ -212,5 +212,7 @@ public interface UserSessionRemote extends UserSession {
 	Collection<Card> getCards() throws NotLoggedInException;
 
 	void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException;
+
+	Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException;
 
 }

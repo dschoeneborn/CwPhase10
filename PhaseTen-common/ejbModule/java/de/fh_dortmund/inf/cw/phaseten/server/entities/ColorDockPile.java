@@ -29,7 +29,7 @@ public class ColorDockPile extends DockPile {
 	@Basic(optional = false)
 	private Color color;
 
-	private ColorDockPile() {
+	public ColorDockPile() {
 		super();
 	}
 
@@ -42,21 +42,71 @@ public class ColorDockPile extends DockPile {
 		return this.color;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile#dock(de.fh_dortmund.
-	 * inf.cw.phaseten.server.entities.Card)
+	/**
+	 * @author Björn Merschmeier
 	 */
+	@Override
+	public boolean addFirst(Card c)
+	{
+		boolean addedCard = super.addFirst(c);
+
+		setCardColorIfNotSet(c, addedCard);
+
+		return addedCard;
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean addLast(Card c)
+	{
+		boolean addedCard = super.addLast(c);
+
+		setCardColorIfNotSet(c, addedCard);
+
+		return addedCard;
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddLastCard(Card card) {
+		return canAddCard(card);
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddFirstCard(Card card) {
+		return canAddCard(card);
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 * @param c
+	 * @param addedCard
+	 */
+	private void setCardColorIfNotSet(Card c, boolean addedCard)
+	{
+		if(addedCard && this.color == null && c.getColor() != Color.NONE)
+		{
+			this.color = c.getColor();
+		}
+	}
+
 	/**
 	 * @author Björn Merschmeier
 	 * @author Robin Harbecke
 	 */
-	@Override
-	public boolean canAddCard(Card card)
+	private boolean canAddCard(Card card)
 	{
-		return card.getColor().equals(this.color) || card.getCardValue() == CardValue.WILD;
+		return (this.color == null
+				|| card.getColor().equals(this.color)
+				|| card.getCardValue() == CardValue.WILD)
+				&& card.getCardValue() != CardValue.SKIP;
 	}
 
 }

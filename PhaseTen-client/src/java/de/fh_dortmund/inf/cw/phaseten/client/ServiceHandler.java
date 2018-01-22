@@ -32,7 +32,7 @@ public interface ServiceHandler extends MessageListener {
 	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException;
 
 	void enterLobbyAsSpectator() throws NotLoggedInException;
-	
+
 	void addAI() throws NoFreeSlotException;
 
 	void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException;
@@ -47,7 +47,7 @@ public interface ServiceHandler extends MessageListener {
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException, NotLoggedInException,
-			PlayerDoesNotExistsException, GameNotInitializedException;
+	PlayerDoesNotExistsException, GameNotInitializedException;
 
 	void register(String username, String password) throws UsernameAlreadyTakenException;
 
@@ -71,11 +71,13 @@ public interface ServiceHandler extends MessageListener {
 
 	Collection<Card> getCards() throws NotLoggedInException;
 
-	void addToPileOnTable(long cardId, long dockPileId)
+	void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachFront)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	void layCardToLiFoStack(long cardId)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
 
 	void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException;
+
+	Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException;
 }

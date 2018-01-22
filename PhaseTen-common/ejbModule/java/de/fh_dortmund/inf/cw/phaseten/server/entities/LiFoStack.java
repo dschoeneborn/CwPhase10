@@ -46,9 +46,21 @@ public class LiFoStack extends Stack {
 		return result;
 	}
 
+	/**
+	 * @author Björn Merschmeier
+	 */
 	@Override
-	public boolean canAddCard(Card card)
+	public boolean canAddLastCard(Card card)
 	{
 		return true;
+	}
+
+	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddFirstCard(Card card)
+	{
+		return false;
 	}
 }
