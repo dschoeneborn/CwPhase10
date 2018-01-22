@@ -40,6 +40,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Björn Merschmeier
+ * @author Sebastian Seitz
  */
 @Stateful
 public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
@@ -393,9 +394,10 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/**
 	 * TODO Add JavaDoc
+	 * Returns the current Player. If a current Player does not exist, a new one will be created and returned.
 	 *
 	 * @author Tim Prange
-	 * @return
+	 * @return current or new Player
 	 */
 	private Player getOrCreateCurrentPlayer() throws NotLoggedInException
 	{
@@ -410,10 +412,10 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	}
 
 	/**
-	 * TODO Add JavaDoc
+	 * Returns the current Spectator. If a current Spectator does not exist, a new one will be created and returned.
 	 *
 	 * @author Tim Prange
-	 * @return
+	 * @return current or new Spectator
 	 */
 	private Spectator getOrCreateCurrentSpectator() {
 		return userManagement.getOrCreateSpectator(currentUser);

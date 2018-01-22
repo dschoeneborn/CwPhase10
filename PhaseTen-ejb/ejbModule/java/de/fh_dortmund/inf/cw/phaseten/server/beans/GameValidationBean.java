@@ -2,6 +2,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -25,11 +26,13 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationRemote;
  *
  * @author Björn Merschmeier
  * @author Tim Prange
+ * @author Dennis Schöneborn
  */
 @Stateless
 public class GameValidationBean implements GameValidationLocal, GameValidationRemote {
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
 	 * isValidDrawCardFromLiFoStack(de.fh_dortmund.inf.cw.phaseten.server.entities.
 	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
@@ -41,10 +44,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	public boolean isValidDrawCardFromLiFoStack(Game g, Player player) {
 		boolean pullCardAllowed = true;
 
-		if (!g.isInitialized()
-				|| g.getLiFoStack().showCard().getCardValue() == CardValue.SKIP
-				|| !playerIsCurrentPlayer(g, player)
-				|| player.getRoundStage() != RoundStage.PULL) {
+		if (!g.isInitialized() || g.getLiFoStack().showCard().getCardValue() == CardValue.SKIP
+				|| !playerIsCurrentPlayer(g, player) || player.getRoundStage() != RoundStage.PULL) {
 			pullCardAllowed = false;
 		}
 
@@ -53,6 +54,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
 	 * isValidPushCardToLiFoStack(de.fh_dortmund.inf.cw.phaseten.server.entities.
 	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player,
@@ -65,14 +67,11 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	public boolean isValidPushCardToLiFoStack(Game g, Player player, Card c) {
 		boolean pushCardToLiFoStackAllowed = false;
 
-		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, player)
+		if (g.isInitialized() && playerIsCurrentPlayer(g, player)
 				&& (player.getRoundStage() == RoundStage.PUT_AND_PUSH
-				|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP))
+						|| (player.getRoundStage() == RoundStage.PULL && c.getCardValue() == CardValue.SKIP))
 				&& playerHasCard(c, player)
-				&& (!player.hasSkipCard()
-						|| (player.hasSkipCard() && c.getCardValue() == CardValue.SKIP)))
-		{
+				&& (!player.hasSkipCard() || (player.hasSkipCard() && c.getCardValue() == CardValue.SKIP))) {
 			pushCardToLiFoStackAllowed = true;
 		}
 
@@ -81,6 +80,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
 	 * isValidDrawCardFromPullStack(de.fh_dortmund.inf.cw.phaseten.server.entities.
 	 * Game, de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
@@ -94,9 +94,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Player currentPlayer = g.getCurrentPlayer();
 
-		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, player)
-				&& currentPlayer.getRoundStage() == RoundStage.PULL
+		if (g.isInitialized() && playerIsCurrentPlayer(g, player) && currentPlayer.getRoundStage() == RoundStage.PULL
 				&& !currentPlayer.hasSkipCard()) {
 			pullCardAllowed = true;
 		}
@@ -106,6 +104,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
 	 * isValidLayStageToTable(de.fh_dortmund.inf.cw.phaseten.server.entities.Game,
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Player, java.util.Collection)
@@ -122,11 +121,9 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 			cardsInPiles.addAll(pile.getCopyOfCardsList());
 		}
 
-		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, p)
-				&& !p.hasSkipCard()
-				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& !p.playerLaidStage() && playerHasCards(cardsInPiles, p)) {
+		if (g.isInitialized() && playerIsCurrentPlayer(g, p) && !p.hasSkipCard()
+				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH && !p.playerLaidStage()
+				&& playerHasCards(cardsInPiles, p)) {
 			switch (p.getPhase()) {
 			case TWO_TRIPLES:
 				layStageDownAllowed = areCardsReadyForPhase1(piles);
@@ -168,6 +165,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#isValidToAddCard(
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Game,
@@ -182,13 +180,9 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	public boolean isValidToAddCardFirst(Game g, Player p, Pile pile, Card c) {
 		boolean addCardAllowed = false;
 
-		if (g.isInitialized()
-				&& playerIsCurrentPlayer(g, p)
-				&& !p.hasSkipCard()
-				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& p.getPlayerPile().getCopyOfCardsList().size() > 1
-				&& p.playerLaidStage() && playerHasCard(c, p))
-		{
+		if (g.isInitialized() && playerIsCurrentPlayer(g, p) && !p.hasSkipCard()
+				&& p.getRoundStage() == RoundStage.PUT_AND_PUSH && p.getPlayerPile().getCopyOfCardsList().size() > 1
+				&& p.playerLaidStage() && playerHasCard(c, p)) {
 			if(pile instanceof DockPile)
 			{
 				DockPile dockPile = (DockPile) pile;
@@ -225,6 +219,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
 	 * isValidLaySkipCard(de.fh_dortmund.inf.cw.phaseten.server.entities.Player,
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Player,
@@ -240,13 +235,9 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 		Card skipCard = new Card(Color.NONE, CardValue.SKIP);
 
-		if (g.isInitialized()
-				&& playerHasCard(skipCard, currentPlayer)
-				&& currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH
-				&& playerIsCurrentPlayer(g, currentPlayer)
-				&& !currentPlayer.hasSkipCard()
-				&& !destinationPlayer.hasSkipCard()
-				&& !destinationPlayer.hasNoCards()
+		if (g.isInitialized() && playerHasCard(skipCard, currentPlayer)
+				&& currentPlayer.getRoundStage() == RoundStage.PUT_AND_PUSH && playerIsCurrentPlayer(g, currentPlayer)
+				&& !currentPlayer.hasSkipCard() && !destinationPlayer.hasSkipCard() && !destinationPlayer.hasNoCards()
 				&& currentPlayer.getPlayerPile().getCopyOfCardsList().size() > 1) {
 			canLaySkipCard = true;
 		}
@@ -256,6 +247,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#hasEnoughPlayers(
 	 * java.util.List)
@@ -271,6 +263,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidation#
 	 * cantHaveMorePlayers(java.util.List)
 	 */
@@ -288,8 +281,10 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 *
 	 * @author Tim Prange
 	 * @author Björn Merschmeier
-	 * @param cards The cards the player should have
-	 * @param p the player
+	 * @param cards
+	 *            The cards the player should have
+	 * @param p
+	 *            the player
 	 * @return userHasCards
 	 */
 	private boolean playerHasCards(List<Card> cards, Player p) {
@@ -309,8 +304,10 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 *
 	 * @author Tim Prange
 	 * @author Björn Merschmeier
-	 * @param card the player should have
-	 * @param p the player that should have the card
+	 * @param card
+	 *            the player should have
+	 * @param p
+	 *            the player that should have the card
 	 * @return playerHasCard
 	 */
 	private boolean playerHasCard(Card card, Player p) {
@@ -330,7 +327,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 1
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 1
+	 * @param piles
+	 *            that should represent phase 1
 	 * @return cardReadyForPhase1
 	 */
 	private boolean areCardsReadyForPhase1(List<DockPile> piles) {
@@ -341,7 +339,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 2
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 2
+	 * @param piles
+	 *            that should represent phase 2
 	 * @return cardReadyForPhase2
 	 */
 	private boolean areCardsReadyForPhase2(List<DockPile> piles) {
@@ -353,7 +352,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 3
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 3
+	 * @param piles
+	 *            that should represent phase 3
 	 * @return cardReadyForPhase3
 	 */
 	private boolean areCardsReadyForPhase3(List<DockPile> piles) {
@@ -365,7 +365,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 4
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 4
+	 * @param piles
+	 *            that should represent phase 4
 	 * @return cardReadyForPhase4
 	 */
 	private boolean areCardsReadyForPhase4(List<DockPile> piles) {
@@ -376,7 +377,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 5
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 5
+	 * @param piles
+	 *            that should represent phase 5
 	 * @return cardReadyForPhase5
 	 */
 	private boolean areCardsReadyForPhase5(List<DockPile> piles) {
@@ -387,7 +389,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 6
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 6
+	 * @param piles
+	 *            that should represent phase 6
 	 * @return cardReadyForPhase6
 	 */
 	private boolean areCardsReadyForPhase6(List<DockPile> piles) {
@@ -398,7 +401,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 7
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 7
+	 * @param piles
+	 *            that should represent phase 7
 	 * @return cardReadyForPhase7
 	 */
 	private boolean areCardsReadyForPhase7(List<DockPile> piles) {
@@ -409,18 +413,21 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 8
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 8
+	 * @param piles
+	 *            that should represent phase 8
 	 * @return cardReadyorPhase8
 	 */
 	private boolean areCardsReadyForPhase8(List<DockPile> piles) {
-		return (piles.size() == 1 && piles.get(0) instanceof SetDockPile && piles.get(0).getCopyOfCardsList().size() == 7);
+		return (piles.size() == 1 && piles.get(0) instanceof SetDockPile
+				&& piles.get(0).getCopyOfCardsList().size() == 7);
 	}
 
 	/**
 	 * Validated if the card are ready for phase 9
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 9
+	 * @param piles
+	 *            that should represent phase 9
 	 * @return cardReadyForPhase9
 	 */
 	private boolean areCardsReadyForPhase9(List<DockPile> piles) {
@@ -432,7 +439,8 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validated if the card are ready for phase 10
 	 *
 	 * @author Björn Merschmeier
-	 * @param piles that should represent phase 10
+	 * @param piles
+	 *            that should represent phase 10
 	 * @return cardReadyForPhase10
 	 */
 	private boolean areCardsReadyForPhase10(List<DockPile> piles) {
@@ -444,8 +452,10 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validates if the given pile represents a set of a given size
 	 *
 	 * @author Björn Merschmeier
-	 * @param pile the pile to check
-	 * @param i the size of the pile
+	 * @param pile
+	 *            the pile to check
+	 * @param i
+	 *            the size of the pile
 	 * @return pileIsSet
 	 */
 	private boolean pileIsSet(DockPile pile, int i) {
@@ -456,8 +466,10 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * validates if the given pile represents a sequence of a given size
 	 *
 	 * @author Björn Merschmeier
-	 * @param pile the pile to check
-	 * @param i the size of the pile
+	 * @param pile
+	 *            the pile to check
+	 * @param i
+	 *            the size of the pile
 	 * @return pileIsSequence
 	 */
 	private boolean pileIsSequence(DockPile pile, int i) {
@@ -468,8 +480,10 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * Validates if the given player is the current player in a given game
 	 *
 	 * @author Björn Merschmeier
-	 * @param g The game to check
-	 * @param player The player who wants to draw a card
+	 * @param g
+	 *            The game to check
+	 * @param player
+	 *            The player who wants to draw a card
 	 * @return playerIsCurrentPlayer
 	 */
 	private boolean playerIsCurrentPlayer(Game g, Player p) {

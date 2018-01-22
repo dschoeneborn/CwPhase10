@@ -32,6 +32,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 /**
  * @author Marc Mettke
  * @author Björn Merschmeier
+ * @author Sebastian Seitz
  */
 public class GameManagementTest {
 	private ServiceHandlerImpl serviceHandler1;
@@ -270,10 +271,11 @@ public class GameManagementTest {
 	}
 
 	private boolean gameGuiDataEquals(GameGuiData gameGuiData1, GameGuiData gameGuiData2) {
-		// TODO - Diese Methode ist nicht wirklich gleichheit. Wenn gleichheit getestet
+		// Diese Methode ist nicht wirklich gleichheit. Wenn gleichheit getestet
 		// werden muss, muss diese methode noch verändert werden
-		if (gameGuiData1.getLiFoStackTop().getCardValue() == gameGuiData2.getLiFoStackTop().getCardValue()
-				&& gameGuiData1.getLiFoStackTop().getColor() == gameGuiData2.getLiFoStackTop().getColor()
+		// - Cardvalue und Color-checks in String equals umgewandelt. (Sebastian Seitz)
+		if (gameGuiData1.getLiFoStackTop().getCardValue().toString().equals(gameGuiData2.getLiFoStackTop().getCardValue().toString())
+				&& gameGuiData1.getLiFoStackTop().getColor().toString().equals(gameGuiData2.getLiFoStackTop().getColor().toString()) 
 				&& gameGuiData1.getOpenPiles().size() == gameGuiData2.getOpenPiles().size()
 				&& gameGuiData1.getPlayers().size() == gameGuiData2.getPlayers().size()
 				&& gameGuiData1.getSpectators().size() == gameGuiData2.getSpectators().size()) {

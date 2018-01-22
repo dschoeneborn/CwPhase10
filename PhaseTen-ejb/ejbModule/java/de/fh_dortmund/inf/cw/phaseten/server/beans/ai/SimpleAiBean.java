@@ -26,8 +26,19 @@ public class SimpleAiBean implements IAIPlayer {
 	public TakeCardAction takeCard(Player player, Game game) {
 		Card discardCard = game.getLiFoStack().showCard();
 
-		double ratingWithDiscardCard = getRatingWithExtraCard(player, game, discardCard);
-		double maxRatingWithDrawerCard = Double.MIN_VALUE;
+		double ratingWithDiscardCard = this.getRatingWithExtraCard(player, game, discardCard);
+		double ratingWithDrawerCard = this.getRatingWithRandomCard(player, game);
+
+		if(ratingWithDiscardCard >= ratingWithDrawerCard){
+			return TakeCardAction.DISCARD_PILE;
+		} else {
+			return TakeCardAction.DRAWER_PILE;
+		}
+	}
+
+	private double getRatingWithRandomCard(Player player, Game game) {
+		double sumRating = 0;
+		int countRating = 0;
 
 		for(CardValue cardValue : CardValue.values() ) {
 			for(Color cardColor : Color.values()) {
@@ -42,50 +53,11 @@ public class SimpleAiBean implements IAIPlayer {
 				}
 
 				Card card = new Card(cardColor, cardValue);
-				if(!discardCard.equals(card)) {
-					if(maxRatingWithDrawerCard == Double.MIN_VALUE) {
-						maxRatingWithDrawerCard = getRatingWithExtraCard(player, game, card);
-					} else {
-						maxRatingWithDrawerCard += getRatingWithExtraCard(player, game, card);
-						maxRatingWithDrawerCard /= 2;
-					}
-				}
+				sumRating += getRatingWithExtraCard(player, game, card);
+				countRating++;
 			}
 		}
-
-		if(ratingWithDiscardCard >= maxRatingWithDrawerCard) {
-			return TakeCardAction.DISCARD_PILE;
-		} else {
-			return TakeCardAction.DRAWER_PILE;
-		}
-	}
-
-	@Override
-	public List<CardsToPileAction> cardsToPile(Player player, Game game) {
-		if(!player.playerLaidStage()) {
-			return this.layPhase(player, game);
-		}else
-		{
-			return this.putCardsToExistingPile(player, game);
-		}
-
-	}
-
-	@Override
-	public Card discardCard(Player player, Game game) {
-		Card minCard = null;
-		double minCardRating = Double.MAX_VALUE;
-		double tmpRating = -1;
-
-		for(Card card : player.getPlayerPile().getCopyOfCardsList()) {
-			tmpRating = getRatingWithoutCard(player, game, card);
-			if( tmpRating < minCardRating ) {
-				minCardRating = tmpRating;
-				minCard = card;
-			}
-		}
-
-		return minCard;
+		return sumRating / (countRating);
 	}
 
 	private double getRatingWithExtraCard(Player player, Game game, Card card) {
@@ -98,6 +70,17 @@ public class SimpleAiBean implements IAIPlayer {
 						),
 				game
 				);
+	}
+
+	@Override
+	public List<CardsToPileAction> cardsToPile(Player player, Game game) {
+		if(!player.playerLaidStage()) {
+			return this.layPhase(player, game);
+		}else
+		{
+			return this.putCardsToExistingPile(player, game);
+		}
+
 	}
 
 	private List<CardsToPileAction> layPhase(Player player, Game game) {
@@ -116,12 +99,29 @@ public class SimpleAiBean implements IAIPlayer {
 		List<CardsToPileAction> actions = new ArrayList<>();
 		for (Card card : player.getPlayerPile().getCopyOfCardsList()) {
 			for (DockPile pile: game.getOpenPiles()) {
-				if(pile.getCopyOfCardsList().size() < (player.getPlayerPile().getCopyOfCardsList().size()-1) && (pile.canAddLastCard(card) || pile.canAddFirstCard(card))){
+				if(actions.size() < (player.getPlayerPile().getCopyOfCardsList().size()-1) && (pile.canAddLastCard(card) || pile.canAddFirstCard(card))){
 					actions.add(new CardsToPileAction(pile, Arrays.asList(card), true));
 				}
 			}
 		}
 		return actions;
+	}
+
+	@Override
+	public Card discardCard(Player player, Game game) {
+		Card minCard = null;
+		double minCardRating = Double.MAX_VALUE;
+		double tmpRating = -1;
+
+		for(Card card : player.getPlayerPile().getCopyOfCardsList()) {
+			tmpRating = getRatingWithoutCard(player, game, card);
+			if( tmpRating < minCardRating ) {
+				minCardRating = tmpRating;
+				minCard = card;
+			}
+		}
+
+		return minCard;
 	}
 
 	private double getRatingWithoutCard(Player player, Game game, Card card) {

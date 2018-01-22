@@ -10,6 +10,7 @@ import javax.jms.ObjectMessage;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Marc Mettke
@@ -38,14 +39,14 @@ public class PlayerManagementTest {
 			}
 		});
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		this.serviceHandler.getPlayerConsumer().setMessageListener(null);
-		this.serviceHandler.getLobbyConsumer().setMessageListener(null);		
+		this.serviceHandler.getLobbyConsumer().setMessageListener(null);
 	}
 
-	//@Test
+//	 @Test
 	public void testRequestPlayerMessage() throws Exception {
 		this.latchPlayer = new CountDownLatch(1);
 		this.serviceHandler.requestPlayerMessage();
@@ -54,13 +55,13 @@ public class PlayerManagementTest {
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
 	}
 
-	//@Test
+	// @Test
 	public void register() throws Exception {
 		// throws UsernameAlreadyTakenException;
-		
+
 		String username = "testUser";
 		String password = "testPassword";
-		
+
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchLobby = new CountDownLatch(1);
 		this.serviceHandler.register(username, password);
@@ -71,13 +72,13 @@ public class PlayerManagementTest {
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
 	}
 
-	//@Test
+	// @Test
 	public void login() throws Exception {
 		// throws UserDoesNotExistException;
-		
+
 		String username = "testUser";
 		String password = "testPassword";
-		
+
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchLobby = new CountDownLatch(1);
 		this.serviceHandler.login(username, password);
