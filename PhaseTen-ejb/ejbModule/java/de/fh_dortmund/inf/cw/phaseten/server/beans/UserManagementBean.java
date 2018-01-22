@@ -10,6 +10,10 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerConfig;
+import javax.ejb.TimerService;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.jms.JMSContext;
@@ -29,6 +33,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
+import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
 
@@ -39,7 +44,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
  * @author Daniela Kaiser
  */
 @Stateless
-@Interceptors({FilterUsermanagement.class})
+@Interceptors({ FilterUsermanagement.class })
 public class UserManagementBean implements UserManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
@@ -49,11 +54,15 @@ public class UserManagementBean implements UserManagementLocal {
 
 	@EJB
 	LobbyManagementLocal lobbyManagment;
-
+	@EJB
+	private CoinManagementLocal coinManagement;
 	@PersistenceContext
 	private EntityManager em;
 
 	private List<String> onlineUsers = synchronizedList(new LinkedList<>());
+
+	@Resource
+	private TimerService timerService;
 
 	@Override
 	public void requestPlayerMessage(Player p) {
@@ -70,20 +79,17 @@ public class UserManagementBean implements UserManagementLocal {
 				foundUser = em.createNamedQuery("User.findByName", User.class).setParameter("name", username)
 						.getSingleResult();
 				throw new EntityExistsException();
-			}
-			catch (NoResultException e) {
+			} catch (NoResultException e) {
 				user.setCoins(500);
 				em.persist(user);
 			}
-		}
-		catch (EntityExistsException e) {
+		} catch (EntityExistsException e) {
 			throw new UsernameAlreadyTakenException();
 		}
 
 		try {
 			foundUser = this.login(username, password);
-		}
-		catch (UserDoesNotExistException e) {
+		} catch (UserDoesNotExistException e) {
 			e.printStackTrace();
 		}
 
@@ -100,8 +106,7 @@ public class UserManagementBean implements UserManagementLocal {
 
 		try {
 			user = em.createNamedQuery("User.findByName", User.class).setParameter("name", username).getSingleResult();
-		}
-		catch (NoResultException e) {
+		} catch (NoResultException e) {
 			throw new UserDoesNotExistException();
 		}
 
@@ -114,7 +119,23 @@ public class UserManagementBean implements UserManagementLocal {
 
 		this.lobbyManagment.sendLobbyMessage();
 
+		TimerConfig config = new TimerConfig("Test-Timer", true);
+		config.setInfo(user);
+		timerService.createIntervalTimer(0, 1, config);
 		return user;
+	}
+
+	@Timeout
+	public void timeOut(Timer timer) {
+		User user = (User) timer.getInfo();
+		coinManagement.increaseCoins(user, 10);
+	}
+
+	public void clearTimer() {
+		for (Timer timer : timerService.getTimers()) {
+			System.out.println(timer.getInfo());
+			timer.cancel();
+		}
 	}
 
 	@Override
@@ -146,8 +167,7 @@ public class UserManagementBean implements UserManagementLocal {
 
 		if (currentUser.getPlayer() != null) {
 			foundPlayer = currentUser.getPlayer();
-		}
-		else {
+		} else {
 			foundPlayer = new Player(currentUser.getLoginName());
 			foundPlayer.setUser(currentUser);
 			currentUser.setPlayer(foundPlayer);
@@ -167,8 +187,7 @@ public class UserManagementBean implements UserManagementLocal {
 
 		if (currentUser.getSpectator() != null) {
 			foundSpectator = currentUser.getSpectator();
-		}
-		else {
+		} else {
 			foundSpectator = new Spectator(currentUser.getLoginName());
 			currentUser.setSpectator(foundSpectator);
 			em.persist(currentUser);
@@ -180,41 +199,32 @@ public class UserManagementBean implements UserManagementLocal {
 	}
 
 	@Override
-	public void unregister(User currentUser, String password) throws PlayerDoesNotExistsException
-	{
+	public void unregister(User currentUser, String password) throws PlayerDoesNotExistsException {
 		User user = em.find(User.class, currentUser.getId());
-		
-		if(user.getPassword().equals(computeHash(password)))
-		{
-			if(user.getPlayer() != null)
-			{
+
+		if (user.getPassword().equals(computeHash(password))) {
+			if (user.getPlayer() != null) {
 				Game g = user.getPlayer().getGame();
 				Lobby l = user.getPlayer().getLobby();
-				
-				if(g != null)
-				{
+
+				if (g != null) {
 					g.removePlayer(user.getPlayer());
 				}
-				
-				if(l != null)
-				{
+
+				if (l != null) {
 					l.removePlayer(user.getPlayer());
 					l.removeSpectators();
 				}
 			}
-			if(user.getSpectator() != null)
-			{
+			if (user.getSpectator() != null) {
 				Game g = user.getSpectator().getGame();
-				
-				if(g != null)
-				{
+
+				if (g != null) {
 					g.removeSpectator(user.getSpectator());
 				}
 			}
 			em.remove(user);
-		}
-		else
-		{
+		} else {
 			throw new PlayerDoesNotExistsException();
 		}
 	}
@@ -224,8 +234,7 @@ public class UserManagementBean implements UserManagementLocal {
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			byte[] hash = digest.digest(pw.getBytes());
 			return DatatypeConverter.printHexBinary(hash);
-		}
-		catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
 	}

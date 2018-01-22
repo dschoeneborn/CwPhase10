@@ -11,6 +11,10 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerConfig;
+import javax.ejb.TimerService;
 import javax.inject.Inject;
 import javax.jms.JMSContext;
 import javax.jms.JMSException;
@@ -48,6 +52,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;;
  */
 @Stateless
 public class GameManagementBean implements GameManagementLocal {
+	
 	@Inject
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Game")
@@ -61,31 +66,26 @@ public class GameManagementBean implements GameManagementLocal {
 
 	@EJB
 	GameValidationLocal gameValidation;
-	
-	@EJB
-	private CoinManagementLocal coinManagment;
-	
-	@EJB 
-	AIManagementLocal aiManagment;
 
 	@EJB
-	private UserManagementLocal userManagement;
+	private CoinManagementLocal coinManagment;
+
+	@EJB
+	AIManagementLocal aiManagment;
 
 	@Override
 	public void requestGameMessage(Player p) throws GameNotInitializedException {
 		if (!p.getGame().isInitialized()) {
 			try {
 				Thread.sleep(3000);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (p.getGame().isInitialized()) {
 			sendGameMessage(p);
-		}
-		else {
+		} else {
 			throw new GameNotInitializedException();
 		}
 	}
@@ -104,13 +104,12 @@ public class GameManagementBean implements GameManagementLocal {
 		Game game = player.getGame();
 		if (gameValidation.isValidDrawCardFromPullStack(game, player)) {
 			internalTakeCardFromPullstack(player, game);
-		}
-		else {
+		} else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
 	}
-	
+
 	private void internalTakeCardFromPullstack(Player player, Game game) {
 		Card drawnCard = game.getPullStack().pullTopCard();
 		player.addCardToPlayerPile(drawnCard);
@@ -126,13 +125,12 @@ public class GameManagementBean implements GameManagementLocal {
 		Game game = player.getGame();
 		if (gameValidation.isValidDrawCardFromLiFoStack(game, player)) {
 			internalTakeCardFromLiFoStack(player, game);
-		}
-		else {
+		} else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
 	}
-	
+
 	private void internalTakeCardFromLiFoStack(Player player, Game game) {
 		Card drawnCard = game.getLiFoStack().pullTopCard();
 		player.addCardToPlayerPile(drawnCard);
@@ -151,13 +149,12 @@ public class GameManagementBean implements GameManagementLocal {
 		DockPile dockPile = entityManager.find(DockPile.class, dockPileId);
 		if (gameValidation.isValidToAddCard(game, player, dockPile, card)) {
 			internalAddToPileOnTable(player, game, card, dockPile);
-		}
-		else {
+		} else {
 			throw new MoveNotValidException();
 		}
 		updateClient(player);
 	}
-	
+
 	private void internalAddToPileOnTable(Player player, Game game, Card card, DockPile dockPile) {
 		dockPile.addCard(card);
 		player.removeCardFromPlayerPile(card);
@@ -173,14 +170,13 @@ public class GameManagementBean implements GameManagementLocal {
 		Game game = player.getGame();
 		if (gameValidation.isValidLayStageToTable(game, player, piles)) {
 			internalLayPhaseToTable(player, piles, game);
-		}
-		else {
+		} else {
 			throw new MoveNotValidException();
 		}
 
 		updateClient(player);
 	}
-	
+
 	private void internalLayPhaseToTable(Player player, Collection<DockPile> piles, Game game) {
 		for (DockPile pile : piles) {
 			entityManager.persist(pile);
@@ -207,14 +203,13 @@ public class GameManagementBean implements GameManagementLocal {
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
 			internalLayCardToLiFoStack(player, game, card);
 			setNextPlayer(game);
-		}
-		else {
+		} else {
 			throw new MoveNotValidException();
 		}
 
 		updateClient(player);
 	}
-	
+
 	private void internalLayCardToLiFoStack(Player player, Game game, Card card) {
 		game.getLiFoStack().addCard(card);
 		player.removeCardFromPlayerPile(card);
@@ -249,8 +244,7 @@ public class GameManagementBean implements GameManagementLocal {
 			layCardToLiFoStack(currentPlayer, cardId);
 			currentPlayer.resetRoundStage();
 			setNextPlayer(game);
-		}
-		else {
+		} else {
 			throw new MoveNotValidException();
 		}
 
@@ -259,6 +253,7 @@ public class GameManagementBean implements GameManagementLocal {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagment#initGame(de.
 	 * fh_dortmund.inf.cw.phaseten.server.entities.Game)
 	 */
@@ -319,51 +314,52 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @param game
 	 */
 	private void initNextRound(Game game) {
-		for(Player player : game.getPlayers()) {
-			if(player.getPhase() == Stage.FINISHED) {
+		for (Player player : game.getPlayers()) {
+			if (player.getPhase() == Stage.FINISHED) {
 				game.setFinished();
 				cashPlayerOut(game);
 				return;
 			}
 		}
-		
+
 		initializePullstack(game);
 		initializeLiFoStack(game);
 		initializeFirstPlayer(game);
 		giveCardsToPlayers(game);
 
-		for(Player player : game.getPlayers()) {
+		for (Player player : game.getPlayers()) {
 			player.setPlayerLaidStage(false);
 		}
-		
+
 		if (game.getLiFoStack().showCard().getCardValue() == CardValue.SKIP) {
 			setNextPlayer(game);
-		} else if(game.getCurrentPlayer().getIsAI()) {
+		} else if (game.getCurrentPlayer().getIsAI()) {
 			aiTurn(game, game.getCurrentPlayer());
 			setNextPlayer(game);
-		} 
+		}
 	}
 
 	private void cashPlayerOut(Game game) {
 		List<Player> ranking = new LinkedList<>();
 		int i = 0;
-		for(Player player : game.getPlayers()) {
+		for (Player player : game.getPlayers()) {
 			i = 0;
-			for(Player rankedPlayer : ranking) {
-				if(rankedPlayer.getNegativePoints() > player.getNegativePoints() ) {
+			for (Player rankedPlayer : ranking) {
+				if (rankedPlayer.getNegativePoints() > player.getNegativePoints()) {
 					break;
 				}
 				i++;
 			}
-			
+
 			ranking.add(i, player);
 		}
 		int coins = ranking.size() * 50;
 		int divisor = 0;
-	    for (i = 1; i < ranking.size(); i++) divisor += i;
+		for (i = 1; i < ranking.size(); i++)
+			divisor += i;
 		i = 1;
-		for(Player player : ranking) {
-			if(!player.getIsAI()) {
+		for (Player player : ranking) {
+			if (!player.getIsAI()) {
 				coinManagment.increaseCoins(player.getUser(), coins / divisor * (ranking.size() - i));
 			}
 			i++;
@@ -396,8 +392,7 @@ public class GameManagementBean implements GameManagementLocal {
 
 		if (game.getLastRoundBeginner() == null) {
 			nextPlayer = r.nextInt(players.size());
-		}
-		else {
+		} else {
 			nextPlayer = (players.indexOf(game.getLastRoundBeginner()) + 1) % players.size();
 		}
 
@@ -468,7 +463,6 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 	}
 
-
 	/**
 	 * @author Björn Merschmeier
 	 * @author Marc Mettke
@@ -476,69 +470,69 @@ public class GameManagementBean implements GameManagementLocal {
 	 */
 	private void setNextPlayer(Game game) {
 		// Removed recursion to prevent stack overflow when only ai player are playing
-		while(true) {
+		while (true) {
 			Player nextPlayer = game.getNextPlayer();
 			game.setCurrentPlayer(nextPlayer);
-			
+
 			// end loop when the next player does not have any cards left
 			if (nextPlayer.hasNoCards()) {
 				countPoints(game);
 				initNextRound(game);
 				break;
-			} else if(nextPlayer.hasSkipCard()) {
+			} else if (nextPlayer.hasSkipCard()) {
 				nextPlayer.removeSkipCard();
 			}
 			// don't end loop as long as ai players are taking their turns
 			// if there are only ai players than this loop will go on till one of them won
-			else if(nextPlayer.getIsAI()) {
+			else if (nextPlayer.getIsAI()) {
 				aiTurn(game, nextPlayer);
 			}
-			// end loop if a valid next player is found (not ai and not skipped) 
-			else if(!nextPlayer.hasSkipCard() ) { 
-				break; 
+			// end loop if a valid next player is found (not ai and not skipped)
+			else if (!nextPlayer.hasSkipCard()) {
+				break;
 			}
 		}
 	}
-	
+
 	private void aiTurn(Game game, Player player) {
 		// take card
 		switch (aiManagment.takeCard(player, game)) {
-			case DISCARD_PILE: {
-				internalTakeCardFromLiFoStack(player, game);
-			}
-			case DRAWER_PILE: {
-				internalTakeCardFromPullstack(player, game);
-			}
+		case DISCARD_PILE: {
+			internalTakeCardFromLiFoStack(player, game);
 		}
-		
+		case DRAWER_PILE: {
+			internalTakeCardFromPullstack(player, game);
+		}
+		}
+
 		// do moves
 		List<CardsToPileAction> actions;
 		do {
-			//get moves
-			actions = aiManagment.cardsToPile(player,game);
-			
+			// get moves
+			actions = aiManagment.cardsToPile(player, game);
+
 			Collection<DockPile> piles = new ArrayList<DockPile>();
-			for(CardsToPileAction action : actions) {
+			for (CardsToPileAction action : actions) {
 				// lay out phase
-				if(!action.isDockPileAlreadyExisting()) {
+				if (!action.isDockPileAlreadyExisting()) {
 					DockPile dockPile = action.getDockpile();
-					for(Card card : action.getCards()) {
+					for (Card card : action.getCards()) {
 						dockPile.addCard(card);
 					}
 					piles.add(dockPile);
-				} 
+				}
 				// add card to existing DockPile
 				else {
-					for(Card card : action.getCards()) {
+					for (Card card : action.getCards()) {
 						internalAddToPileOnTable(player, game, card, action.getDockpile());
 					}
 				}
 			}
-			if(piles.size() > 0) {
-				internalLayPhaseToTable(player, piles, game);						
+			if (piles.size() > 0) {
+				internalLayPhaseToTable(player, piles, game);
 			}
-		} while(actions.size() > 0);
-		
+		} while (actions.size() > 0);
+
 		// discard card
 		Card card = aiManagment.discardCard(player, game);
 		internalLayCardToLiFoStack(player, game, card);
@@ -584,8 +578,7 @@ public class GameManagementBean implements GameManagementLocal {
 
 		try {
 			message.setStringProperty("userNames", playersAndSpectators);
-		}
-		catch (JMSException e) {
+		} catch (JMSException e) {
 			e.printStackTrace();
 		}
 
