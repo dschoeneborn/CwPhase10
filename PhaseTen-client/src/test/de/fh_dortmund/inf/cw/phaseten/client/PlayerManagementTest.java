@@ -10,6 +10,7 @@ import javax.jms.ObjectMessage;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Marc Mettke
@@ -45,7 +46,7 @@ public class PlayerManagementTest {
 		this.serviceHandler.getLobbyConsumer().setMessageListener(null);		
 	}
 
-	//@Test
+	@Test
 	public void testRequestPlayerMessage() throws Exception {
 		this.latchPlayer = new CountDownLatch(1);
 		this.serviceHandler.requestPlayerMessage();
@@ -54,7 +55,7 @@ public class PlayerManagementTest {
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
 	}
 
-	//@Test
+	@Test
 	public void register() throws Exception {
 		// throws UsernameAlreadyTakenException;
 		
@@ -71,7 +72,7 @@ public class PlayerManagementTest {
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
 	}
 
-	//@Test
+	@Test
 	public void login() throws Exception {
 		// throws UserDoesNotExistException;
 		
