@@ -12,7 +12,14 @@ public class CardsToPileAction extends EmptyCardsToPileAction {
 	private DockPile dockpile;
 	private Iterable<Card> cards;
 	private boolean dockPileAlreadyExisting;
-	
+
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param dockpile
+	 * @param cards
+	 * @param dockPileAlreadyExisting
+	 */
 	public CardsToPileAction(DockPile dockpile, Iterable<Card> cards, boolean dockPileAlreadyExisting) {
 		super();
 		this.dockpile = dockpile;
@@ -20,16 +27,31 @@ public class CardsToPileAction extends EmptyCardsToPileAction {
 		this.dockPileAlreadyExisting = dockPileAlreadyExisting;
 	}
 
+	/**
+	 * Liefert DockPile
+	 * 
+	 * @return dockpile
+	 */
 	public DockPile getDockpile() {
 		return dockpile;
 	}
-	
+
+	/**
+	 * Liefert Karten.
+	 * 
+	 * @return cards
+	 */
 	public Iterable<Card> getCards() {
 		return cards;
 	}
 
+	/**
+	 * Liefert dockPileAlreadyExisting
+	 * 
+	 * @return dockPileAlreadyExisting
+	 */
 	public boolean isDockPileAlreadyExisting() {
 		return dockPileAlreadyExisting;
 	}
-	
+
 }

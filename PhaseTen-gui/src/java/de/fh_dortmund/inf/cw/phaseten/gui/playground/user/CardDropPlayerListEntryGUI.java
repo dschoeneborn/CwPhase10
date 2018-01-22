@@ -9,7 +9,7 @@ import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.drag_drop.CardDropTargetListener;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.drag_drop.ICardDropTarget;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;

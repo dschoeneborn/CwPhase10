@@ -12,7 +12,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedExcept
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InsufficientCoinSupplyException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
@@ -35,7 +35,7 @@ public interface ServiceHandler extends MessageListener {
 
 	void addAI() throws NoFreeSlotException;
 
-	void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException;
+	void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException;
 
 	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException;
 

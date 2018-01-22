@@ -18,7 +18,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.listener.EntityListener;
+
 /**
+ * User Entity.
+ * 
  * @author Dennis Schöneborn
  * @author Daniela Kaiser
  * @author Björn Merschmeier
@@ -58,10 +62,19 @@ public class User implements Serializable {
 	@JoinColumn
 	private Spectator spectator;
 
+	/**
+	 * Konstruktor
+	 */
 	private User() {
 
 	}
 
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param name
+	 * @param password
+	 */
 	public User(String name, String password) {
 		this();
 		this.loginName = name;
@@ -70,6 +83,8 @@ public class User implements Serializable {
 	}
 
 	/**
+	 * Liefert Login Namen
+	 * 
 	 * @return the loginName
 	 */
 	public String getLoginName() {
@@ -77,6 +92,8 @@ public class User implements Serializable {
 	}
 
 	/**
+	 * Liefert Coins
+	 * 
 	 * @return the coins
 	 */
 	public int getCoins() {
@@ -92,6 +109,11 @@ public class User implements Serializable {
 		this.coins += coins;
 	}
 
+	/**
+	 * Verringert Coins.
+	 * 
+	 * @param coins
+	 */
 	public void decreaseCoins(int coins) {
 		this.coins -= coins;
 	}
@@ -106,6 +128,8 @@ public class User implements Serializable {
 	}
 
 	/**
+	 * Liefert Player
+	 * 
 	 * @return Player
 	 */
 	public Player getPlayer() {
@@ -117,20 +141,37 @@ public class User implements Serializable {
 	}
 
 	/**
+	 * Liefert Spectator.
+	 * 
 	 * @return Spectator
 	 */
 	public Spectator getSpectator() {
 		return spectator;
 	}
 
+	/**
+	 * Liefert Passwort.
+	 * 
+	 * @return password
+	 */
 	public String getPassword() {
 		return password;
 	}
 
+	/**
+	 * Setzt spectator
+	 * 
+	 * @param spectator
+	 */
 	public void setSpectator(Spectator spectator) {
 		this.spectator = spectator;
 	}
 
+	/**
+	 * Liefert id
+	 * 
+	 * @return id
+	 */
 	public long getId() {
 		return id;
 	}

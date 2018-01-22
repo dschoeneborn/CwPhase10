@@ -1,6 +1,8 @@
 package de.fh_dortmund.inf.cw.phaseten.server.exceptions;
 
 /**
+ * InsufficientCoinSupplyException
+ * 
  * @author Marc Mettke
  */
 public class InsufficientCoinSupplyException extends Exception {

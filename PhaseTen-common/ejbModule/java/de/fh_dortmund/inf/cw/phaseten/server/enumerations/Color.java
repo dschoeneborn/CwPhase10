@@ -1,9 +1,11 @@
 /**
  * 
  */
-package de.fh_dortmund.inf.cw.phaseten.server.entities;
+package de.fh_dortmund.inf.cw.phaseten.server.enumerations;
 
 /**
+ * Color Enum.
+ * 
  * @author Dennis Schöneborn
  * @author Sven Krefeld
  *
@@ -13,14 +15,30 @@ public enum Color {
 
 	private int value;
 
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param value
+	 */
 	private Color(int value) {
 		this.value = value;
 	}
 
+	/**
+	 * Liefert Value.
+	 * 
+	 * @return value
+	 */
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * Liefert Color
+	 * 
+	 * @param value
+	 * @return color
+	 */
 	public static Color getColor(int value) {
 		Color chatMessageType = null;
 
@@ -33,6 +51,11 @@ public enum Color {
 		return chatMessageType;
 	}
 
+	/**
+	 * Liefert Color als Objekt
+	 * 
+	 * @return color
+	 */
 	public java.awt.Color getRGBColor() {
 		switch (value) {
 		case 1:

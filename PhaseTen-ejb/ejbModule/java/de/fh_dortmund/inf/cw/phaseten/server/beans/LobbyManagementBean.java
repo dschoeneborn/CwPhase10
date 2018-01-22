@@ -20,7 +20,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
@@ -119,11 +119,11 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void startGame(Player player) throws NotEnoughPlayerException {
+	public void startGame(Player player) throws NotEnoughPlayersException {
 		Lobby lobby = getOrCreateLobby();
 
 		if (!gameValidation.hasEnoughPlayers(lobby)) {
-			throw new NotEnoughPlayerException();
+			throw new NotEnoughPlayersException();
 		}
 
 		gameManagment.startGame(lobby.getPlayers(), lobby.getSpectators());

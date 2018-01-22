@@ -15,8 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
@@ -24,6 +22,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.TestType;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.TakeCardAction;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
 
 /**
  * @author Robin Harbecke

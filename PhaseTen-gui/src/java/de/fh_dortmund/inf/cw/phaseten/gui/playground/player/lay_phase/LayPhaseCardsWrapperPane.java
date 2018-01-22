@@ -11,11 +11,11 @@ import javax.swing.JPanel;
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.player.PlayerCardsPane;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
 
 /**
  * @author Robin Harbecke

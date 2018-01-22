@@ -1,22 +1,28 @@
-package de.fh_dortmund.inf.cw.phaseten.server.entities;
+package de.fh_dortmund.inf.cw.phaseten.server.entities.listener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Date;
 
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
 /**
- * EntityListener
+ * EntityListener für das UserManagement.
  * 
  * @author Daniela Kaiser
  *
  */
 public class EntityListener {
 
+	/**
+	 * Bei neuem User werden initial 500 Coins hinzugefügt.
+	 * 
+	 * @param entity
+	 */
 	@PrePersist
 	public void newEntity(Object entity) {
 
@@ -35,6 +41,11 @@ public class EntityListener {
 		}
 	}
 
+	/**
+	 * Meldung nach persistieren wird ausgegeben.
+	 * 
+	 * @param entity
+	 */
 	@PostPersist
 	public void persistEntity(Object entity) {
 
@@ -50,6 +61,11 @@ public class EntityListener {
 		}
 	}
 
+	/**
+	 * Meldung nach Update wird ausgegeben.
+	 * 
+	 * @param entity
+	 */
 	@PostUpdate
 	public void updateEntity(Object entity) {
 
