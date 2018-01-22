@@ -23,7 +23,7 @@ public class TemporaryDockPilePane extends PilePane{
 	private static final long serialVersionUID = 1783687628149961426L;
 
 	protected PlayerCardsPane playerCardsPane;
-	protected DockPile dockPile;
+	protected TemporaryDockPile dockPile = new TemporaryDockPile();
 	protected ServiceHandler serviceHandler;
 
 	public TemporaryDockPilePane(ServiceHandler serviceHandler,PlayerCardsPane playerCardsPane, Class<? extends DockPile> dockPileType) {
@@ -33,12 +33,6 @@ public class TemporaryDockPilePane extends PilePane{
 		this.setMinimumSize(this.getPreferredSize());
 		this.setMaximumSize(this.getPreferredSize());
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-
-		try {
-			this.dockPile = dockPileType.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException("Error in programming, this should not happen");
-		}
 		this.updateData();
 	}
 
@@ -55,7 +49,7 @@ public class TemporaryDockPilePane extends PilePane{
 		this.playerCardsPane.updateData();
 	}
 
-	public DockPile getDockPile() {
+	public TemporaryDockPile getDockPile() {
 		return this.dockPile;
 	}
 

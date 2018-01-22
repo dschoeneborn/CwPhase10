@@ -36,7 +36,17 @@ public class LayPhaseRowPane extends JPanel{
 	public LayPhaseRowPane(ServiceHandler serviceHandler,PlayerCardsPane playerCardsPane) {
 		this.serviceHandler = serviceHandler;
 		this.playerCardsPane = playerCardsPane;
-		clearPiles();
+		try {
+			List<Class<? extends DockPile>> piles;
+			piles = new ArrayList<>(serviceHandler.getDockPileTypesForPlayer());
+			this.leftLayPhaseCardsWrapperPane = new LayPhaseCardsWrapperPane(this.serviceHandler, this.playerCardsPane, piles.get(0));
+			if(piles.size() > 1)
+			{
+				this.rightLayPhaseCardsWrapperPane = new LayPhaseCardsWrapperPane(this.serviceHandler, this.playerCardsPane, piles.get(1));
+			}
+		} catch (NotLoggedInException e1) {
+			e1.printStackTrace();
+		}
 		this.add(this.leftLayPhaseCardsWrapperPane);
 		this.add(this.rightLayPhaseCardsWrapperPane);
 		this.layPhaseCardsWrapperPanes = new LayPhaseCardsWrapperPane[]{this.leftLayPhaseCardsWrapperPane,this.rightLayPhaseCardsWrapperPane};
@@ -50,46 +60,14 @@ public class LayPhaseRowPane extends JPanel{
 		this.add(sendDataButton);
 	}
 
-	protected void layCurrentPhaseCards() {
-		Collection<DockPile> cardPiles = new ArrayList<>();
-		for (LayPhaseCardsWrapperPane wrapper : this.layPhaseCardsWrapperPanes) {
-			DockPile newPile = wrapper.getCurrentPile();
-			if(newPile != null) {
-				cardPiles.add(newPile);
-			}
-		}
-		try {
-			this.serviceHandler.layPhaseToTable(cardPiles);
-			this.clearPiles();
-			this.playerCardsPane.updateData();
-		} catch (MoveNotValidException e) {
-			System.out.println("Move not valide");
-		} catch (NotLoggedInException e) {
-			System.out.println("Not logged in");
-		} catch (GameNotInitializedException e) {
-			System.out.println("Game not initialized");
-		}
-		this.revalidate();
-		this.repaint();
+	public void clearPiles() {
+		this.leftLayPhaseCardsWrapperPane.clearPile();
+		this.rightLayPhaseCardsWrapperPane.clearPile();
 	}
 
 	public void updateData(Collection<Card> allCards) {
-
-		List<Class<? extends DockPile>> dockPileTypes;
-		try {
-			dockPileTypes = new ArrayList<>(serviceHandler.getDockPileTypesForPlayer());
-			this.leftLayPhaseCardsWrapperPane.updateData(allCards, dockPileTypes.get(0));
-
-			if(dockPileTypes.size() > 1)
-			{
-				this.rightLayPhaseCardsWrapperPane.updateData(allCards, dockPileTypes.get(1));
-			}
-		}
-		catch (NotLoggedInException e)
-		{
-			System.out.println("User is not logged in!");
-		}
-
+		this.leftLayPhaseCardsWrapperPane.updateData(allCards);
+		this.rightLayPhaseCardsWrapperPane.updateData(allCards);
 		this.revalidate();
 		this.repaint();
 	}
@@ -107,34 +85,24 @@ public class LayPhaseRowPane extends JPanel{
 		return false;
 	}
 
-	private void clearPiles()
-	{
-		List<Class<? extends DockPile>> dockPileTypes;
-		if(this.leftLayPhaseCardsWrapperPane != null && this.rightLayPhaseCardsWrapperPane != null)
-		{
-			this.remove(this.leftLayPhaseCardsWrapperPane);
-			this.remove(this.rightLayPhaseCardsWrapperPane);
-			this.remove(sendDataButton);
-		}
-		try {
-			dockPileTypes = new ArrayList<>(serviceHandler.getDockPileTypesForPlayer());
-			this.leftLayPhaseCardsWrapperPane = new LayPhaseCardsWrapperPane(this.serviceHandler, this.playerCardsPane, dockPileTypes.get(0));
-
-			if(dockPileTypes.size() > 1)
-			{
-				this.rightLayPhaseCardsWrapperPane = new LayPhaseCardsWrapperPane(this.serviceHandler, this.playerCardsPane, dockPileTypes.get(1));
+	protected void layCurrentPhaseCards() {
+		Collection<DockPile> cardPiles = new ArrayList<>();
+		for (LayPhaseCardsWrapperPane wrapper : this.layPhaseCardsWrapperPanes) {
+			DockPile newPile = wrapper.getLayDockPile();
+			if(newPile != null) {
+				cardPiles.add(newPile);
 			}
 		}
-		catch (NotLoggedInException e)
-		{
-			System.out.println("User is not logged in!");
+		try {
+			this.serviceHandler.layPhaseToTable(cardPiles);
+			this.clearPiles();
+			this.playerCardsPane.updateData();
+		} catch (MoveNotValidException e) {
+			System.out.println("Move not valide");
+		} catch (NotLoggedInException e) {
+			System.out.println("Not logged in");
+		} catch (GameNotInitializedException e) {
+			System.out.println("Game not initialized");
 		}
-		this.leftLayPhaseCardsWrapperPane.getCurrentPile().clearCards();
-		this.rightLayPhaseCardsWrapperPane.getCurrentPile().clearCards();
-		this.add(this.leftLayPhaseCardsWrapperPane);
-		this.add(this.rightLayPhaseCardsWrapperPane);
-		this.add(sendDataButton);
-		this.revalidate();
-		this.repaint();
 	}
 }

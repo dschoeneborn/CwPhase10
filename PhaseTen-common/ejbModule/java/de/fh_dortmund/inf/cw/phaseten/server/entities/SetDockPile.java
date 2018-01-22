@@ -53,7 +53,7 @@ public class SetDockPile extends DockPile {
 	{
 		boolean addedCard = super.addFirst(c);
 
-		if(addedCard && this.cardValue == null)
+		if(addedCard && this.cardValue == null && c.getCardValue() != CardValue.WILD)
 		{
 			this.cardValue = c.getCardValue();
 		}
@@ -69,7 +69,7 @@ public class SetDockPile extends DockPile {
 	{
 		boolean addedCard = super.addLast(c);
 
-		if(addedCard && this.cardValue == null)
+		if(addedCard && this.cardValue == null && c.getCardValue() != CardValue.WILD)
 		{
 			this.cardValue = c.getCardValue();
 		}

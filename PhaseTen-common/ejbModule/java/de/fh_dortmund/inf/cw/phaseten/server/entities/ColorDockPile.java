@@ -103,7 +103,10 @@ public class ColorDockPile extends DockPile {
 	 */
 	private boolean canAddCard(Card card)
 	{
-		return this.color == null || card.getColor().equals(this.color) || card.getCardValue() == CardValue.WILD;
+		return (this.color == null
+				|| card.getColor().equals(this.color)
+				|| card.getCardValue() == CardValue.WILD)
+				&& card.getCardValue() != CardValue.SKIP;
 	}
 
 }
