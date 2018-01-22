@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.Topic;
@@ -35,8 +36,10 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;
  * @author Marc Mettke
  * @author Dennis Schöneborn
  * @author Björn Merschmeier
+ * @author Daniela Kaiser
  */
 @Stateless
+@Interceptors({FilterUsermanagement.class})
 public class UserManagementBean implements UserManagementLocal {
 	@Inject
 	private JMSContext jmsContext;
