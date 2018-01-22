@@ -1,6 +1,8 @@
 package de.fh_dortmund.inf.cw.phaseten.server.exceptions;
 
 /**
+ * UsernameAlreadyTakenException
+ * 
  * @author Marc Mettke
  */
 public class UsernameAlreadyTakenException extends Exception {

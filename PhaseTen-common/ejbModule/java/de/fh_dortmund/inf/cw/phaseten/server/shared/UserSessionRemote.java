@@ -13,7 +13,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedExcept
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InsufficientCoinSupplyException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
@@ -55,11 +55,11 @@ public interface UserSessionRemote extends UserSession {
 	 * 
 	 * @throws PlayerDoesNotExistsException  If the player does not exist.
 	 * @throws NotLoggedInException  If the player is not logged in.
-	 * @throws NotEnoughPlayerException  If there are not enough players in the lobby.
+	 * @throws NotEnoughPlayersException  If there are not enough players in the lobby.
 	 *
 	 * @author Tim Prange
 	 */
-	void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException;
+	void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException;
 
 	/**
 	 * Takes a card from the pull stack.

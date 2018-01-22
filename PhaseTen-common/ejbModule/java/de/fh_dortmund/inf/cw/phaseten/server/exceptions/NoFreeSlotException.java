@@ -1,6 +1,8 @@
 package de.fh_dortmund.inf.cw.phaseten.server.exceptions;
 
 /**
+ * NoFreeSlotException
+ * 
  * @author Marc Mettke
  */
 public class NoFreeSlotException extends Exception {

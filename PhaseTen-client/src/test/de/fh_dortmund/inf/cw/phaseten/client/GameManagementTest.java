@@ -23,7 +23,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
@@ -252,14 +252,14 @@ public class GameManagementTest {
 	 * @throws NoFreeSlotException
 	 * @throws PlayerDoesNotExistsException
 	 * @throws NotLoggedInException
-	 * @throws NotEnoughPlayerException
+	 * @throws NotEnoughPlayersException
 	 * @throws InterruptedException
 	 * @throws JMSException
 	 */
 	@Test(timeout = 3000)
 	public void testInitializeGame()
 			throws UsernameAlreadyTakenException, NoFreeSlotException, PlayerDoesNotExistsException,
-			NotLoggedInException, NotEnoughPlayerException, InterruptedException, JMSException {
+			NotLoggedInException, NotEnoughPlayersException, InterruptedException, JMSException {
 		Assert.assertEquals(10, serviceHandler1.getCards().size());
 		Assert.assertEquals(10, serviceHandler2.getCards().size());
 		GameGuiData gameGuiData1 = ((GameGuiData) ((ObjectMessage) messageGame1).getObject());
