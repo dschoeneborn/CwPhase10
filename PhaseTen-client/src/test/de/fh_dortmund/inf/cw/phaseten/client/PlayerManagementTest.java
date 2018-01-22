@@ -46,7 +46,7 @@ public class PlayerManagementTest {
 		this.serviceHandler.getLobbyConsumer().setMessageListener(null);
 	}
 
-	@Test
+//	 @Test
 	public void testRequestPlayerMessage() throws Exception {
 		this.latchPlayer = new CountDownLatch(1);
 		this.serviceHandler.requestPlayerMessage();
