@@ -9,6 +9,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,11 +25,10 @@ import javax.persistence.OneToOne;
  */
 
 @Entity
-@NamedQueries(value = {
-		@NamedQuery(name="User.findAll", query="select u from User u"),
-		@NamedQuery(name="User.findByName", query="select u from User u where u.loginName = :name")
-})
-public class User implements Serializable{
+@NamedQueries(value = { @NamedQuery(name = "User.findAll", query = "select u from User u"),
+		@NamedQuery(name = "User.findByName", query = "select u from User u where u.loginName = :name") })
+@EntityListeners({ EntityListener.class })
+public class User implements Serializable {
 
 	/**
 	 * 
@@ -54,7 +54,7 @@ public class User implements Serializable{
 	@JoinColumn(name = "PLAYER_ID", unique = true)
 	private Player player;
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	private Spectator spectator;
 
@@ -91,38 +91,35 @@ public class User implements Serializable{
 	public void increaseCoins(int coins) {
 		this.coins += coins;
 	}
-	
+
 	public void decreaseCoins(int coins) {
 		this.coins -= coins;
 	}
-	
+
 	/**
 	 * Set Coins.
 	 * 
 	 * @param coinsToSet
 	 */
-	public void setCoins(int coinsToSet)
-	{
+	public void setCoins(int coinsToSet) {
 		coins = coinsToSet;
 	}
-	
+
 	/**
 	 * @return Player
 	 */
-	public Player getPlayer()
-	{
+	public Player getPlayer() {
 		return player;
 	}
 
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-	
+
 	/**
 	 * @return Spectator
 	 */
-	public Spectator getSpectator()
-	{
+	public Spectator getSpectator() {
 		return spectator;
 	}
 
@@ -130,13 +127,11 @@ public class User implements Serializable{
 		return password;
 	}
 
-	public void setSpectator(Spectator spectator)
-	{
+	public void setSpectator(Spectator spectator) {
 		this.spectator = spectator;
 	}
 
-	public long getId()
-	{
+	public long getId() {
 		return id;
-	}	
+	}
 }

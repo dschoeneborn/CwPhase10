@@ -15,7 +15,7 @@ public class FilterUsermanagement {
 	private LinkedList<String> insults;
 
 	@AroundInvoke
-	public Object timeTrace(InvocationContext ctx) throws Exception {
+	public Object filter(InvocationContext ctx) throws Exception {
 		insults = new LinkedList<String>();
 		insults.add("schimpfwort");
 		insults.add("fieses schimpfwort");
