@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
 
 /**
  * @author Björn Merschmeier

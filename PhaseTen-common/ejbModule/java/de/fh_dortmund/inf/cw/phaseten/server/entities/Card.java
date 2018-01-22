@@ -11,6 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
+
 /**
  * Card Entity.
  *
@@ -31,17 +34,22 @@ public class Card implements Serializable {
 	@Basic(optional = false)
 	private Color color;
 
-	@Override
-	public String toString() {
-		return "Card [id=" + id + ", color=" + color.name() + ", cardValue=" + cardValue.getWrittenValue() + "]";
-	}
-
 	@Column(nullable = false)
 	@Basic(optional = false)
 	@Enumerated(EnumType.ORDINAL)
 	private CardValue cardValue;
 
 	/**
+	 * Default Konstruktor.
+	 */
+	@SuppressWarnings("unused")
+	private Card() {
+
+	}
+
+	/**
+	 * Konstruktor.
+	 * 
 	 * @param color
 	 * @param cardValue
 	 */
@@ -51,22 +59,31 @@ public class Card implements Serializable {
 		this.cardValue = cardValue;
 	}
 
-	@SuppressWarnings("unused")
-	private Card() {
-
-	}
-
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param color
+	 * @param cardValue
+	 * @param id
+	 */
 	public Card(Color color, CardValue cardValue, int id) {
 		this(color, cardValue);
 
 		this.id = id;
 	}
 
+	/**
+	 * Liefert id.
+	 * 
+	 * @return id
+	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
+	 * Liefert color.
+	 * 
 	 * @return the color
 	 */
 	public Color getColor() {
@@ -74,6 +91,8 @@ public class Card implements Serializable {
 	}
 
 	/**
+	 * Liefert cardValue.
+	 * 
 	 * @return the cardValue
 	 */
 	public CardValue getCardValue() {
@@ -81,7 +100,9 @@ public class Card implements Serializable {
 	}
 
 	/**
-	 * @return the minus points of the card at the end of the round
+	 * Liefert Punktabzug für jeweilige Karte.
+	 * 
+	 * @return punktabzug
 	 */
 	public int getRoundEndValue() {
 		switch (cardValue) {
@@ -124,5 +145,10 @@ public class Card implements Serializable {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Card [id=" + id + ", color=" + color.name() + ", cardValue=" + cardValue.getWrittenValue() + "]";
 	}
 }

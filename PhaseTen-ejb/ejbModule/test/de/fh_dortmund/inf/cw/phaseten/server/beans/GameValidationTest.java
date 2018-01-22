@@ -21,18 +21,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.LiFoStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.RoundStage;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.RoundStage;
 
 /**
  * @author Dennis Schöneborn

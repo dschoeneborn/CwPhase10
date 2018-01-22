@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
+ * PlayerPile Entity.
+ * 
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
@@ -23,11 +25,18 @@ public class PlayerPile extends Pile {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
+	/**
+	 * Konstruktor.
+	 */
 	public PlayerPile() {
 		super();
 	}
 
 	/**
+	 * 
+	 * Prüft, ob letzte Karte hinzugefügt werden kann.
+	 * 
+	 * @param card
 	 * @author Björn Merschmeier
 	 */
 	@Override
@@ -36,6 +45,10 @@ public class PlayerPile extends Pile {
 	}
 
 	/**
+	 * 
+	 * Prüft, ob letzte Karte hinzugefügt werden kann.
+	 * 
+	 * @param card
 	 * @author Björn Merschmeier
 	 */
 	@Override

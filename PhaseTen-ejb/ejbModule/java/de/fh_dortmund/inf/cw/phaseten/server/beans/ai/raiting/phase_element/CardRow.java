@@ -2,8 +2,8 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting.phase_element;
 
 import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.SimPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
 
 /**
  * @author Robin Harbecke

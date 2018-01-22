@@ -8,16 +8,16 @@ import java.util.List;
 import javax.ejb.Stateless;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Pile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.RoundStage;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.RoundStage;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationRemote;
 

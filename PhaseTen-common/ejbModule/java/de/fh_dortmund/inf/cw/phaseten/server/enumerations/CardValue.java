@@ -1,27 +1,44 @@
 /**
  * 
  */
-package de.fh_dortmund.inf.cw.phaseten.server.entities;
+package de.fh_dortmund.inf.cw.phaseten.server.enumerations;
 
 /**
+ * Enum für CardValue.
+ * 
  * @author Dennis Schöneborn
  * @author Sven Krefeld
  *
  */
 public enum CardValue {
-	ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7),
-	EIGHT(8), NINE(9), TEN(10), ELEVEN(11), TWELVE(12), SKIP(15), WILD(20);
-	
+	ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10), ELEVEN(11), TWELVE(
+			12), SKIP(15), WILD(20);
+
 	private int value;
 
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param value
+	 */
 	private CardValue(int value) {
 		this.value = value;
 	}
 
+	/**
+	 * Liefert Value.
+	 * 
+	 * @return value
+	 */
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * Liefert Value als String.
+	 * 
+	 * @return value
+	 */
 	public String getWrittenValue() {
 		if (value == 15) {
 			return "Skip";
@@ -32,6 +49,11 @@ public enum CardValue {
 		}
 	}
 
+	/**
+	 * Liefert Value als String (Abkürzung).
+	 * 
+	 * @return value
+	 */
 	public String getShorthandValue() {
 		if (value == 15) {
 			return "S";
@@ -42,6 +64,12 @@ public enum CardValue {
 		}
 	}
 
+	/**
+	 * Liefert value
+	 * 
+	 * @param value
+	 * @return value
+	 */
 	public static CardValue getCardValue(int value) {
 		CardValue chatMessageType = null;
 

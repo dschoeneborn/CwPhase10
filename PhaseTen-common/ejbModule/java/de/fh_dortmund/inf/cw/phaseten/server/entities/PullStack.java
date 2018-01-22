@@ -8,7 +8,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.Entity;
 
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
+
 /**
+ * PullStack Entity
+ * 
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Sebastian Seitz
@@ -19,11 +24,16 @@ import javax.persistence.Entity;
 public class PullStack extends Stack {
 	private static final long serialVersionUID = 2117218073864785792L;
 
+	/**
+	 * Konstruktor
+	 */
 	public PullStack() {
 		super();
 	}
 
 	/**
+	 * Initialisierung.
+	 * 
 	 * @author Björn Merschmeier
 	 * @author Tim Prange
 	 */
@@ -55,6 +65,8 @@ public class PullStack extends Stack {
 	}
 
 	/**
+	 * mischt.
+	 * 
 	 * @author Björn Merschmeier
 	 */
 	public void shuffle() {
@@ -80,6 +92,9 @@ public class PullStack extends Stack {
 	}
 
 	/**
+	 * 
+	 * Prüft, ob letzte Karte hinzugefügt werden kann.
+	 * 
 	 * @author Björn Merschmeier
 	 */
 	@Override
@@ -88,6 +103,8 @@ public class PullStack extends Stack {
 	}
 
 	/**
+	 * Prüft, ob erste Karte hinzugefügt werden kann.
+	 * 
 	 * @author Björn Merschmeier
 	 */
 	@Override
