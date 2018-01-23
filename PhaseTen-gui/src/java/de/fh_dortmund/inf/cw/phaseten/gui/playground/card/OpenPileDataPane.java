@@ -1,5 +1,7 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.playground.card;
 
+import java.awt.Point;
+
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.card.drag_drop.ICardDropTarget;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
@@ -21,17 +23,23 @@ public class OpenPileDataPane extends PilePane implements ICardDropTarget{
 
 	public OpenPileDataPane(ServiceHandler serviceHandler, OpenPileGuiData dockPile) {
 		this.serviceHandler = serviceHandler;
-		this.dockPile = dockPile;		
+		this.dockPile = dockPile;
 		this.updateData();
 	}
-	
+
 	@Override
-	public void handleCardDrop(Card card) {
+	public void handleCardDrop(Card card, Point point) {
+		boolean tryToAttachFront = false;
+
+		if(point.getX() < this.getWidth()/2)
+		{
+			tryToAttachFront = true;
+		}
 		try {
-			this.serviceHandler.addToPileOnTable(card.getId(), this.dockPile.getId());
-		} catch (MoveNotValidException e) {		
+			this.serviceHandler.addToPileOnTable(card.getId(), this.dockPile.getId(), tryToAttachFront);
+		} catch (MoveNotValidException e) {
 		} catch (NotLoggedInException e) {
-		} catch (GameNotInitializedException e) {			
+		} catch (GameNotInitializedException e) {
 		}
 	}
 
@@ -39,6 +47,4 @@ public class OpenPileDataPane extends PilePane implements ICardDropTarget{
 	protected Iterable<Card> getCards() {
 		return this.dockPile.getCards();
 	}
-
-		
 }

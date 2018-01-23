@@ -23,6 +23,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
 /**
+ * Pile Entity.
+ * 
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
@@ -41,117 +43,190 @@ public abstract class Pile implements Serializable {
 	private long id;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	@JoinColumn(name="PILE_ID")
+	@JoinColumn(name = "PILE_ID")
 	@OrderColumn
 	private List<Card> cards;
 
+	/**
+	 * Konstruktor.
+	 */
 	public Pile() {
 		cards = new ArrayList<>();
 	}
 
+	/**
+	 * Liefert Liste der aktuellen Karten.
+	 * 
+	 * @return cards
+	 */
 	public Collection<Card> getCopyOfCardsList() {
 		return new ArrayList<>(cards);
 	}
 
-	public boolean addCard(Card card)
-	{
-		if(canAddCard(card))
-		{
-			cards.add(card);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public boolean addAll(Collection<Card> notVisibleCards)
-	{
+	/**
+	 * fügt letzte Karten hinzu.
+	 * 
+	 * @param notVisibleCards
+	 * @return konnte hinzugefügt werden
+	 */
+	public boolean addAllLast(Collection<Card> notVisibleCards) {
 		boolean canAddCards = true;
 
-		for(Card c : notVisibleCards)
-		{
-			if(!this.canAddCard(c))
-			{
+		for (Card c : notVisibleCards) {
+			if (!this.canAddLastCard(c)) {
 				canAddCards = false;
+				break;
 			}
 		}
 
-		if(canAddCards)
-		{
-			cards.addAll(notVisibleCards);
+		if (canAddCards) {
+			for (Card c : notVisibleCards) {
+				if (!addLast(c)) {
+					throw new RuntimeException("Card is tried to be added to pile, but was not allowed");
+				}
+			}
 		}
 
 		return canAddCards;
 	}
 
-	public boolean addFirst(Card card)
-	{
-		if(canAddCard(card))
-		{
+	/**
+	 * fügt erste Karte hinzu.
+	 * 
+	 * @param card
+	 * @return konnte hinzugefügt werden
+	 */
+	public boolean addFirst(Card card) {
+		if (this.canAddFirstCard(card)) {
 			cards.add(0, card);
 
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
+	/**
+	 * fügt letzte Karte hinzu.
+	 * 
+	 * @param card
+	 * @return konnte hinzugefügt werden
+	 */
+	public boolean addLast(Card card) {
+		if (canAddLastCard(card)) {
+			cards.add(card);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * leert Karten.
+	 */
 	public void clearCards() {
 		this.cards.clear();
 	}
 
-	public boolean isEmpty()
-	{
+	/**
+	 * Keine Karten vorhanden?
+	 * 
+	 * @return isEmpty
+	 */
+	public boolean isEmpty() {
 		return cards.isEmpty();
 	}
 
-	public Card getCard(int i)
-	{
+	/**
+	 * Liefert Karte zu Index.
+	 * 
+	 * @param i
+	 * @return card
+	 */
+	public Card getCard(int i) {
 		return cards.get(i);
 	}
 
-	public void setCard(int i, Card c)
-	{
+	/**
+	 * Setzt Karte am Index.
+	 * 
+	 * @param i
+	 * @param c
+	 */
+	public void setCard(int i, Card c) {
 		cards.set(i, c);
 	}
 
-	public void removeCard(int i)
-	{
+	/**
+	 * Löscht Karte zum Index.
+	 * 
+	 * @param i
+	 */
+	public void removeCard(int i) {
 		cards.remove(i);
 	}
 
-	public boolean removeCard(Card c)
-	{
+	/**
+	 * Löscht übergebene Karte.
+	 * 
+	 * @param c
+	 * @return
+	 */
+	public boolean removeCard(Card c) {
 		return cards.remove(c);
 	}
 
-	public boolean containsCard(Card card)
-	{
+	/**
+	 * Enthält Karte?
+	 * 
+	 * @param card
+	 * @return containsCard
+	 */
+	public boolean containsCard(Card card) {
 		return this.cards.contains(card);
 	}
 
 	/**
-	 * TODO Add JavaDoc
+	 * Größe des Stapels.
+	 * 
+	 * @return size
+	 */
+	public int getSize() {
+		return cards.size();
+	}
+
+	/**
+	 * Returns the id of the pile.
 	 *
 	 * @author Tim Prange
-	 * @return
+	 * @return id
 	 */
 	public long getId() {
 		return id;
 	}
 
 	/**
+	 * 
+	 * Prüft, ob letzte Karte hinzugefügt werden kann.
+	 * 
 	 * @author Robin Harbecke
 	 * @param card
 	 */
-	public abstract boolean canAddCard(Card card);
+	public abstract boolean canAddLastCard(Card card);
 
-	protected Card getLast()
-	{
+	/**
+	 * Prüft, ob letzte Karte hinzugefügt werden kann.
+	 * 
+	 * @param card
+	 */
+	public abstract boolean canAddFirstCard(Card card);
+
+	/**
+	 * Liefert letzte Karte.
+	 * 
+	 * @return card
+	 */
+	protected Card getLast() {
 		LinkedList<Card> newCards = new LinkedList<>(cards);
 		return newCards.getLast();
 	}

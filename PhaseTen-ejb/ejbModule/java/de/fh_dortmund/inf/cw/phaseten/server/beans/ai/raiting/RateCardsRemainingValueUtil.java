@@ -14,7 +14,7 @@ public class RateCardsRemainingValueUtil {
 		int sum = 0;
 		for (Card card : playerPile.getCards()) {
 			for (Pile pile: game.getOpenPiles()) {
-				if(!pile.canAddCard(card)) {
+				if(!pile.canAddLastCard(card) && !pile.canAddFirstCard(card)) {
 					sum += card.getRoundEndValue();
 				}
 			}

@@ -26,26 +26,28 @@ public class PlayerManagementTest {
 	public void setUp() throws Exception {
 		this.serviceHandler = ServiceHandlerImpl.getInstance();
 		this.serviceHandler.getPlayerConsumer().setMessageListener(new MessageListener() {
+			@Override
 			public void onMessage(Message message) {
 				messagePlayer = message;
 				latchPlayer.countDown();
 			}
 		});
 		this.serviceHandler.getLobbyConsumer().setMessageListener(new MessageListener() {
+			@Override
 			public void onMessage(Message message) {
 				messageLobby = message;
 				latchLobby.countDown();
 			}
 		});
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		this.serviceHandler.getPlayerConsumer().setMessageListener(null);
-		this.serviceHandler.getLobbyConsumer().setMessageListener(null);		
+		this.serviceHandler.getLobbyConsumer().setMessageListener(null);
 	}
 
-	//@Test
+	//	 @Test
 	public void testRequestPlayerMessage() throws Exception {
 		this.latchPlayer = new CountDownLatch(1);
 		this.serviceHandler.requestPlayerMessage();
@@ -54,13 +56,13 @@ public class PlayerManagementTest {
 		Assert.assertTrue(messagePlayer instanceof ObjectMessage);
 	}
 
-	//@Test
+	// @Test
 	public void register() throws Exception {
 		// throws UsernameAlreadyTakenException;
-		
+
 		String username = "testUser";
 		String password = "testPassword";
-		
+
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchLobby = new CountDownLatch(1);
 		this.serviceHandler.register(username, password);
@@ -71,13 +73,13 @@ public class PlayerManagementTest {
 		Assert.assertTrue(messageLobby instanceof ObjectMessage);
 	}
 
-	//@Test
+	// @Test
 	public void login() throws Exception {
 		// throws UserDoesNotExistException;
-		
+
 		String username = "testUser";
 		String password = "testPassword";
-		
+
 		this.latchPlayer = new CountDownLatch(1);
 		this.latchLobby = new CountDownLatch(1);
 		this.serviceHandler.login(username, password);

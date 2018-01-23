@@ -9,6 +9,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,18 +18,21 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
+import de.fh_dortmund.inf.cw.phaseten.server.entities.listener.EntityListener;
+
 /**
+ * User Entity.
+ * 
  * @author Dennis Schöneborn
  * @author Daniela Kaiser
  * @author Björn Merschmeier
  */
 
 @Entity
-@NamedQueries(value = {
-		@NamedQuery(name="User.findAll", query="select u from User u"),
-		@NamedQuery(name="User.findByName", query="select u from User u where u.loginName = :name")
-})
-public class User implements Serializable{
+@NamedQueries(value = { @NamedQuery(name = "User.findAll", query = "select u from User u"),
+		@NamedQuery(name = "User.findByName", query = "select u from User u where u.loginName = :name") })
+@EntityListeners({ EntityListener.class })
+public class User implements Serializable {
 
 	/**
 	 * 
@@ -54,14 +58,23 @@ public class User implements Serializable{
 	@JoinColumn(name = "PLAYER_ID", unique = true)
 	private Player player;
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	private Spectator spectator;
 
+	/**
+	 * Konstruktor
+	 */
 	private User() {
 
 	}
 
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param name
+	 * @param password
+	 */
 	public User(String name, String password) {
 		this();
 		this.loginName = name;
@@ -70,6 +83,8 @@ public class User implements Serializable{
 	}
 
 	/**
+	 * Liefert Login Namen
+	 * 
 	 * @return the loginName
 	 */
 	public String getLoginName() {
@@ -77,6 +92,8 @@ public class User implements Serializable{
 	}
 
 	/**
+	 * Liefert Coins
+	 * 
 	 * @return the coins
 	 */
 	public int getCoins() {
@@ -91,52 +108,71 @@ public class User implements Serializable{
 	public void increaseCoins(int coins) {
 		this.coins += coins;
 	}
-	
+
+	/**
+	 * Verringert Coins.
+	 * 
+	 * @param coins
+	 */
 	public void decreaseCoins(int coins) {
 		this.coins -= coins;
 	}
-	
+
 	/**
 	 * Set Coins.
 	 * 
 	 * @param coinsToSet
 	 */
-	public void setCoins(int coinsToSet)
-	{
+	public void setCoins(int coinsToSet) {
 		coins = coinsToSet;
 	}
-	
+
 	/**
+	 * Liefert Player
+	 * 
 	 * @return Player
 	 */
-	public Player getPlayer()
-	{
+	public Player getPlayer() {
 		return player;
 	}
 
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-	
+
 	/**
+	 * Liefert Spectator.
+	 * 
 	 * @return Spectator
 	 */
-	public Spectator getSpectator()
-	{
+	public Spectator getSpectator() {
 		return spectator;
 	}
 
+	/**
+	 * Liefert Passwort.
+	 * 
+	 * @return password
+	 */
 	public String getPassword() {
 		return password;
 	}
 
-	public void setSpectator(Spectator spectator)
-	{
+	/**
+	 * Setzt spectator
+	 * 
+	 * @param spectator
+	 */
+	public void setSpectator(Spectator spectator) {
 		this.spectator = spectator;
 	}
 
-	public long getId()
-	{
+	/**
+	 * Liefert id
+	 * 
+	 * @return id
+	 */
+	public long getId() {
 		return id;
-	}	
+	}
 }

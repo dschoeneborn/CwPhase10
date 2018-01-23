@@ -9,16 +9,19 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+
 /**
+ * SequenceDockPile Entity.
+ * 
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
  * @author Sebastian Seitz
  * @author Björn Merschmeier
  */
-
 @Entity
-@DiscriminatorValue( value="SDP" )
+@DiscriminatorValue(value = "SDP")
 public class SequenceDockPile extends DockPile {
 
 	/**
@@ -35,72 +38,83 @@ public class SequenceDockPile extends DockPile {
 	private CardValue maximum;
 
 	/**
-	 *
+	 * Konstruktor
 	 */
 	public SequenceDockPile() {
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile#dock(de.fh_dortmund.
-	 * inf.cw.phaseten.server.entities.Card)
-	 */
 	/**
-	 * @author Björn Merschmeier
+	 * fügt letzte Karte hinzu.
+	 * 
+	 * @param card
+	 * @return konnte hinzugefügt werden
 	 */
 	@Override
-	public boolean addCard(Card card) {
-		boolean addedCard = false;
+	public boolean addLast(Card card) {
+		boolean addedCard = super.addLast(card);
 
-		if (minimum == null || card.getCardValue().getValue() < minimum.getValue()) {
-			addedCard = addFirst(card);
-			if (card.getCardValue() != CardValue.WILD) {
-				minimum = card.getCardValue();
-			} else {
-				minimum = CardValue.SIX;
-			}
-
-			if (maximum == null) {
-				maximum = minimum;
-			}
-		} else if (maximum == null || card.getCardValue().getValue() > maximum.getValue()) {
-			addedCard = super.addCard(card);
-			maximum = card.getCardValue();
-		} else if (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD) {
-			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
-
-			addedCard = addFirst(card);
-			minimum = CardValue.getCardValue(minimum.getValue() - 1);
-		} else if (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD) {
-			//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
-
-			addedCard = super.addCard(card);
+		if (addedCard && maximum != null) {
 			maximum = CardValue.getCardValue(maximum.getValue() + 1);
+		} else if (addedCard && maximum == null && card.getCardValue() != CardValue.WILD) {
+			maximum = card.getCardValue();
+			minimum = CardValue.getCardValue(card.getCardValue().getValue() - this.getCopyOfCardsList().size() + 1);
 		}
 
 		return addedCard;
 	}
 
-	public CardValue getMinimum() {
-		return minimum;
-	}
-
-	public CardValue getMaximum() {
-		return maximum;
-	}
-
+	/**
+	 * fügt erste Karte hinzu.
+	 * 
+	 * @param card
+	 * @return konnte hinzugefügt werden
+	 */
 	@Override
-	public boolean canAddCard(Card card)
-	{
-		//TODO ACHTUNG: Wildcards beachten. Bei einer 7er Sequence, könnten auch nur 3 und 4 gegeben sein und alles andere mit Wilds aufgefüllt sein. Das wird noch nicht wirklich abgebildet!
+	public boolean addFirst(Card card) {
+		boolean addedCard = super.addFirst(card);
 
-		return (minimum == null || card.getCardValue().getValue() < minimum.getValue()
-				|| maximum == null || card.getCardValue().getValue() > maximum.getValue()
-				|| (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD)
-				|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD));
+		if (addedCard && minimum != null) {
+			minimum = CardValue.getCardValue(minimum.getValue() - 1);
+		} else if (addedCard && minimum == null && card.getCardValue() != CardValue.WILD) {
+			minimum = card.getCardValue();
+			maximum = CardValue.getCardValue(card.getCardValue().getValue() + this.getCopyOfCardsList().size() - 1);
+		}
+
+		return addedCard;
 	}
 
+	/**
+	 * 
+	 * Prüft, ob letzte Karte hinzugefügt werden kann.
+	 * 
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddLastCard(Card card) {
+		return card.getCardValue() != CardValue.SKIP
+				&& ((maximum == null && card.getCardValue() != CardValue.WILD && this.getCopyOfCardsList().size() < 12
+						&& card.getCardValue().getValue() - this.getCopyOfCardsList().size() > 0)
+						|| (maximum != null && card.getCardValue().getValue() == (maximum.getValue() + 1)
+								&& maximum != CardValue.TWELVE && this.getCopyOfCardsList().size() < 12)
+						|| (maximum != CardValue.TWELVE && card.getCardValue() == CardValue.WILD
+								&& this.getCopyOfCardsList().size() < 12));
+	}
+
+	/**
+	 * 
+	 * Prüft, ob erste Karte hinzugefügt werden kann.
+	 * 
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddFirstCard(Card card) {
+		return card.getCardValue() != CardValue.SKIP
+				&& ((minimum == null && card.getCardValue() != CardValue.WILD && this.getCopyOfCardsList().size() < 12
+						&& card.getCardValue().getValue() + this.getCopyOfCardsList().size() <= 12)
+						|| (minimum != null && card.getCardValue().getValue() == (minimum.getValue() - 1)
+								&& minimum != CardValue.ONE && this.getCopyOfCardsList().size() < 12)
+						|| (minimum != CardValue.ONE && card.getCardValue() == CardValue.WILD
+								&& this.getCopyOfCardsList().size() < 12));
+	}
 }

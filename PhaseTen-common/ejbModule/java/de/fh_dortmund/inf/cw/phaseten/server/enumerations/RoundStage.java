@@ -1,6 +1,8 @@
-package de.fh_dortmund.inf.cw.phaseten.server.entities;
+package de.fh_dortmund.inf.cw.phaseten.server.enumerations;
 
 /**
+ * RoudStage Enum
+ * 
  * @author Björn Merschmeier
  */
 public enum RoundStage {
@@ -8,14 +10,30 @@ public enum RoundStage {
 
 	private int value;
 
+	/**
+	 * Konstruktor
+	 * 
+	 * @param value
+	 */
 	private RoundStage(int value) {
 		this.value = value;
 	}
 
+	/**
+	 * Liefert Value
+	 * 
+	 * @return value
+	 */
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * Liefert Value als Objekt
+	 * 
+	 * @param value
+	 * @return value
+	 */
 	public static RoundStage getRoundStageValue(int value) {
 		RoundStage roundStage = null;
 

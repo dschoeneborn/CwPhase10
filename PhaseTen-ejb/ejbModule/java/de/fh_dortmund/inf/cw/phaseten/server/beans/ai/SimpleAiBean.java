@@ -10,13 +10,13 @@ import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting.phase_element.Foun
 import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting.phase_element.MissingResult;
 import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting.phase_element.SimPileAndPileElement;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.CardsToPileAction;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.TakeCardAction;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
 
 /**
  * @author Robin Harbecke
@@ -35,7 +35,7 @@ public class SimpleAiBean implements IAIPlayer {
 			return TakeCardAction.DRAWER_PILE;
 		}
 	}
-	
+
 	private double getRatingWithRandomCard(Player player, Game game) {
 		double sumRating = 0;
 		int countRating = 0;
@@ -51,13 +51,13 @@ public class SimpleAiBean implements IAIPlayer {
 				if(cardColor != Color.NONE && cardValue == CardValue.SKIP) {
 					continue;
 				}
-				
-				Card card = new Card(cardColor, cardValue);								
+
+				Card card = new Card(cardColor, cardValue);
 				sumRating += getRatingWithExtraCard(player, game, card);
 				countRating++;
 			}
 		}
-		return sumRating / ((double)countRating);
+		return sumRating / (countRating);
 	}
 
 	private double getRatingWithExtraCard(Player player, Game game, Card card) {
@@ -99,7 +99,7 @@ public class SimpleAiBean implements IAIPlayer {
 		List<CardsToPileAction> actions = new ArrayList<>();
 		for (Card card : player.getPlayerPile().getCopyOfCardsList()) {
 			for (DockPile pile: game.getOpenPiles()) {
-				if(actions.size() < (player.getPlayerPile().getCopyOfCardsList().size()-1) && pile.canAddCard(card)){
+				if(actions.size() < (player.getPlayerPile().getCopyOfCardsList().size()-1) && (pile.canAddLastCard(card) || pile.canAddFirstCard(card))){
 					actions.add(new CardsToPileAction(pile, Arrays.asList(card), true));
 				}
 			}

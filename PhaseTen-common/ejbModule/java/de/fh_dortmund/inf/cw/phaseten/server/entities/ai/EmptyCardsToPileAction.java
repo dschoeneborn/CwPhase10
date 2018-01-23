@@ -6,5 +6,9 @@ package de.fh_dortmund.inf.cw.phaseten.server.entities.ai;
  * @author Robin Harbecke
  */
 public class EmptyCardsToPileAction {
-	public EmptyCardsToPileAction() {}
+	/**
+	 * Leerer Konstruktor.
+	 */
+	public EmptyCardsToPileAction() {
+	}
 }

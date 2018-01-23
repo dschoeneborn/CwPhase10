@@ -1,6 +1,8 @@
 package de.fh_dortmund.inf.cw.phaseten.server.exceptions;
 
 /**
+ * InvalidCardCompilationException
+ * 
  * @author Marc Mettke
  */
 public class InvalidCardCompilationException extends MoveNotValidException {

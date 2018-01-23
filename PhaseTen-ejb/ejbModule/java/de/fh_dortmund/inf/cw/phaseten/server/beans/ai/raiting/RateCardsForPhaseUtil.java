@@ -6,7 +6,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting.phase_element.Card
 import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting.phase_element.CombinedPhaseElement;
 import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting.phase_element.IdenticalCards;
 import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting.phase_element.MissingResult;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Stage;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Stage;
 
 /**
  * @author Robin Harbecke
