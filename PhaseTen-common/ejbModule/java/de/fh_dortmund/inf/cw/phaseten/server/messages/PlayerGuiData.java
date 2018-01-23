@@ -11,6 +11,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
  * @author Robin Harbecke
  * @author Tim Prange
  * @author Björn Merschmeier
+ * @author Sven Krefeld
  */
 public class PlayerGuiData implements Serializable {
 	private static final long serialVersionUID = -2947823309554723821L;
@@ -19,12 +20,14 @@ public class PlayerGuiData implements Serializable {
 	private String name;
 	private long id;
 	private int negativePoints;
+	private int roundStage;
 
-	public PlayerGuiData(String playerName, int phase, long id, int negativePoints) {
+	public PlayerGuiData(String playerName, int phase, long id, int negativePoints, int roundStage) {
 		this.phase = phase;
 		this.name = playerName;
 		this.negativePoints = negativePoints;
 		this.id = id;
+		this.roundStage = roundStage;
 	}
 
 	public long getId()
@@ -45,8 +48,12 @@ public class PlayerGuiData implements Serializable {
 		return negativePoints;
 	}
 
+	public int getRoundStage() {
+		return roundStage;
+	}
+
 	public static PlayerGuiData from(Player player) {
-		return new PlayerGuiData(player.getName(), player.getPhase().getValue(), player.getId(), player.getNegativePoints());
+		return new PlayerGuiData(player.getName(), player.getPhase().getValue(), player.getId(), player.getNegativePoints(), player.getRoundStage().getValue());
 	}
 
 	public static Collection<PlayerGuiData> from(Collection<Player> players) {
