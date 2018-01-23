@@ -10,7 +10,6 @@ import javax.jms.ObjectMessage;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * @author Marc Mettke
@@ -27,12 +26,14 @@ public class PlayerManagementTest {
 	public void setUp() throws Exception {
 		this.serviceHandler = ServiceHandlerImpl.getInstance();
 		this.serviceHandler.getPlayerConsumer().setMessageListener(new MessageListener() {
+			@Override
 			public void onMessage(Message message) {
 				messagePlayer = message;
 				latchPlayer.countDown();
 			}
 		});
 		this.serviceHandler.getLobbyConsumer().setMessageListener(new MessageListener() {
+			@Override
 			public void onMessage(Message message) {
 				messageLobby = message;
 				latchLobby.countDown();
@@ -46,7 +47,7 @@ public class PlayerManagementTest {
 		this.serviceHandler.getLobbyConsumer().setMessageListener(null);
 	}
 
-//	 @Test
+	//	 @Test
 	public void testRequestPlayerMessage() throws Exception {
 		this.latchPlayer = new CountDownLatch(1);
 		this.serviceHandler.requestPlayerMessage();
