@@ -10,17 +10,16 @@ import javax.persistence.PrePersist;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 
-/**
- * EntityListener für das UserManagement.
- * 
- * @author Daniela Kaiser
+/***
+ * EntityListener für das UserManagement.**
  *
+ * @author Daniela Kaiser
  */
 public class EntityListener {
 
 	/**
 	 * Bei neuem User werden initial 500 Coins hinzugefügt.
-	 * 
+	 *
 	 * @param entity
 	 */
 	@PrePersist
@@ -35,7 +34,8 @@ public class EntityListener {
 
 			increaseCoins.invoke(entity, initialCoins);
 
-		} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+		}
+		catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			e.printStackTrace();
 		}
@@ -43,7 +43,7 @@ public class EntityListener {
 
 	/**
 	 * Meldung nach persistieren wird ausgegeben.
-	 * 
+	 *
 	 * @param entity
 	 */
 	@PostPersist
@@ -55,7 +55,8 @@ public class EntityListener {
 			Method getLoginName = clazz.getMethod("getLoginName");
 			String loginName = (String) getLoginName.invoke(entity);
 			System.out.println("User persistiert: " + loginName);
-		} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+		}
+		catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			e.printStackTrace();
 		}
@@ -63,7 +64,7 @@ public class EntityListener {
 
 	/**
 	 * Meldung nach Update wird ausgegeben.
-	 * 
+	 *
 	 * @param entity
 	 */
 	@PostUpdate
@@ -87,7 +88,8 @@ public class EntityListener {
 			System.out.println("User persistiert: loginName=" + loginName + ", coins=" + coins + ", player="
 					+ (player == null ? "-" : player.getName()) + ", spectator="
 					+ (spectator == null ? "-" : spectator.getName()) + "");
-		} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+		}
+		catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			e.printStackTrace();
 		}

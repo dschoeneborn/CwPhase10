@@ -23,7 +23,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Stage;
 
 /**
  * Player Entity.
- * 
+ *
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
@@ -55,9 +55,6 @@ public class Player implements Serializable {
 	@JoinColumn
 	@ManyToOne()
 	private Lobby lobby;
-
-	@OneToOne(mappedBy = "player")
-	private User user;
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
@@ -93,7 +90,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param name
 	 */
 	public Player(String name) {
@@ -103,7 +100,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Liefert Game.
-	 * 
+	 *
 	 * @return
 	 */
 	public Game getGame() {
@@ -112,7 +109,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Liefert Lobby.
-	 * 
+	 *
 	 * @return
 	 */
 	public Lobby getLobby() {
@@ -120,26 +117,8 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * Liefert User.
-	 * 
-	 * @return
-	 */
-	public User getUser() {
-		return user;
-	}
-
-	/**
-	 * Setzt User.
-	 * 
-	 * @param user
-	 */
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	/**
 	 * Liefert PlayerPile
-	 * 
+	 *
 	 * @return playerPile
 	 */
 	public PlayerPile getPlayerPile() {
@@ -148,7 +127,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Setzt PlayerPile.
-	 * 
+	 *
 	 * @param playerPile
 	 */
 	public void setPlayerPile(PlayerPile playerPile) {
@@ -157,7 +136,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Fügt Karte hinzu.
-	 * 
+	 *
 	 * @param c
 	 */
 	public void addCardToPlayerPile(Card c) {
@@ -166,7 +145,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Entfernt Karte.
-	 * 
+	 *
 	 * @param c
 	 * @throws NoSuchElementException
 	 */
@@ -176,7 +155,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Liefert Namen.
-	 * 
+	 *
 	 * @return name
 	 */
 	public String getName() {
@@ -185,7 +164,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Liefert Id.
-	 * 
+	 *
 	 * @return id
 	 */
 	public long getId() {
@@ -194,7 +173,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Liefert Round Stage.
-	 * 
+	 *
 	 * @return roundStage
 	 */
 	public RoundStage getRoundStage() {
@@ -203,7 +182,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Fügt Round Stage hinzu.
-	 * 
+	 *
 	 * @author Björn Merschmeier
 	 */
 	public void addRoundStage() {
@@ -212,7 +191,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Liefert Phase.
-	 * 
+	 *
 	 * @return
 	 */
 	public Stage getPhase() {
@@ -221,7 +200,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Fügt Phase hinzu
-	 * 
+	 *
 	 * @author Björn Merschmeier
 	 */
 	public void addPhase() {
@@ -230,7 +209,7 @@ public class Player implements Serializable {
 
 	/**
 	 * playerLaidStage?
-	 * 
+	 *
 	 * @return playerLaidStage
 	 */
 	public boolean playerLaidStage() {
@@ -239,7 +218,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Setzt playerLaidStage
-	 * 
+	 *
 	 * @param playerLaidStage
 	 */
 	public void setPlayerLaidStage(boolean playerLaidStage) {
@@ -248,7 +227,7 @@ public class Player implements Serializable {
 
 	/**
 	 * hat skip Karte?
-	 * 
+	 *
 	 * @return playerHasSkipCard
 	 */
 	public boolean hasSkipCard() {
@@ -278,7 +257,7 @@ public class Player implements Serializable {
 
 	/**
 	 * hat keine Karten?
-	 * 
+	 *
 	 * @returnhasNoCards
 	 */
 	public boolean hasNoCards() {
@@ -287,7 +266,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Liefert Abzugpunte.
-	 * 
+	 *
 	 * @return negativePoints
 	 */
 	public int getNegativePoints() {
@@ -296,7 +275,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Fügt Abzugpunkte hinzu.
-	 * 
+	 *
 	 * @param i
 	 */
 	public void addNegativePoints(int i) {
@@ -305,7 +284,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Ist AI?
-	 * 
+	 *
 	 * @return isAI
 	 */
 	public boolean getIsAI() {
@@ -314,7 +293,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Setzt isAI
-	 * 
+	 *
 	 * @param isAI
 	 */
 	public void setIsAI(boolean isAI) {
@@ -323,7 +302,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Setzt Game
-	 * 
+	 *
 	 * @param game
 	 */
 	protected void setGame(Game game) {
@@ -339,7 +318,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Setzt Lobby.
-	 * 
+	 *
 	 * @param lobby
 	 */
 	protected void setLobby(Lobby lobby) {

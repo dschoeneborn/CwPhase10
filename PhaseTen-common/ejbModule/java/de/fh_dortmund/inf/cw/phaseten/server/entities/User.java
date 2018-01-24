@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
@@ -22,7 +22,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.listener.EntityListener;
 
 /**
  * User Entity.
- * 
+ *
  * @author Dennis Schöneborn
  * @author Daniela Kaiser
  * @author Björn Merschmeier
@@ -30,14 +30,19 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.listener.EntityListener;
 
 @Entity
 @NamedQueries(value = { @NamedQuery(name = "User.findAll", query = "select u from User u"),
-		@NamedQuery(name = "User.findByName", query = "select u from User u where u.loginName = :name") })
+		@NamedQuery(name = "User.findByName", query = "select u from User u where u.loginName = :name"),
+		@NamedQuery(name = User.FIND_BY_PLAYER, query = "SELECT u FROM User u WHERE u.player = :"
+				+ User.PARAM_PLAYER) })
 @EntityListeners({ EntityListener.class })
 public class User implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public static final String FIND_BY_PLAYER = "User.FIND_BY_PLAYER";
+	public static final String PARAM_PLAYER = "UserParamPlayer";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,7 +76,7 @@ public class User implements Serializable {
 
 	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param name
 	 * @param password
 	 */
@@ -84,7 +89,7 @@ public class User implements Serializable {
 
 	/**
 	 * Liefert Login Namen
-	 * 
+	 *
 	 * @return the loginName
 	 */
 	public String getLoginName() {
@@ -93,7 +98,7 @@ public class User implements Serializable {
 
 	/**
 	 * Liefert Coins
-	 * 
+	 *
 	 * @return the coins
 	 */
 	public int getCoins() {
@@ -102,7 +107,7 @@ public class User implements Serializable {
 
 	/**
 	 * Increase Coins.
-	 * 
+	 *
 	 * @param coinsToAdd
 	 */
 	public void increaseCoins(int coins) {
@@ -111,7 +116,7 @@ public class User implements Serializable {
 
 	/**
 	 * Verringert Coins.
-	 * 
+	 *
 	 * @param coins
 	 */
 	public void decreaseCoins(int coins) {
@@ -120,7 +125,7 @@ public class User implements Serializable {
 
 	/**
 	 * Set Coins.
-	 * 
+	 *
 	 * @param coinsToSet
 	 */
 	public void setCoins(int coinsToSet) {
@@ -129,7 +134,7 @@ public class User implements Serializable {
 
 	/**
 	 * Liefert Player
-	 * 
+	 *
 	 * @return Player
 	 */
 	public Player getPlayer() {
@@ -142,7 +147,7 @@ public class User implements Serializable {
 
 	/**
 	 * Liefert Spectator.
-	 * 
+	 *
 	 * @return Spectator
 	 */
 	public Spectator getSpectator() {
@@ -151,7 +156,7 @@ public class User implements Serializable {
 
 	/**
 	 * Liefert Passwort.
-	 * 
+	 *
 	 * @return password
 	 */
 	public String getPassword() {
@@ -160,7 +165,7 @@ public class User implements Serializable {
 
 	/**
 	 * Setzt spectator
-	 * 
+	 *
 	 * @param spectator
 	 */
 	public void setSpectator(Spectator spectator) {
@@ -169,7 +174,7 @@ public class User implements Serializable {
 
 	/**
 	 * Liefert id
-	 * 
+	 *
 	 * @return id
 	 */
 	public long getId() {

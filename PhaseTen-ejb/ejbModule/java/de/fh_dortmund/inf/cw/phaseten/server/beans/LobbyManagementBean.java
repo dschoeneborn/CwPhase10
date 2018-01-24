@@ -11,7 +11,6 @@ import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.Topic;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -127,7 +126,7 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 		}
 
 		gameManagment.startGame(lobby.getPlayers(), lobby.getSpectators());
-		
+
 		lobby.preRemove();
 
 		entityManager.remove(lobby);
@@ -158,13 +157,11 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 		Query namedQuery = entityManager.createNamedQuery("lobby.selectLatest");
 
 		try {
-			namedQuery.setLockMode(LockModeType.PESSIMISTIC_READ);
 			return (Lobby) namedQuery.getSingleResult();
 		}
 		catch (NoResultException e) {
 			Lobby l = new Lobby();
 			entityManager.persist(l);
-			entityManager.lock(l, LockModeType.PESSIMISTIC_READ);
 			entityManager.flush();
 
 			return l;
