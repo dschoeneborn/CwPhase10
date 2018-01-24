@@ -127,7 +127,7 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 			User u;
 			u = serviceHandler.getUser();
 
-			statusPanel.updateData(u);
+			statusPanel.updateData(u, null);
 		} catch (NotLoggedInException e) {
 			new RuntimeException("Lobby is shown, but user is not logged in. This error should not happen");
 		}

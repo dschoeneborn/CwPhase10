@@ -21,6 +21,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
  * @author Robin Harbecke
  * @author Marc Mettke
  * @author Björn Merschmeier
+ * @author Sven Krefeld
  */
 public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 	private static final long serialVersionUID = -8685207683648562278L;
@@ -65,16 +66,17 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 			this.topRowPane.gameDataUpdated(game);
 			this.publicCardStackPane.gameDataUpdated(game);
 			this.pack();
+
+			try {
+				this.playerCardsPane.updateData(serviceHandler.getCards());
+				this.statusPanel.updateData(serviceHandler.getUser(), game.getCurrentPlayer());
+				this.pack();
+			}
+			catch (NotLoggedInException e) {
+				throw new RuntimeException(
+						"User tried to get Cards while not logged in in Game-Screen. This error should not happen!");
+			}
 		}
 
-		try {
-			this.playerCardsPane.updateData(serviceHandler.getCards());
-			this.statusPanel.updateData(serviceHandler.getUser());
-			this.pack();
-		}
-		catch (NotLoggedInException e) {
-			throw new RuntimeException(
-					"User tried to get Cards while not logged in in Game-Screen. This error should not happen!");
-		}
 	}
 }

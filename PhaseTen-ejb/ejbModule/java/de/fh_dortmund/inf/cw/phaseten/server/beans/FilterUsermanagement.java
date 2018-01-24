@@ -5,11 +5,10 @@ import java.util.LinkedList;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
-/**
- * Filtert beim Registrieren und/oder einloggen Schimpfwörter heraus.
+/***
+ * Filtert beim Registrieren und/oder einloggen Schimpfwörter heraus.**
  *
  * @author Daniela Kaiser
- *
  */
 public class FilterUsermanagement {
 	private LinkedList<String> insults;
@@ -22,8 +21,7 @@ public class FilterUsermanagement {
 		insults.add("ganz fieses schimpfwort");
 
 		Object[] params = ctx.getParameters();
-		if(params != null)
-		{
+		if (params != null) {
 			for (int i = 0; i < params.length; i++) {
 				if (params[i] instanceof String) {
 					params[i] = format((String) params[i]);

@@ -11,10 +11,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.Timeout;
-import javax.ejb.Timer;
-import javax.ejb.TimerConfig;
-import javax.ejb.TimerService;
 import javax.inject.Inject;
 import javax.jms.JMSContext;
 import javax.jms.JMSException;
@@ -22,6 +18,7 @@ import javax.jms.Message;
 import javax.jms.Topic;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
@@ -31,6 +28,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PlayerPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.PullStack;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ai.CardsToPileAction;
 import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Stage;
@@ -52,7 +50,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal;;
  */
 @Stateless
 public class GameManagementBean implements GameManagementLocal {
-	
+
 	@Inject
 	private JMSContext jmsContext;
 	@Resource(lookup = "java:global/jms/Game")
@@ -78,14 +76,16 @@ public class GameManagementBean implements GameManagementLocal {
 		if (!p.getGame().isInitialized()) {
 			try {
 				Thread.sleep(3000);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (p.getGame().isInitialized()) {
 			sendGameMessage(p);
-		} else {
+		}
+		else {
 			throw new GameNotInitializedException();
 		}
 	}
@@ -133,10 +133,10 @@ public class GameManagementBean implements GameManagementLocal {
 	 */
 	@Override
 	public void addToPileOnTable(Player player, long cardId, long dockPileId)
-			throws MoveNotValidException, GameNotInitializedException
-	{
+			throws MoveNotValidException, GameNotInitializedException {
 		addToPileOnTable(player, cardId, dockPileId, false);
 	}
+
 	/**
 	 * @author Björn Merschmeier
 	 * @throws GameNotInitializedException
@@ -148,20 +148,16 @@ public class GameManagementBean implements GameManagementLocal {
 		Game game = player.getGame();
 		DockPile dockPile = entityManager.find(DockPile.class, dockPileId);
 
-		if (layAtFirstPosition && gameValidation.isValidToAddCardFirst(game, player, dockPile, card))
-		{
+		if (layAtFirstPosition && gameValidation.isValidToAddCardFirst(game, player, dockPile, card)) {
 			dockPile.addFirst(card);
 		}
-		else if(!layAtFirstPosition && gameValidation.isValidToAddCardLast(game, player, dockPile, card))
-		{
+		else if (!layAtFirstPosition && gameValidation.isValidToAddCardLast(game, player, dockPile, card)) {
 			dockPile.addLast(card);
 		}
-		else if(gameValidation.isValidToAddCardLast(game, player, dockPile, card))
-		{
+		else if (gameValidation.isValidToAddCardLast(game, player, dockPile, card)) {
 			dockPile.addLast(card);
 		}
-		else if(gameValidation.isValidToAddCardFirst(game, player, dockPile, card))
-		{
+		else if (gameValidation.isValidToAddCardFirst(game, player, dockPile, card)) {
 			dockPile.addFirst(card);
 		}
 		else {
@@ -202,7 +198,8 @@ public class GameManagementBean implements GameManagementLocal {
 		if (gameValidation.isValidPushCardToLiFoStack(game, player, card)) {
 			layCardToLiFoStack(player, game, card);
 			setNextPlayer(game);
-		} else {
+		}
+		else {
 			throw new MoveNotValidException();
 		}
 
@@ -233,7 +230,8 @@ public class GameManagementBean implements GameManagementLocal {
 			layCardToLiFoStack(currentPlayer, game, card);
 			currentPlayer.resetRoundStage();
 			setNextPlayer(game);
-		} else {
+		}
+		else {
 			throw new MoveNotValidException();
 		}
 
@@ -242,7 +240,6 @@ public class GameManagementBean implements GameManagementLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagment#initGame(de.
 	 * fh_dortmund.inf.cw.phaseten.server.entities.Game)
 	 */
@@ -359,7 +356,8 @@ public class GameManagementBean implements GameManagementLocal {
 
 		if (game.getLiFoStack().showCard().getCardValue() == CardValue.SKIP) {
 			setNextPlayer(game);
-		} else if (game.getCurrentPlayer().getIsAI()) {
+		}
+		else if (game.getCurrentPlayer().getIsAI()) {
 			aiTurn(game, game.getCurrentPlayer());
 			setNextPlayer(game);
 		}
@@ -381,11 +379,16 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 		int coins = ranking.size() * 50;
 		int divisor = 0;
-		for (i = 1; i < ranking.size(); i++) divisor += i;
+		for (i = 1; i < ranking.size(); i++) {
+			divisor += i;
+		}
 		i = 1;
 		for (Player player : ranking) {
 			if (!player.getIsAI()) {
-				coinManagment.increaseCoins(player.getUser(), coins / divisor * (ranking.size() - i));
+				TypedQuery<User> query = entityManager.createNamedQuery(User.FIND_BY_PLAYER, User.class);
+				query.setParameter(User.PARAM_PLAYER, player);
+				User result = query.getSingleResult();
+				coinManagment.increaseCoins(result, coins / divisor * (ranking.size() - i));
 			}
 			i++;
 		}
@@ -417,7 +420,8 @@ public class GameManagementBean implements GameManagementLocal {
 
 		if (game.getLastRoundBeginner() == null) {
 			nextPlayer = r.nextInt(players.size());
-		} else {
+		}
+		else {
 			nextPlayer = (players.indexOf(game.getLastRoundBeginner()) + 1) % players.size();
 		}
 
@@ -504,7 +508,8 @@ public class GameManagementBean implements GameManagementLocal {
 				countPoints(game);
 				initNextRound(game);
 				break;
-			} else if (nextPlayer.hasSkipCard()) {
+			}
+			else if (nextPlayer.hasSkipCard()) {
 				nextPlayer.removeSkipCard();
 			}
 			// don't end loop as long as ai players are taking their turns
@@ -513,7 +518,7 @@ public class GameManagementBean implements GameManagementLocal {
 				aiTurn(game, nextPlayer);
 			}
 			// end loop if a valid next player is found (not ai and not skipped)
-			else if(!nextPlayer.hasSkipCard() ) {
+			else if (!nextPlayer.hasSkipCard()) {
 				break;
 			}
 		}
@@ -533,34 +538,36 @@ public class GameManagementBean implements GameManagementLocal {
 		// do moves
 		List<CardsToPileAction> actions;
 		do {
-			//get moves
-			actions = aiManagment.cardsToPile(player,game);
+			// get moves
+			actions = aiManagment.cardsToPile(player, game);
 
 			Collection<DockPile> piles = new ArrayList<>();
-			for(CardsToPileAction action : actions) {
+			for (CardsToPileAction action : actions) {
 				// lay out phase
 				if (!action.isDockPileAlreadyExisting()) {
 					DockPile dockPile = action.getDockpile();
-					for(Card card : action.getCards()) {
+					for (Card card : action.getCards()) {
 						dockPile.addLast(card);
 					}
 					piles.add(dockPile);
 				}
 				// add card to existing DockPile
 				else {
-					for(Card card : action.getCards()) {
+					for (Card card : action.getCards()) {
 						try {
 							addToPileOnTable(player, card.getId(), action.getDockpile().getId());
-						} catch (MoveNotValidException | GameNotInitializedException e) {
+						}
+						catch (MoveNotValidException | GameNotInitializedException e) {
 							e.printStackTrace();
 						}
 					}
 				}
 			}
-			if(piles.size() > 0) {
+			if (piles.size() > 0) {
 				layPhaseToTable(player, piles, game);
 			}
-		} while(actions.size() > 0);
+		}
+		while (actions.size() > 0);
 
 		// discard card
 		Card card = aiManagment.discardCard(player, game);
@@ -607,7 +614,8 @@ public class GameManagementBean implements GameManagementLocal {
 
 		try {
 			message.setStringProperty("userNames", playersAndSpectators);
-		} catch (JMSException e) {
+		}
+		catch (JMSException e) {
 			e.printStackTrace();
 		}
 
