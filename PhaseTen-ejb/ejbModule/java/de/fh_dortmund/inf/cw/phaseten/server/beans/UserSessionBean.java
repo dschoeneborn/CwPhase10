@@ -268,21 +268,6 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	/*
 	 * (non-Javadoc)
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
-	 * requestGameMessage()
-	 */
-	/**
-	 * @author Tim Prange
-	 */
-	@Override
-	public void requestGameMessage()
-			throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException {
-		this.gameManagement.requestGameMessage(getOrCreateCurrentPlayer());
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * getLobbyPlayers()
 	 */
 	/**

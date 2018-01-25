@@ -118,16 +118,6 @@ public interface UserSessionRemote extends UserSession {
 	 * TODO Add JavaDoc
 	 *
 	 * @author Tim Prange
-	 * @throws GameNotInitializedException
-	 * @throws NotLoggedInException
-	 * @throws PlayerDoesNotExistsException
-	 */
-	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException;
-
-	/**
-	 * TODO Add JavaDoc
-	 *
-	 * @author Tim Prange
 	 * @return
 	 */
 	Collection<PlayerGuiData> getLobbyPlayers();
