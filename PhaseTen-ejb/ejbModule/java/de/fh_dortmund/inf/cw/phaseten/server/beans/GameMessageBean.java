@@ -8,7 +8,7 @@ import javax.jms.MessageListener;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 
 /**
@@ -31,10 +31,16 @@ public class GameMessageBean implements MessageListener {
 	 */
 	public void onMessage(Message message) {
 		try {
-			long playerId = message.getLongProperty("PLAYER");
-			Player p = entityManager.find(Player.class, playerId);
-			
-			this.gameManagement.requestGameMessage(p);			
+			long userId = message.getLongProperty("USER");
+			User u = entityManager.find(User.class, userId);
+
+			if (u.getPlayer() == null) {
+			        Thread.sleep(3000);
+			}
+
+			if (u.getPlayer() != null) {
+			        this.gameManagement.requestGameMessage(u.getPlayer());
+			}
 		} catch (Exception e) {
 			System.err.println("Error while game message request: " + e.getMessage());
 		}

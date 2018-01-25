@@ -100,7 +100,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 			throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException {
 		try {
 			Message message = jmsContext.createMessage();
-			message.setLongProperty("PLAYER", getUser().getPlayer().getId());
+			message.setLongProperty("USER", getUser().getId());
 			jmsContext.createProducer().send(gameMessageQueue, message);
 		} catch (JMSException e) {
 			e.printStackTrace();
