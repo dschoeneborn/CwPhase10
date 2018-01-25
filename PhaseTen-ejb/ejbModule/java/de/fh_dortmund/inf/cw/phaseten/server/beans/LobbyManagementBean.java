@@ -11,7 +11,6 @@ import javax.jms.JMSContext;
 import javax.jms.Message;
 import javax.jms.Topic;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -20,7 +19,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.GameValidationLocal;
@@ -119,15 +118,15 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 	 * @author Björn Merschmeier
 	 */
 	@Override
-	public void startGame(Player player) throws NotEnoughPlayerException {
+	public void startGame(Player player) throws NotEnoughPlayersException {
 		Lobby lobby = getOrCreateLobby();
 
 		if (!gameValidation.hasEnoughPlayers(lobby)) {
-			throw new NotEnoughPlayerException();
+			throw new NotEnoughPlayersException();
 		}
 
 		gameManagment.startGame(lobby.getPlayers(), lobby.getSpectators());
-		
+
 		lobby.preRemove();
 
 		entityManager.remove(lobby);
@@ -158,13 +157,11 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 		Query namedQuery = entityManager.createNamedQuery("lobby.selectLatest");
 
 		try {
-			namedQuery.setLockMode(LockModeType.PESSIMISTIC_READ);
 			return (Lobby) namedQuery.getSingleResult();
 		}
 		catch (NoResultException e) {
 			Lobby l = new Lobby();
 			entityManager.persist(l);
-			entityManager.lock(l, LockModeType.PESSIMISTIC_READ);
 			entityManager.flush();
 
 			return l;

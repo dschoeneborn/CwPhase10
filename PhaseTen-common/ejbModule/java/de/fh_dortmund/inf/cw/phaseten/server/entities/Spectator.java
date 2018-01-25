@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
+ * Spectator Entity.
+ * 
  * @author Dennis Schöneborn
  * @author Sebastian Seitz
  * @author Daniela Kaiser
@@ -40,35 +42,65 @@ public class Spectator implements Serializable {
 
 	}
 
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param name
+	 */
 	public Spectator(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param name
+	 * @param game
+	 */
 	public Spectator(String name, Game game) {
 		this(name);
 		this.game = game;
 	}
 
 	/**
+	 * Liefert Game
+	 * 
 	 * @return the game
 	 */
 	public Game getGame() {
 		return game;
 	}
 
+	/**
+	 * Liefert Id.
+	 * 
+	 * @return id
+	 */
 	public long getId() {
 		return id;
 	}
 
+	/**
+	 * Liefert Namen
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
-	protected void removeGame()
-	{
+	/**
+	 * Setzt Spiel zurück.
+	 */
+	protected void removeGame() {
 		this.game = null;
 	}
 
+	/**
+	 * Setzt Spiel
+	 * 
+	 * @param game
+	 */
 	protected void setGame(Game game) {
 		this.game = game;
 	}

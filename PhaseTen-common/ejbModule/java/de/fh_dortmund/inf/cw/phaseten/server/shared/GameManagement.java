@@ -29,4 +29,6 @@ public interface GameManagement {
 	void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, long cardId)
 			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException;
 
+	void addToPileOnTable(Player player, long cardId, long dockPileId, boolean layAtFirstPosition) throws MoveNotValidException, GameNotInitializedException;
+
 }

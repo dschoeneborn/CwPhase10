@@ -19,6 +19,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
+ * Lobby Entity.
+ * 
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Daniela Kaiser
@@ -26,14 +28,22 @@ import javax.persistence.OneToMany;
  * @author Björn Merschmeier
  */
 @NamedQueries({
-		@NamedQuery(name = "lobby.selectLobbyByUserId", query = "SELECT l FROM Lobby l "
-				+ "JOIN Player p " + "WHERE p.id = :playerId"),
-		@NamedQuery(name = "lobby.selectLatest", query = "SELECT l FROM Lobby l"),
-		@NamedQuery(name = "selectLobbyBySpectatorId", query = "SELECT l FROM Lobby l " + "JOIN Spectator s "
+		@NamedQuery(name = Lobby.LOBBY_SELECT_LOBBY_BY_USER_ID, query = "SELECT l FROM Lobby l " + "JOIN Player p "
+				+ "WHERE p.id = :playerId"),
+		@NamedQuery(name = Lobby.LOBBY_SELECT_LATEST, query = "SELECT l FROM Lobby l"),
+		@NamedQuery(name = Lobby.SELECT_LOBBY_BY_SPECTATOR_ID, query = "SELECT l FROM Lobby l " + "JOIN Spectator s "
 				+ "WHERE s.id = :spectatorId"),
-		@NamedQuery(name = "lobby.findById", query = "SELECT l FROM Lobby l WHERE l.id = :lobbyId") })
+		@NamedQuery(name = Lobby.LOBBY_FIND_BY_ID, query = "SELECT l FROM Lobby l WHERE l.id = :lobbyId") })
 @Entity
 public class Lobby implements Serializable {
+
+	protected static final String LOBBY_FIND_BY_ID = "lobby.findById";
+
+	protected static final String SELECT_LOBBY_BY_SPECTATOR_ID = "selectLobbyBySpectatorId";
+
+	protected static final String LOBBY_SELECT_LATEST = "lobby.selectLatest";
+
+	protected static final String LOBBY_SELECT_LOBBY_BY_USER_ID = "lobby.selectLobbyByUserId";
 
 	/**
 	 *
@@ -52,28 +62,49 @@ public class Lobby implements Serializable {
 	@JoinTable
 	private Set<Spectator> spectators;
 
+	/**
+	 * Konstruktor.
+	 */
 	public Lobby() {
 		this.players = new HashSet<>();
 		this.spectators = new HashSet<>();
 	}
 
+	/**
+	 * max. Anzahl Spieler erreicht
+	 * 
+	 * @return isFull
+	 */
 	public boolean isFull() {
 		if (this.players.size() < Game.MAX_PLAYER) {
 			return false;
 		}
-
 		return true;
-
 	}
 
+	/**
+	 * Liefert Anazhl Spieler.
+	 * 
+	 * @return size
+	 */
 	public int getNumberOfPlayers() {
 		return this.players.size();
 	}
 
+	/**
+	 * Liefert Anzahl Spectator.
+	 * 
+	 * @return size
+	 */
 	public int getNumberOfSpectators() {
 		return this.spectators.size();
 	}
 
+	/**
+	 * Fügt Spieler hinzu, wenn möglich.
+	 * 
+	 * @param player
+	 */
 	public void addPlayer(Player player) {
 		if (this.players.size() < Game.MAX_PLAYER) {
 			this.players.add(player);
@@ -81,49 +112,85 @@ public class Lobby implements Serializable {
 		}
 	}
 
+	/**
+	 * Fügt Spectator hinzu.
+	 * 
+	 * @param spectator
+	 */
 	public void addSpectator(Spectator spectator) {
 		this.spectators.add(spectator);
 	}
 
+	/**
+	 * entfernt Spieler.
+	 * 
+	 * @param player
+	 */
 	public void removePlayer(Player player) {
 		this.players.remove(player);
 		player.removeLobby();
 	}
 
+	/**
+	 * entfernt Spectator.
+	 * 
+	 * @param spectator
+	 */
 	public void removeSpectator(Spectator spectator) {
 		this.spectators.remove(spectator);
 	}
 
+	/**
+	 * Liefert spieler
+	 * 
+	 * @return players
+	 */
 	public Set<Player> getPlayers() {
 		return players;
 	}
 
+	/**
+	 * Liefert Spectator.
+	 * 
+	 * @return
+	 */
 	public Set<Spectator> getSpectators() {
 		return spectators;
 	}
 
+	/**
+	 * Vorbereiten auf Schließen
+	 */
 	public void preRemove() {
-		
+
 		removeSpectators();
 		removePlayers();
 	}
 
-	public long getId() {
-		return id;
+	/**
+	 * Entfernt Spieler.
+	 */
+	private void removePlayers() {
+		for (Player p : new ArrayList<>(players)) {
+			removePlayer(p);
+		}
 	}
 
+	/**
+	 * Entfernt Spectator.
+	 */
 	public void removeSpectators() {
-		for(Spectator s : new ArrayList<>(spectators))
-		{
+		for (Spectator s : new ArrayList<>(spectators)) {
 			removeSpectator(s);
 		}
 	}
-	
-	private void removePlayers()
-	{
-		for(Player p: new ArrayList<>(players))
-		{
-			removePlayer(p);
-		}
+
+	/**
+	 * Liefert id
+	 * 
+	 * @return id
+	 */
+	public long getId() {
+		return id;
 	}
 }

@@ -6,8 +6,8 @@ import java.awt.Font;
 import javax.swing.JPanel;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Color;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
 
 /**
  * @author Robin Harbecke
@@ -109,10 +109,10 @@ public class CardPane extends JPanel {
 	}
 	
 	private static Color getColor(Card card) {
-		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.BLUE) return Color.BLUE;
-		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.RED) return Color.RED;
-		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.GREEN) return Color.GREEN;
-		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.entities.Color.YELLOW) return Color.YELLOW;
+		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color.BLUE) return Color.BLUE;
+		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color.RED) return Color.RED;
+		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color.GREEN) return Color.GREEN;
+		if(card.getColor() == de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color.YELLOW) return Color.YELLOW;
 		return Color.NONE;
 		
 	}

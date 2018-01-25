@@ -11,15 +11,15 @@ import javax.swing.JPanel;
 import de.fh_dortmund.inf.cw.phaseten.client.ServiceHandler;
 import de.fh_dortmund.inf.cw.phaseten.gui.playground.player.PlayerCardsPane;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.CardValue;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SequenceDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.SetDockPile;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
 
 /**
  * @author Robin Harbecke
- *
+ * @author Björn Merschmeier
  */
 public class LayPhaseCardsWrapperPane extends JPanel{
 	private static final long serialVersionUID = 5268736642704635817L;
@@ -32,8 +32,8 @@ public class LayPhaseCardsWrapperPane extends JPanel{
 	protected TemporaryDockPilePane currentPile;
 	protected JComboBox<String> typeComboBox = new JComboBox<>(new String[] {equalNumber,cardSequence,equalColor,empty});
 
-	public LayPhaseCardsWrapperPane(ServiceHandler serviceHandler,PlayerCardsPane playerCardsPane) {
-		this.currentPile = new TemporaryDockPilePane(serviceHandler,playerCardsPane);
+	public LayPhaseCardsWrapperPane(ServiceHandler serviceHandler,PlayerCardsPane playerCardsPane, Class<? extends DockPile> pileType) {
+		this.currentPile = new TemporaryDockPilePane(serviceHandler,playerCardsPane, pileType);
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		this.add(this.typeComboBox);
 		this.add(this.currentPile);
@@ -66,7 +66,7 @@ public class LayPhaseCardsWrapperPane extends JPanel{
 			return null;
 		}
 		for (Card card : cards) {
-			if(!resultDockPile.addCard(card)) {
+			if(!resultDockPile.addLast(card)) {
 				return null;
 			}
 		}

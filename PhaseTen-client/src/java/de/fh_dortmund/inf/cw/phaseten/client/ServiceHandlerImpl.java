@@ -22,7 +22,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedExcept
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InsufficientCoinSupplyException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
@@ -110,10 +110,10 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	@Override
 	public void register(String username, String password) throws UsernameAlreadyTakenException {
 		userSessionRemote.register(username, password);
-		
+
 		createNewGameQueueConsumerWithMessageSelector();
 	}
-	
+
 	@Override
 	public void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException
 	{
@@ -143,7 +143,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void startGame() throws NotEnoughPlayerException, PlayerDoesNotExistsException, NotLoggedInException {
+	public void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException {
 		userSessionRemote.startGame();
 	}
 
@@ -160,9 +160,9 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void addToPileOnTable(long cardId, long dockPileId)
+	public void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachToFront)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
-		userSessionRemote.addToPileOnTable(cardId, dockPileId);
+		userSessionRemote.addToPileOnTable(cardId, dockPileId, tryToAttachToFront);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 
 	@Override
 	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
-			NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
+	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
 		userSessionRemote.laySkipCardForPlayer(destinationPlayerId, cardId);
 	}
 
@@ -247,6 +247,17 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 		}
 	}
 
+	@Override
+	public void addAI() throws NoFreeSlotException {
+		userSessionRemote.addAI();
+	}
+
+	@Override
+	public Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException
+	{
+		return userSessionRemote.getDockPileTypesForPlayer();
+	}
+
 	/**
 	 * @author Björn Merschmeier
 	 */
@@ -261,10 +272,5 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 		{
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void addAI() throws NoFreeSlotException {
-		userSessionRemote.addAI();
 	}
 }

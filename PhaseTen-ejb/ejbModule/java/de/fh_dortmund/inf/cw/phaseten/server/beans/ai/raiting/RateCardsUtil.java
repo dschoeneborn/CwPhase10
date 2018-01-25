@@ -2,7 +2,7 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans.ai.raiting;
 
 import de.fh_dortmund.inf.cw.phaseten.server.beans.ai.SimPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
-import de.fh_dortmund.inf.cw.phaseten.server.entities.Stage;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Stage;
 
 /**
  * @author Robin Harbecke

@@ -21,7 +21,7 @@ import de.fh_dortmund.inf.cw.phaseten.gui.elements.UserList;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.InsufficientCoinSupplyException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
-import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
@@ -245,7 +245,7 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 	private void startGame() {
 		try {
 			serviceHandler.startGame();
-		} catch (NotEnoughPlayerException exception) {
+		} catch (NotEnoughPlayersException exception) {
 			errorLabel.setText(NOT_ENOUGH_PLAYER);
 			errorLabel.setForeground(Color.RED);
 		} catch (PlayerDoesNotExistsException e1) {

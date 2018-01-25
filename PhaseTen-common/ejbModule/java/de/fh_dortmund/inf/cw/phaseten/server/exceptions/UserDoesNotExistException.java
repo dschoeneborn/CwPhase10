@@ -1,6 +1,8 @@
 package de.fh_dortmund.inf.cw.phaseten.server.exceptions;
 
 /**
+ * UserDoesNotExistException
+ * 
  * @author Marc Mettke
  */
 public class UserDoesNotExistException extends Exception {

@@ -3,13 +3,17 @@
  */
 package de.fh_dortmund.inf.cw.phaseten.server.entities;
 
-import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.Entity;
 
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.CardValue;
+import de.fh_dortmund.inf.cw.phaseten.server.enumerations.Color;
+
 /**
+ * PullStack Entity
+ * 
  * @author Dennis Schöneborn
  * @author Marc Mettke
  * @author Sebastian Seitz
@@ -20,11 +24,16 @@ import javax.persistence.Entity;
 public class PullStack extends Stack {
 	private static final long serialVersionUID = 2117218073864785792L;
 
+	/**
+	 * Konstruktor
+	 */
 	public PullStack() {
 		super();
 	}
 
 	/**
+	 * Initialisierung.
+	 * 
 	 * @author Björn Merschmeier
 	 * @author Tim Prange
 	 */
@@ -33,29 +42,31 @@ public class PullStack extends Stack {
 			if (!color.equals(Color.NONE)) {
 				for (CardValue value : CardValue.values()) {
 					if (!value.equals(CardValue.SKIP) && !value.equals(CardValue.WILD)) {
-						addCard(new Card(color, value));
-						addCard(new Card(color, value));
+						addLast(new Card(color, value));
+						addLast(new Card(color, value));
 					}
 				}
 
 			}
 		}
-		addCard(new Card(Color.NONE, CardValue.SKIP));
-		addCard(new Card(Color.NONE, CardValue.SKIP));
-		addCard(new Card(Color.NONE, CardValue.SKIP));
-		addCard(new Card(Color.NONE, CardValue.SKIP));
+		addLast(new Card(Color.NONE, CardValue.SKIP));
+		addLast(new Card(Color.NONE, CardValue.SKIP));
+		addLast(new Card(Color.NONE, CardValue.SKIP));
+		addLast(new Card(Color.NONE, CardValue.SKIP));
 
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
-		addCard(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
+		addLast(new Card(Color.NONE, CardValue.WILD));
 	}
 
 	/**
+	 * mischt.
+	 * 
 	 * @author Björn Merschmeier
 	 */
 	public void shuffle() {
@@ -70,15 +81,6 @@ public class PullStack extends Stack {
 		}
 	}
 
-	public void addCards(Collection<Card> notVisibleCards) {
-		this.addAll(notVisibleCards);
-	}
-
-	@Override
-	public boolean canAddCard(Card card) {
-		return true;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -87,5 +89,26 @@ public class PullStack extends Stack {
 			sb.append(System.lineSeparator());
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 
+	 * Prüft, ob letzte Karte hinzugefügt werden kann.
+	 * 
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddLastCard(Card card) {
+		return true;
+	}
+
+	/**
+	 * Prüft, ob erste Karte hinzugefügt werden kann.
+	 * 
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean canAddFirstCard(Card card) {
+		return true;
 	}
 }
