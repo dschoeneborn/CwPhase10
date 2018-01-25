@@ -21,4 +21,9 @@
     <interface-name>javax.jms.Topic</interface-name>
     <destination-name>Game</destination-name>
   </jms-destination>
+  <jms-destination>
+    <name>java:global/jms/GameQueue</name>
+    <interface-name>javax.jms.Queue</interface-name>
+    <destination-name>GameQueue</destination-name>
+  </jms-destination>
 </application>
