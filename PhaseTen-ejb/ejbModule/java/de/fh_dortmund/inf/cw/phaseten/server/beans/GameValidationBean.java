@@ -2,12 +2,12 @@ package de.fh_dortmund.inf.cw.phaseten.server.beans;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.ColorDockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Game;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Lobby;
@@ -418,7 +418,7 @@ public class GameValidationBean implements GameValidationLocal, GameValidationRe
 	 * @return cardReadyorPhase8
 	 */
 	private boolean areCardsReadyForPhase8(List<DockPile> piles) {
-		return (piles.size() == 1 && piles.get(0) instanceof SetDockPile
+		return (piles.size() == 1 && piles.get(0) instanceof ColorDockPile
 				&& piles.get(0).getCopyOfCardsList().size() == 7);
 	}
 

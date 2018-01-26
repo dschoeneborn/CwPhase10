@@ -554,12 +554,9 @@ public class GameManagementBean implements GameManagementLocal {
 				// add card to existing DockPile
 				else {
 					for (Card card : action.getCards()) {
-						try {
-							addToPileOnTable(player, card.getId(), action.getDockpile().getId());
-						}
-						catch (MoveNotValidException | GameNotInitializedException e) {
-							e.printStackTrace();
-						}
+						DockPile dockPile = entityManager.find(DockPile.class, action.getDockpile().getId());
+						dockPile.addLast(card);
+						player.removeCardFromPlayerPile(card);
 					}
 				}
 			}
