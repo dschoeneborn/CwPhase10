@@ -160,16 +160,6 @@ public interface UserSessionRemote extends UserSession {
 	boolean playerIsInGame() throws NotLoggedInException;
 
 	/**
-	 * Requests a game message.
-	 *
-	 * @author Tim Prange
-	 * @throws NotLoggedInException  If the player is not logged in.
-	 * @throws GameNotInitializedException  If the game is not initialized yet.
-	 * @throws PlayerDoesNotExistsException  If the player does not exist.
-	 */
-	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException;
-
-	/**
 	 * Returns players in the lobby.
 	 *
 	 * @author Tim Prange

@@ -9,6 +9,7 @@ import javax.jms.JMSContext;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
+import javax.jms.Queue;
 import javax.jms.Topic;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -34,6 +35,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote;
  * @author Marc Mettke
  * @author Tim Prange
  * @author Björn Merschmeier
+ * @author Sven Krefeld
  */
 public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	private static ServiceHandlerImpl instance;
@@ -45,6 +47,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	private Topic playerMessageTopic;
 	private Topic lobbyMessageTopic;
 	private Topic gameMessageTopic;
+	private Queue gameMessageQueue;
 	private JMSConsumer playerConsumer;
 	private JMSConsumer lobbyConsumer;
 	private JMSConsumer gameConsumer;
@@ -61,6 +64,8 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 
 			playerMessageTopic = (Topic) context.lookup("java:global/jms/User");
 			lobbyMessageTopic = (Topic) context.lookup("java:global/jms/Lobby");
+
+			gameMessageQueue = (Queue) context.lookup("java:global/jms/GameQueue");
 
 			this.playerConsumer = jmsContext.createConsumer(playerMessageTopic);
 			this.playerConsumer.setMessageListener(this);
@@ -93,7 +98,13 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	@Override
 	public void requestGameMessage()
 			throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException {
-		userSessionRemote.requestGameMessage();
+		try {
+			Message message = jmsContext.createMessage();
+			message.setLongProperty("USER", getUser().getId());
+			jmsContext.createProducer().send(gameMessageQueue, message);
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package de.fh_dortmund.inf.cw.phaseten.gui.login;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -90,7 +91,7 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 	        register.addActionListener(this);
 	        
 	        usernameLogin = new JTextField("", 15);
-	        passwordLogin = new JTextField("", 15);
+	        passwordLogin = new JPasswordField("", 15);
 	        usernameRegister = new JTextField("", 15);
 	        passwordRegister = new JPasswordField("", 15);
 	        passwordWdhRegister = new JPasswordField("", 15);
@@ -146,6 +147,7 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 			catch (UserDoesNotExistException ignored)
 			{
 				statusLabel.setText(LOGIN_INVALID);
+				statusLabel.setForeground(Color.RED);
 			}
 			catch (NotLoggedInException e)
 			{
@@ -170,21 +172,25 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 				{
 					serviceHandler.register(username, password);
 					statusLabel.setText(SUCCESSFULLY_REGISTERED);
+					statusLabel.setForeground(Color.BLACK);
 					this.getGuiManager().showLobbyGui();
 				}
 				catch (UsernameAlreadyTakenException ignored)
 				{
 					statusLabel.setText(USERNAME_TAKEN);
+					statusLabel.setForeground(Color.RED);
 				}					
 			}
 			else
 			{
 				statusLabel.setText(PASSWORD_NOT_MATCH);
+				statusLabel.setForeground(Color.RED);
 			}						
 		}
 		else
 		{
 			statusLabel.setText(FILL_USERNAME_PASSWORD);
+			statusLabel.setForeground(Color.RED);
 		}
 	}
 }
