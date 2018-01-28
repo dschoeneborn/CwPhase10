@@ -49,39 +49,27 @@ public class AIManagmentTest {
 		bean.setLocalBean(new Empty());
 		return bean;
 	}
-	
+
 	@Test
-	public void testTakeCard() throws Exception {	
+	public void testTakeCard() throws Exception {
 		PlayerPile playerPile = new PlayerPile();
 		playerPile.addLast(new Card(Color.GREEN, CardValue.SEVEN));
 		Player player = new Player("testPlayer");
-	    LiFoStack discardPile = new LiFoStack();
-	    discardPile.addLast(new Card(Color.GREEN, CardValue.EIGHT));
+		LiFoStack discardPile = new LiFoStack();
+		discardPile.addLast(new Card(Color.GREEN, CardValue.EIGHT));
 		Game game = new Game(new HashSet<>(), new HashSet<>(), new PullStack(), discardPile);
 		Assert.assertEquals(TakeCardAction.DISCARD_PILE, this.aiManagment.takeCard(player, game));
 	}
-	
+
 	@Test
-	public void testCardsToPile() throws Exception {	
+	public void testCardsToPile() throws Exception {
 		PlayerPile playerPile = new PlayerPile();
 		playerPile.addLast(new Card(Color.GREEN, CardValue.SEVEN));
 		Player player = new Player("testPlayer");
-	    LiFoStack discardPile = new LiFoStack();
-	    discardPile.addLast(new Card(Color.GREEN, CardValue.EIGHT));
+		LiFoStack discardPile = new LiFoStack();
+		discardPile.addLast(new Card(Color.GREEN, CardValue.EIGHT));
 		Game game = new Game(new HashSet<>(), new HashSet<>(), new PullStack(), discardPile);
 		Assert.assertEquals(new ArrayList<>(), this.aiManagment.cardsToPile(player, game));
-	}
-	
-	@Test
-	public void testDiscardCard() throws Exception {	
-		//TODO - Test auskommentiert, weil nicht mehr funktionsfähig - Test reparieren!
-//		PlayerPile playerPile = new PlayerPile();
-//		playerPile.addCard(new Card(Color.GREEN, CardValue.SEVEN));
-//		Player player = new Player("testPlayer");
-//	    LiFoStack discardPile = new LiFoStack();
-//	    discardPile.addCard(new Card(Color.GREEN, CardValue.EIGHT));
-//		Game game = new Game(new HashSet<>(), new HashSet<>(), new PullStack(), discardPile);
-//		Assert.assertEquals(new Card(Color.GREEN, CardValue.SEVEN), this.aiManagment.discardCard(player, game));
 	}
 
 }

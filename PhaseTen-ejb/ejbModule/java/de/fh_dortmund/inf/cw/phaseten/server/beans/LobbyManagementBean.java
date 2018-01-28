@@ -53,6 +53,9 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 	/**
 	 * @author Björn Merschmeier
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal#sendLobbyMessage()
+	 */
 	@Override
 	public void sendLobbyMessage() {
 		Message message = jmsContext.createObjectMessage();
@@ -61,6 +64,9 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 
 	/**
 	 * @author Björn Merschmeier
+	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal#enterLobby(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
 	 */
 	@Override
 	public void enterLobby(Player player) throws NoFreeSlotException {
@@ -75,6 +81,9 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 		sendLobbyMessage();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagement#leaveLobby(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
+	 */
 	@Override
 	public void leaveLobby(Player player) {
 		Lobby lobby = getOrCreateLobby();
@@ -89,6 +98,9 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 
 	/**
 	 * @author Björn Merschmeier
+	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal#enterLobby(de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator)
 	 */
 	@Override
 	public void enterLobby(Spectator spectator) {
@@ -107,6 +119,9 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 	 * @author Björn Merschmeier
 	 * @param Spectator spectator is the spectator to delete
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagement#leaveLobby(de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator)
+	 */
 	@Override
 	public void leaveLobby(Spectator spectator) {
 		Lobby lobby = getOrCreateLobby();
@@ -116,6 +131,9 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 
 	/**
 	 * @author Björn Merschmeier
+	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagement#startGame(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
 	 */
 	@Override
 	public void startGame(Player player) throws NotEnoughPlayersException {
@@ -132,11 +150,17 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 		entityManager.remove(lobby);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal#getPlayersForGui()
+	 */
 	@Override
 	public Collection<PlayerGuiData> getPlayersForGui() {
 		return PlayerGuiData.from(getOrCreateLobby().getPlayers());
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal#getSpectatorNamesForGui()
+	 */
 	@Override
 	public Collection<String> getSpectatorNamesForGui() {
 		ArrayList<String> result = new ArrayList<>();
@@ -146,6 +170,24 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 		}
 
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal#addAI()
+	 */
+	@Override
+	public void addAI() throws NoFreeSlotException {
+		Lobby l = getOrCreateLobby();
+
+		if (l.isFull()) {
+			throw new NoFreeSlotException();
+		}
+		Player player = new Player("AI-" + System.currentTimeMillis());
+		player = entityManager.merge(player);
+		player.setIsAI(true);
+		l.addPlayer(player);
+
+		sendLobbyMessage();
 	}
 
 	/**
@@ -166,20 +208,5 @@ public class LobbyManagementBean implements LobbyManagementLocal {
 
 			return l;
 		}
-	}
-
-	@Override
-	public void addAI() throws NoFreeSlotException {
-		Lobby l = getOrCreateLobby();
-
-		if (l.isFull()) {
-			throw new NoFreeSlotException();
-		}
-		Player player = new Player("AI-" + System.currentTimeMillis());
-		player = entityManager.merge(player);
-		player.setIsAI(true);
-		l.addPlayer(player);
-
-		sendLobbyMessage();
 	}
 }

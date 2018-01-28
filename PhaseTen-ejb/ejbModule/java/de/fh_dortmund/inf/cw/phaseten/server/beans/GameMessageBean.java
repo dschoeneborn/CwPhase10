@@ -13,7 +13,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 
 /**
  * Message-Driven Bean implementation class for: GameMessageBean
- * 
+ * Receives requests of the players and send a sync-Message out for every player in the game
+ *
  * @author Sven Krefeld
  */
 @MessageDriven(mappedName = "java:global/jms/GameQueue", activationConfig = {
@@ -21,7 +22,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal;
 public class GameMessageBean implements MessageListener {
 
 	@EJB
-	private GameManagementLocal gameManagement;	
+	private GameManagementLocal gameManagement;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -29,17 +30,18 @@ public class GameMessageBean implements MessageListener {
 	/**
 	 * @see MessageListener#onMessage(Message)
 	 */
+	@Override
 	public void onMessage(Message message) {
 		try {
 			long userId = message.getLongProperty("USER");
 			User u = entityManager.find(User.class, userId);
 
 			if (u.getPlayer() == null) {
-			        Thread.sleep(3000);
+				Thread.sleep(3000);
 			}
 
 			if (u.getPlayer() != null) {
-			        this.gameManagement.requestGameMessage(u.getPlayer());
+				this.gameManagement.requestGameMessage(u.getPlayer());
 			}
 		} catch (Exception e) {
 			System.err.println("Error while game message request: " + e.getMessage());

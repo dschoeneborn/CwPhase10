@@ -64,11 +64,17 @@ public class UserManagementBean implements UserManagementLocal {
 	@Resource
 	private TimerService timerService;
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#requestPlayerMessage(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
+	 */
 	@Override
 	public void requestPlayerMessage(Player p) {
 		sendUserMessage();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#register(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public User register(String username, String password) throws UsernameAlreadyTakenException {
 		User foundUser = null;
@@ -99,6 +105,9 @@ public class UserManagementBean implements UserManagementLocal {
 		return foundUser;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#login(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public User login(String username, String password) throws UserDoesNotExistException {
 		password = computeHash(password);
@@ -126,23 +135,9 @@ public class UserManagementBean implements UserManagementLocal {
 		return user;
 	}
 
-	@Timeout
-	public void timeOut(Timer timer) {
-		User user = (User) timer.getInfo();
-		User managedUser = em.find(User.class, user.getId());
-		if (managedUser != null) {
-			coinManagement.increaseCoins(managedUser, 10);
-			em.refresh(managedUser);
-		}
-	}
-
-	public void clearTimer() {
-		for (Timer timer : timerService.getTimers()) {
-			System.out.println(timer.getInfo());
-			timer.cancel();
-		}
-	}
-
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#sendUserMessage()
+	 */
 	@Override
 	public void sendUserMessage() {
 		Message message = jmsContext.createObjectMessage();
@@ -164,6 +159,9 @@ public class UserManagementBean implements UserManagementLocal {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#getOrCreatePlayer(de.fh_dortmund.inf.cw.phaseten.server.entities.User)
+	 */
 	@Override
 	public Player getOrCreatePlayer(User user) {
 		User currentUser = em.find(User.class, user.getId());
@@ -182,6 +180,9 @@ public class UserManagementBean implements UserManagementLocal {
 		return foundPlayer;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#getOrCreateSpectator(de.fh_dortmund.inf.cw.phaseten.server.entities.User)
+	 */
 	@Override
 	public Spectator getOrCreateSpectator(User user) {
 		User currentUser = em.find(User.class, user.getId());
@@ -201,6 +202,9 @@ public class UserManagementBean implements UserManagementLocal {
 		return foundSpectator;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#unregister(de.fh_dortmund.inf.cw.phaseten.server.entities.User, java.lang.String)
+	 */
 	@Override
 	public void unregister(User currentUser, String password) throws PlayerDoesNotExistsException {
 		User user = em.find(User.class, currentUser.getId());
@@ -232,6 +236,31 @@ public class UserManagementBean implements UserManagementLocal {
 		}
 	}
 
+	/**
+	 * @param timer
+	 */
+	@Timeout
+	public void timeOut(Timer timer) {
+		User user = (User) timer.getInfo();
+		User managedUser = em.find(User.class, user.getId());
+		if (managedUser != null) {
+			coinManagement.increaseCoins(managedUser, 10);
+			em.refresh(managedUser);
+		}
+	}
+
+	public void clearTimer() {
+		for (Timer timer : timerService.getTimers()) {
+			System.out.println(timer.getInfo());
+			timer.cancel();
+		}
+	}
+
+	/**
+	 * Compute a SHA-256 hash of a given password to save it on the database
+	 * @param pw
+	 * @return
+	 */
 	private String computeHash(String pw) {
 		try {
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");

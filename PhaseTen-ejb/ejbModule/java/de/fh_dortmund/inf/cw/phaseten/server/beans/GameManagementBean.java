@@ -71,6 +71,9 @@ public class GameManagementBean implements GameManagementLocal {
 	@EJB
 	AIManagementLocal aiManagment;
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal#requestGameMessage(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
+	 */
 	@Override
 	public void requestGameMessage(Player p) throws GameNotInitializedException {
 		if (!p.getGame().isInitialized()) {
@@ -90,6 +93,9 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal#sendGameMessage(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
+	 */
 	@Override
 	public void sendGameMessage(Player p) {
 		sendGameMessage(GameGuiData.from(p.getGame()));
@@ -98,6 +104,9 @@ public class GameManagementBean implements GameManagementLocal {
 	/**
 	 * @author Björn Merschmeier
 	 * @throws GameNotInitializedException
+	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagement#takeCardFromPullstack(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
 	 */
 	@Override
 	public void takeCardFromPullstack(Player player) throws MoveNotValidException {
@@ -115,6 +124,9 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @author Björn Merschmeier
 	 * @throws GameNotInitializedException
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagement#takeCardFromLiFoStack(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
+	 */
 	@Override
 	public void takeCardFromLiFoStack(Player player) throws MoveNotValidException {
 		Game game = player.getGame();
@@ -131,6 +143,9 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @author Björn Merschmeier
 	 * @throws GameNotInitializedException
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagement#addToPileOnTable(de.fh_dortmund.inf.cw.phaseten.server.entities.Player, long, long)
+	 */
 	@Override
 	public void addToPileOnTable(Player player, long cardId, long dockPileId)
 			throws MoveNotValidException, GameNotInitializedException {
@@ -140,6 +155,9 @@ public class GameManagementBean implements GameManagementLocal {
 	/**
 	 * @author Björn Merschmeier
 	 * @throws GameNotInitializedException
+	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagement#addToPileOnTable(de.fh_dortmund.inf.cw.phaseten.server.entities.Player, long, long, boolean)
 	 */
 	@Override
 	public void addToPileOnTable(Player player, long cardId, long dockPileId, boolean layAtFirstPosition)
@@ -172,6 +190,9 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @author Björn Merschmeier
 	 * @throws GameNotInitializedException
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagement#layPhaseToTable(de.fh_dortmund.inf.cw.phaseten.server.entities.Player, java.util.Collection)
+	 */
 	@Override
 	public void layPhaseToTable(Player player, Collection<DockPile> piles)
 			throws MoveNotValidException, GameNotInitializedException {
@@ -190,6 +211,9 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @author Björn Merschmeier
 	 * @throws GameNotInitializedException
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagement#layCardToLiFoStack(de.fh_dortmund.inf.cw.phaseten.server.entities.Player, long)
+	 */
 	@Override
 	public void layCardToLiFoStack(Player player, long cardId)
 			throws MoveNotValidException, GameNotInitializedException {
@@ -206,6 +230,9 @@ public class GameManagementBean implements GameManagementLocal {
 		updateClient(player);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagement#laySkipCardForPlayerById(de.fh_dortmund.inf.cw.phaseten.server.entities.Player, long, long)
+	 */
 	@Override
 	public void laySkipCardForPlayerById(Player currentPlayer, long destinationPlayerId, long cardId)
 			throws MoveNotValidException, PlayerDoesNotExistsException, GameNotInitializedException {
@@ -247,6 +274,9 @@ public class GameManagementBean implements GameManagementLocal {
 	 * @author Tim Prange
 	 * @author Björn Merschmeier
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal#startGame(java.util.Collection, java.util.Collection)
+	 */
 	@Override
 	public void startGame(Collection<Player> playersCollection, Collection<Spectator> spectatorsCollection) {
 		Set<Player> players = new HashSet<>(playersCollection);
@@ -262,11 +292,20 @@ public class GameManagementBean implements GameManagementLocal {
 		sendGameMessage((Player) players.toArray()[0]);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.GameManagementLocal#isInGame(de.fh_dortmund.inf.cw.phaseten.server.entities.Player)
+	 */
 	@Override
 	public boolean isInGame(Player p) {
 		return (p.getGame() != null);
 	}
 
+	/**
+	 * Lay a new card to the lifo stack (and remove it from the players inventory)
+	 * @param player
+	 * @param game
+	 * @param card
+	 */
 	private void layCardToLiFoStack(Player player, Game game, Card card) {
 		game.getLiFoStack().addLast(card);
 		player.removeCardFromPlayerPile(card);
@@ -277,6 +316,12 @@ public class GameManagementBean implements GameManagementLocal {
 		player.resetRoundStage();
 	}
 
+	/**
+	 * Lay a phase to the table
+	 * @param player
+	 * @param piles
+	 * @param game
+	 */
 	private void layPhaseToTable(Player player, Collection<DockPile> piles, Game game) {
 		for (DockPile pile : piles) {
 			entityManager.persist(pile);
@@ -291,12 +336,22 @@ public class GameManagementBean implements GameManagementLocal {
 		player.addPhase();
 	}
 
+	/**
+	 * Take a new card from the lifo-stack (and add it to the players inventory)
+	 * @param player
+	 * @param game
+	 */
 	private void takeCardFromLiFoStack(Player player, Game game) {
 		Card drawnCard = game.getLiFoStack().pullTopCard();
 		player.addCardToPlayerPile(drawnCard);
 		player.addRoundStage();
 	}
 
+	/**
+	 * Take a new card from the pullstack (and add it to the players inventory)
+	 * @param player
+	 * @param game
+	 */
 	private void takeCardFromPullstack(Player player, Game game) {
 		Card drawnCard = game.getPullStack().pullTopCard();
 		player.addCardToPlayerPile(drawnCard);
@@ -304,6 +359,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Get all cards which are not accessible anymore from the lifo stack and shuffle them into the pullstack
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
@@ -313,6 +369,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Find a card by id and the given player in the players inventory
 	 * @author Björn Merschmeier
 	 * @param player
 	 * @param cardId
@@ -332,6 +389,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Initialize a new game round (reset all cards, etc.)
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
@@ -363,6 +421,10 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 	}
 
+	/**
+	 * If the game has ended, give out coins for the players
+	 * @param game
+	 */
 	private void cashPlayerOut(Game game) {
 		List<Player> ranking = new LinkedList<>();
 		int i = 0;
@@ -395,6 +457,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Give cards from the pullstack to the players
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
@@ -409,6 +472,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Set up the first player
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
@@ -430,6 +494,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Initialize the lifo-stack (pull a card from the pullstack and lay it on top)
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
@@ -443,6 +508,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Initialize the pullstack (initialize and persist cards and shuffle)
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
@@ -456,12 +522,20 @@ public class GameManagementBean implements GameManagementLocal {
 		game.setPullstack(pullStack);
 	}
 
+	/**
+	 * Save all given cards in the database
+	 * @param cards
+	 */
 	private void saveNewCards(Collection<Card> cards) {
 		for (Card card : cards) {
 			entityManager.persist(card);
 		}
 	}
 
+	/**
+	 * Delete old cards from the database, which were in the last game
+	 * @param game
+	 */
 	private void deleteOldCards(Game game) {
 		if (game != null) {
 			if (game.getPullStack() != null) {
@@ -493,6 +567,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Set the next player in the queue
 	 * @author Björn Merschmeier
 	 * @author Marc Mettke
 	 * @param game
@@ -524,6 +599,11 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 	}
 
+	/**
+	 * Do an ai turn
+	 * @param game
+	 * @param player
+	 */
 	private void aiTurn(Game game, Player player) {
 		// take card
 		switch (aiManagment.takeCard(player, game)) {
@@ -572,6 +652,7 @@ public class GameManagementBean implements GameManagementLocal {
 	}
 
 	/**
+	 * Count points for each player at the end of the round
 	 * @author Björn Merschmeier
 	 * @param game
 	 */
@@ -587,13 +668,20 @@ public class GameManagementBean implements GameManagementLocal {
 		}
 	}
 
+	/**
+	 * Send a update-message to all clients
+	 * @param p
+	 */
 	private void updateClient(Player p) {
-		// Send updated Game to Client
 		sendGameMessage(p);
 
 		playerManagment.sendUserMessage();
 	}
 
+	/**
+	 * Send a game message with the given GameGuiData object in it
+	 * @param game
+	 */
 	private void sendGameMessage(GameGuiData game) {
 		Message message = jmsContext.createObjectMessage(game);
 
