@@ -42,10 +42,10 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 
 	private static final String WINDOW_NAME = "Phaseten | Lobby";
 	private static final String ADD_AI = "Add AI";
-	private static final String SPECTATE = "Zuschauen";
-	private static final String JOIN = "Beitreten";
-	private static final String DISCONNECT = "Verlassen";
-	private static final String START = "Starten";
+	private static final String SPECTATE = "Spectate";
+	private static final String JOIN = "Join Game";
+	private static final String DISCONNECT = "Disconnect";
+	private static final String START = "Start Game";
 
 	private static final String NO_FREE_SLOT_AVAILABLE = "No free slot available";
 	private static final String PLAYER_DOES_NOT_EXISTS = "Player does not exits";
@@ -55,13 +55,11 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 
 	private ServiceHandler serviceHandler;
 
-	protected ButtonPane buttonPane = new ButtonPane();
 	protected UserList userList;
 	protected StatusPanel statusPanel = new StatusPanel();
 	private JButton addAiButton;
 	private JButton spectatorButton;
 	private JButton startGameButton;
-	private JLabel infoLabel = new JLabel();
 	private JLabel errorLabel = new JLabel();
 
 	public LobbyWindow(ServiceHandler serviceHandler, GuiManager guiManager) {
@@ -97,20 +95,18 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		startGameButton.setActionCommand(ACTIONCOMMAND_PLAY);
 		startGameButton.addActionListener(this);
 
-		infoLabel.setText("Some text");
-
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(this.statusPanel)
 						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 								.addComponent(addAiButton)								
 								.addComponent(spectatorButton)
 								.addComponent(startGameButton).addComponent(errorLabel))
-						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(infoLabel)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 								.addComponent(this.userList))));
 
 		layout.linkSize(SwingConstants.HORIZONTAL, userList, statusPanel);
 
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(this.userList).addComponent(infoLabel)
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(this.userList)
 				.addComponent(addAiButton).addComponent(spectatorButton).addComponent(startGameButton).addComponent(errorLabel)
 				.addComponent(this.statusPanel));
 
