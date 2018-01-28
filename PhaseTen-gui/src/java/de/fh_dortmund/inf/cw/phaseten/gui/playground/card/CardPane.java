@@ -47,7 +47,7 @@ public class CardPane extends JPanel {
 
 	public void paintComponent(java.awt.Graphics graphics) {
 		if (this.cardValue == null) {
-			// Rückseite
+			// drawing back side
 			super.paintComponent(graphics);
 
 			int x = 0;
@@ -61,7 +61,7 @@ public class CardPane extends JPanel {
 			gr.setColor(java.awt.Color.BLACK);
 			gr.drawRect(x, y, cardWidth - 1, cardHeight - 1);
 		} else {
-			// Vorderseite
+			// drawing front side
 			super.paintComponent(graphics);
 
 			int x = 0;
