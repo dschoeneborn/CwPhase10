@@ -15,6 +15,7 @@ import de.fh_dortmund.inf.cw.phaseten.gui.playground.top_row.TopRowPane;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
@@ -75,6 +76,8 @@ public class PlaygroundWindow extends GuiWindow implements GuiObserver {
 			catch (NotLoggedInException e) {
 				throw new RuntimeException(
 						"User tried to get Cards while not logged in in Game-Screen. This error should not happen!");
+			} catch (UserIsSpectatorException e) {
+				System.out.println("User is spectator and has no cards");
 			}
 		}
 

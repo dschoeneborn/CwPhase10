@@ -14,6 +14,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedExcept
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 
 /**
@@ -44,6 +45,8 @@ public class CardDropPlayerListEntryGUI extends PlayerListEntryGUI implements IC
 				System.out.println("Player does not exist");
 			} catch (GameNotInitializedException e) {
 				System.out.println("Game not initialized");
+			} catch (UserIsSpectatorException e) {
+				System.out.println("User is spectator");
 			}
 		}
 

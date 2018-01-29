@@ -24,6 +24,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 
 /**
@@ -50,8 +52,10 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 	private static final String NO_FREE_SLOT_AVAILABLE = "No free slot available";
 	private static final String PLAYER_DOES_NOT_EXISTS = "Player does not exits";
 	private static final String PLAYER_NOT_LOGGED_IN = "Player is not logged in";
+	private static final String PLAYER_IS_SPECTATOR = "Player already joined as Spectator";
 	private static final String NOT_ENOUGH_PLAYER = "Not enough player to start a new game";
 	private static final String NOT_ENOUGH_COINS = "Not enough coins to start game. 50 are required";
+	private static final String SPECTATOR_CANNOT_START_GAME = "A spectator cannot start the game";
 
 	private ServiceHandler serviceHandler;
 
@@ -98,7 +102,7 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(this.statusPanel)
 						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-								.addComponent(addAiButton)								
+								.addComponent(addAiButton)
 								.addComponent(spectatorButton)
 								.addComponent(startGameButton).addComponent(errorLabel))
 						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
@@ -180,6 +184,10 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 			errorLabel.setText(PLAYER_NOT_LOGGED_IN);
 			errorLabel.setForeground(Color.RED);
 			this.getGuiManager().showLoginGui();
+		} catch (UserIsPlayerException e) {
+			errorLabel.setText(PLAYER_IS_SPECTATOR);
+			errorLabel.setForeground(Color.RED);
+			this.getGuiManager().showLoginGui();
 		}
 		spectatorButton.setEnabled(false);
 		startGameButton.setEnabled(false);
@@ -210,6 +218,9 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 			this.getGuiManager().showLoginGui();
 		} catch (InsufficientCoinSupplyException e) {
 			errorLabel.setText(NOT_ENOUGH_COINS);
+			errorLabel.setForeground(Color.RED);
+		} catch (UserIsSpectatorException e) {
+			errorLabel.setText(PLAYER_IS_SPECTATOR);
 			errorLabel.setForeground(Color.RED);
 		}
 	}
@@ -252,6 +263,9 @@ public class LobbyWindow extends GuiWindow implements ActionListener, GuiObserve
 			errorLabel.setText(PLAYER_NOT_LOGGED_IN);
 			errorLabel.setForeground(Color.RED);
 			this.getGuiManager().showLoginGui();
+		} catch (UserIsSpectatorException e) {
+			errorLabel.setText(SPECTATOR_CANNOT_START_GAME);
+			errorLabel.setForeground(Color.RED);
 		}
 	}
 }

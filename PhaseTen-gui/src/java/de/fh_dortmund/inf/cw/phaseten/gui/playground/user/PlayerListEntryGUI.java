@@ -32,7 +32,7 @@ public class PlayerListEntryGUI extends JLabel implements UserListEntry{
 			currentPlayerMarker = "->";
 		}
 
-		this.setText(currentPlayerMarker + this.player.getName() + "(Phase " + this.player.getPhase() + ") [-" + this.player.getNegativePoints() + " Punkte]");
+		this.setText(currentPlayerMarker + this.player.getName() + "(Phase " + this.player.getPhase() + ") [-" + this.player.getNegativePoints() + " Punkte] (" + this.player.getRemainingCards()  + " Karten)");
 		this.revalidate();
 		this.repaint();
 	}

@@ -27,6 +27,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersExceptio
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementLocal;
@@ -76,23 +78,25 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/**
 	 * @author Björn Merschmeier
+	 * @throws UserIsSpectatorException
 	 */
 	/* (non-Javadoc)
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSession#getOrCreatePlayer()
 	 */
 	@Override
-	public Player getOrCreatePlayer() throws NotLoggedInException {
+	public Player getOrCreatePlayer() throws NotLoggedInException, UserIsSpectatorException {
 		return getOrCreateCurrentPlayer();
 	}
 
 	/**
 	 * @author Björn Merschmeier
+	 * @throws UserIsPlayerException
 	 */
 	/* (non-Javadoc)
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSession#getOrCreateSpectator()
 	 */
 	@Override
-	public Spectator getOrCreateSpectator() throws NotLoggedInException {
+	public Spectator getOrCreateSpectator() throws NotLoggedInException, UserIsPlayerException {
 		return userManagement.getOrCreateSpectator(currentUser);
 	}
 
@@ -127,10 +131,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	/**
 	 * @author Tim Prange
 	 * @author Marc Mettke
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
 	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException,
-	InsufficientCoinSupplyException {
+	InsufficientCoinSupplyException, UserIsSpectatorException {
 		if (currentUser == null) {
 			throw new NotLoggedInException();
 		}
@@ -147,9 +152,10 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @throws UserIsPlayerException
 	 */
 	@Override
-	public void enterLobbyAsSpectator() throws NotLoggedInException {
+	public void enterLobbyAsSpectator() throws NotLoggedInException, UserIsPlayerException {
 		this.lobbyManagement.enterLobby(getOrCreateCurrentSpectator());
 
 	}
@@ -162,9 +168,10 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
-	public void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException {
+	public void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException, UserIsSpectatorException {
 		this.lobbyManagement.startGame(getOrCreateCurrentPlayer());
 	}
 
@@ -176,10 +183,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
 	public void takeCardFromPullstack()
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		gameManagement.takeCardFromPullstack(getOrCreateCurrentPlayer());
 
 	}
@@ -192,10 +200,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
 	public void takeCardFromLiFoStack()
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		gameManagement.takeCardFromLiFoStack(getOrCreateCurrentPlayer());
 
 	}
@@ -210,10 +219,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	/**
 	 * @author Tim Prange
 	 * @author Björn Merschmeier
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
 	public void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachToFront)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		gameManagement.addToPileOnTable(getOrCreateCurrentPlayer(), cardId, dockPileId, tryToAttachToFront);
 
 	}
@@ -226,10 +236,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
 	public void layPhaseToTable(Collection<DockPile> cards)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		gameManagement.layPhaseToTable(getOrCreateCurrentPlayer(), cards);
 
 	}
@@ -243,10 +254,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	/**
 	 * @author Tim Prange
 	 * @author Björn Merschmeier
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
 	public void layCardToLiFoStack(long cardId)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		gameManagement.layCardToLiFoStack(getOrCreateCurrentPlayer(), cardId);
 
 	}
@@ -261,10 +273,11 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	/**
 	 * @author Tim Prange
 	 * @author Björn Merschmeier
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
 	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
-	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
+	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException, UserIsSpectatorException {
 		gameManagement.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, cardId);
 
 	}
@@ -277,11 +290,27 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
-	public void exitLobby() throws NotLoggedInException {
-		lobbyManagement.leaveLobby(getOrCreateCurrentPlayer());
-		lobbyManagement.leaveLobby(getOrCreateCurrentSpectator());
+	public void exitLobby() throws NotLoggedInException
+	{
+		try
+		{
+			lobbyManagement.leaveLobby(getOrCreateCurrentPlayer());
+		}
+		catch(UserIsSpectatorException e)
+		{
+
+		}
+		try
+		{
+			lobbyManagement.leaveLobby(getOrCreateCurrentSpectator());
+		}
+		catch(UserIsPlayerException e)
+		{
+
+		}
 
 	}
 
@@ -294,9 +323,10 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
-	public boolean playerIsInGame() throws NotLoggedInException {
+	public boolean playerIsInGame() throws NotLoggedInException, UserIsSpectatorException {
 		return gameManagement.isInGame(getOrCreateCurrentPlayer());
 	}
 
@@ -336,9 +366,10 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	/**
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
 	@Override
-	public void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException {
+	public void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException, UserIsSpectatorException {
 		userManagement.requestPlayerMessage(getOrCreateCurrentPlayer());
 
 	}
@@ -359,7 +390,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	}
 
 	@Override
-	public Collection<Card> getCards() throws NotLoggedInException {
+	public Collection<Card> getCards() throws NotLoggedInException, UserIsSpectatorException {
 		return getOrCreateCurrentPlayer().getPlayerPile().getCopyOfCardsList();
 	}
 
@@ -376,12 +407,13 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	/**
 	 * @author Björn Merschmeier
 	 * @throws NotLoggedInException
+	 * @throws UserIsSpectatorException
 	 */
 	/* (non-Javadoc)
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#getDockPileTypesForPlayer()
 	 */
 	@Override
-	public Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException {
+	public Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException, UserIsSpectatorException {
 		List<Class<? extends DockPile>> result = new ArrayList<>();
 
 		Player p = getOrCreateCurrentPlayer();
@@ -414,12 +446,22 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	}
 
 	/**
+	 * @author Björn Merschmeier
+	 */
+	@Override
+	public boolean isUserInGame() throws NotLoggedInException {
+		return currentUser != null && ((currentUser.getPlayer() != null && currentUser.getPlayer().getGame() != null)
+				|| (currentUser.getSpectator() != null && currentUser.getSpectator().getGame() != null));
+	}
+
+	/**
 	 * Returns the current Player. If a current Player does not exist, a new one will be created and returned.
 	 *
 	 * @author Tim Prange
 	 * @return current or new Player
+	 * @throws UserIsSpectatorException
 	 */
-	private Player getOrCreateCurrentPlayer() throws NotLoggedInException {
+	private Player getOrCreateCurrentPlayer() throws NotLoggedInException, UserIsSpectatorException {
 		if (currentUser == null) {
 			throw new NotLoggedInException();
 		} else {
@@ -433,8 +475,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 *
 	 * @author Tim Prange
 	 * @return current or new Spectator
+	 * @throws UserIsPlayerException
 	 */
-	private Spectator getOrCreateCurrentSpectator() {
+	private Spectator getOrCreateCurrentSpectator() throws UserIsPlayerException {
 		return userManagement.getOrCreateSpectator(currentUser);
 	}
 
