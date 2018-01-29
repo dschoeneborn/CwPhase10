@@ -26,7 +26,17 @@ public interface GameManagementLocal extends GameManagement {
 	 */
 	void startGame(Collection<Player> players, Collection<Spectator> spectators);
 
+	/**
+	 * Let the player request a game message to synchronize all players with the game
+	 * @param player
+	 * @throws GameNotInitializedException
+	 */
 	void requestGameMessage(Player player) throws GameNotInitializedException;
 
+	/**
+	 * Checks if the player is in a game
+	 * @param player
+	 * @return
+	 */
 	boolean isInGame(Player player);
 }

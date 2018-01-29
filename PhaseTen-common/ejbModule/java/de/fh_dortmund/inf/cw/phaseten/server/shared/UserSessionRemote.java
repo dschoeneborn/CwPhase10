@@ -29,7 +29,7 @@ public interface UserSessionRemote extends UserSession {
 
 	/**
 	 * Enters lobby as a player
-	 * 
+	 *
 	 * @throws NoFreeSlotException  If the lobby is full
 	 * @throws PlayerDoesNotExistsException  If the player does not exist.
 	 * @throws NotLoggedInException  If the player is not logged in.
@@ -41,7 +41,7 @@ public interface UserSessionRemote extends UserSession {
 
 	/**
 	 * Enters lobby as a spectator
-	 * 
+	 *
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 *
 	 * @author Tim Prange
@@ -52,7 +52,7 @@ public interface UserSessionRemote extends UserSession {
 
 	/**
 	 * Starts the game.
-	 * 
+	 *
 	 * @throws PlayerDoesNotExistsException  If the player does not exist.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws NotEnoughPlayersException  If there are not enough players in the lobby.
@@ -63,7 +63,7 @@ public interface UserSessionRemote extends UserSession {
 
 	/**
 	 * Takes a card from the pull stack.
-	 * 
+	 *
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
@@ -75,7 +75,7 @@ public interface UserSessionRemote extends UserSession {
 
 	/**
 	 * Takes a card from the lifo stack.
-	 * 
+	 *
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
@@ -90,11 +90,11 @@ public interface UserSessionRemote extends UserSession {
 	 * @author Tim Prange
 	 * @param cardId
 	 * @param dockPileId
-	 * 
+	 *
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
-	 * 
+	 *
 	 */
 	void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachToFront)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
@@ -104,11 +104,11 @@ public interface UserSessionRemote extends UserSession {
 	 *
 	 * @author Tim Prange
 	 * @param cards
-	 * 
+	 *
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
-	 * 
+	 *
 	 */
 	void layPhaseToTable(Collection<DockPile> cards)
 			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
@@ -118,7 +118,7 @@ public interface UserSessionRemote extends UserSession {
 	 *
 	 * @author Tim Prange
 	 * @param cardId
-	 * 
+	 *
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
@@ -131,7 +131,7 @@ public interface UserSessionRemote extends UserSession {
 	 * @author Tim Prange
 	 * @param destinationPlayerId
 	 * @param cardId
-	 * 
+	 *
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
@@ -144,7 +144,7 @@ public interface UserSessionRemote extends UserSession {
 	 * Player exits the lobby.
 	 *
 	 * @author Tim Prange
-	 * 
+	 *
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 */
 	void exitLobby() throws NotLoggedInException;
@@ -153,8 +153,8 @@ public interface UserSessionRemote extends UserSession {
 	 * Checks if a player is in a game.
 	 *
 	 * @author Tim Prange
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 */
 	boolean playerIsInGame() throws NotLoggedInException;
@@ -179,7 +179,7 @@ public interface UserSessionRemote extends UserSession {
 	 * Requests a players message.
 	 *
 	 * @author Tim Prange
-	 * 
+	 *
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws PlayerDoesNotExistsException  If the player does not exist.
 	 */
@@ -194,15 +194,26 @@ public interface UserSessionRemote extends UserSession {
 
 	/**
 	 * Returns cards.
-	 * 
+	 *
 	 * @author Björn Merschmeier
 	 * @return cards
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 */
 	Collection<Card> getCards() throws NotLoggedInException;
 
+	/**
+	 * Delete the saved user from the database. Proxy-Method
+	 * @param password
+	 * @throws NotLoggedInException
+	 * @throws PlayerDoesNotExistsException
+	 */
 	void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException;
 
+	/**
+	 * Return the dockpile-types the player currently needs in his phase
+	 * @return
+	 * @throws NotLoggedInException
+	 */
 	Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException;
 
 }

@@ -63,14 +63,27 @@ public class GameGuiData implements Serializable {
 		return liFoStackTop;
 	}
 
+	/**
+	 * Returns all open piles "on the table"
+	 * @return
+	 */
 	public Collection<OpenPileGuiData> getOpenPiles() {
 		return openPiles;
 	}
 
+	/**
+	 * Checks if game is finished
+	 * @return
+	 */
 	public boolean isFinished() {
 		return isFinished;
 	}
 
+	/**
+	 * Generates a GameGuiData-Object from the real game-object which is persisted in the server
+	 * @param game
+	 * @return
+	 */
 	public static GameGuiData from(Game game) {
 		ArrayList<String> spectatorNames = new ArrayList<>();
 

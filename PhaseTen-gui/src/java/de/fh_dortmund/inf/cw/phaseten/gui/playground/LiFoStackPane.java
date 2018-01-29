@@ -27,15 +27,15 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscarding
  */
 public class LiFoStackPane extends CardPilePane {
 	private static final long serialVersionUID = 7330764386204801790L;
-	
+
 	protected ServiceHandler serviceHandler;
-	
+
 	public LiFoStackPane(ServiceHandler serviceHandler) {
 		this.serviceHandler = serviceHandler;
 		this.setDropTarget(new DropTarget(this, new CardDropTargetListener()));
 	}
 
-	class CardDropTargetListener implements DropTargetListener {//TODO change listener to default card listener
+	class CardDropTargetListener implements DropTargetListener {
 		@Override
 		public void dropActionChanged(DropTargetDragEvent dtde) {
 
@@ -48,14 +48,14 @@ public class LiFoStackPane extends CardPilePane {
 			try {
 				card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
 				LiFoStackPane.this.serviceHandler.layCardToLiFoStack(card.getId());
-			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | TakeCardBeforeDiscardingException e) {				
+			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | TakeCardBeforeDiscardingException e) {
 			} catch (MoveNotValidException e) {
-				System.out.println("Move not valide");				
+				System.out.println("Move not valide");
 			} catch (NotLoggedInException e) {
 				System.out.println("Not logged in");
 			} catch (GameNotInitializedException e) {
 				System.out.println("Game not initialized");
-			}					
+			}
 			return;
 		}
 

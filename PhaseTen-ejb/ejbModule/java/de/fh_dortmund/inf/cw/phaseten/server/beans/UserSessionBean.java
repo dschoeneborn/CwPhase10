@@ -58,11 +58,17 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	@EJB
 	private CoinManagementLocal coinManagment;
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSession#login(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void login(String userName, String password) throws UserDoesNotExistException {
 		currentUser = userManagement.login(userName, password);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSession#register(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void register(String userName, String password) throws UsernameAlreadyTakenException {
 		currentUser = userManagement.register(userName, password);
@@ -70,6 +76,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/**
 	 * @author Björn Merschmeier
+	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSession#getOrCreatePlayer()
 	 */
 	@Override
 	public Player getOrCreatePlayer() throws NotLoggedInException {
@@ -79,6 +88,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	/**
 	 * @author Björn Merschmeier
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSession#getOrCreateSpectator()
+	 */
 	@Override
 	public Spectator getOrCreateSpectator() throws NotLoggedInException {
 		return userManagement.getOrCreateSpectator(currentUser);
@@ -86,6 +98,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/**
 	 * @author Björn Merschmeier
+	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSession#logout()
 	 */
 	@Override
 	public void logout() {
@@ -95,6 +110,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	/**
 	 * @author Björn Merschmeier
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSession#getUser()
+	 */
 	@Override
 	public User getUser() {
 		return currentUser;
@@ -102,7 +120,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * enterLobbyAsPlayer()
 	 */
@@ -112,7 +130,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	@Override
 	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException,
-			InsufficientCoinSupplyException {
+	InsufficientCoinSupplyException {
 		if (currentUser == null) {
 			throw new NotLoggedInException();
 		}
@@ -123,7 +141,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * enterLobbyAsSpectator()
 	 */
@@ -138,7 +156,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#startGame()
 	 */
@@ -152,7 +170,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * takeCardFromPullstack()
 	 */
@@ -168,7 +186,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * takeCardFromLiFoStack()
 	 */
@@ -184,7 +202,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * addToPileOnTable(de.fh_dortmund.inf.cw.phaseten.server.entities.Card,
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile)
@@ -202,7 +220,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * layPhaseToTable(java.util.Collection)
 	 */
@@ -218,7 +236,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * layCardToLiFoStack(de.fh_dortmund.inf.cw.phaseten.server.entities.Card)
 	 */
@@ -235,7 +253,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * laySkipCardForPlayer(long,
 	 * de.fh_dortmund.inf.cw.phaseten.server.entities.Card)
@@ -246,14 +264,14 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 */
 	@Override
 	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
-			NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
+	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
 		gameManagement.laySkipCardForPlayerById(getOrCreateCurrentPlayer(), destinationPlayerId, cardId);
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#exitLobby()
 	 */
@@ -269,7 +287,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#playerIsInGame
 	 * ()
@@ -284,7 +302,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * getLobbyPlayers()
 	 */
@@ -298,7 +316,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * getLobbySpectators()
 	 */
@@ -312,7 +330,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * requestPlayerMessage()
 	 */
@@ -327,7 +345,7 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#
 	 * requestLobbyMessage()
 	 */
@@ -359,6 +377,9 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 	 * @author Björn Merschmeier
 	 * @throws NotLoggedInException
 	 */
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#getDockPileTypesForPlayer()
+	 */
 	@Override
 	public Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException {
 		List<Class<? extends DockPile>> result = new ArrayList<>();
@@ -384,13 +405,15 @@ public class UserSessionBean implements UserSessionRemote, UserSessionLocal {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserSessionRemote#addAI()
+	 */
 	@Override
 	public void addAI() throws NoFreeSlotException {
 		this.lobbyManagement.addAI();
 	}
 
 	/**
-	 * TODO Add JavaDoc
 	 * Returns the current Player. If a current Player does not exist, a new one will be created and returned.
 	 *
 	 * @author Tim Prange

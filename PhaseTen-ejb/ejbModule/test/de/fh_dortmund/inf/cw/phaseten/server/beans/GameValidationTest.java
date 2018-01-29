@@ -117,57 +117,6 @@ public class GameValidationTest {
 		Assert.assertEquals(false, gameValidation.isValidDrawCardFromLiFoStack(game, p1));
 	}
 
-	// TODO: Weitere Phasen
-	// ENDE DER RUNDE
-	// B: 5 Punkte
-	// T: 0 Punkte
-
-	// T: 70
-	// B: 5 - Phase 2
-
-	// B: 5 5 5 W | 1 2 3 4
-	// T: 8 8 8 | 9 10 11 12
-	// B: 5
-	// T: 90
-
-	// B: 4 5 W 7 8 9 10 11
-	// T: 170
-	// B: 5
-
-	// B: 3 4 W 6 7 8 9 10
-	// T: 220
-	// B: 5
-
-	// B: 3 4 5 6 7 8 9 W 11 12
-	// T: 290
-	// B: 5
-
-	// T: W W 3 3 |
-	// B: 90
-	// T: 290
-
-	// B: 4 4 4 4 | 3 3 W W
-	// T: 5 6 7 W 9 10 11
-	// T: 290
-	// B: 95
-
-	// T: 1 2 3 W 5 6 7 8
-	// B: 195
-	// T: 290
-
-	// T: 1 2 3 4 W 6 W 8 9
-	// B: 1 9 9 12 11 W W (rot)
-	// T: 290
-	// B: 200
-
-	// B + T haben phase geschafft
-	// B: 215
-	// T: 2
-
-	// T: (2x wild) nur blaue karten
-	// T: 290
-	// B: 285
-
 	/**
 	 * @author Björn Merschmeier
 	 * @author Tim Prange
@@ -562,8 +511,6 @@ public class GameValidationTest {
 
 	}
 
-	// TODO - BM - 13.01.2018 - Es müssen noch die einzelnen Phasen getestet werden
-
 	@Test
 	public void testIsValidPushCardToLiFoStack() throws Exception {
 		HashSet<Player> players = new HashSet<>();
@@ -704,10 +651,6 @@ public class GameValidationTest {
 		assertEquals(true, pileIsFull(dockPile));
 	}
 
-	private boolean pileIsFull(SequenceDockPile dockPile) {
-		return dockPile.getCopyOfCardsList().size() == 12;
-	}
-
 	@Test
 	public void testIsValidLayStageToTable() throws Exception {
 		Card validCard = new Card(Color.RED, CardValue.EIGHT);
@@ -808,8 +751,12 @@ public class GameValidationTest {
 	}
 
 
+	private boolean pileIsFull(SequenceDockPile dockPile) {
+		return dockPile.getCopyOfCardsList().size() == 12;
+	}
+
 	/**
-	 * TODO Add JavaDoc
+	 * Lay a card to the lifo stack (only test-method)
 	 *
 	 * @author Tim Prange
 	 * @param player
@@ -857,7 +804,7 @@ public class GameValidationTest {
 	}
 
 	/**
-	 * TODO Add JavaDoc
+	 * Lay a skip card for the player (only called from test-methods)
 	 *
 	 * @author Tim Prange
 	 * @param player

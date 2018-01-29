@@ -17,19 +17,62 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenExce
 @Local
 public interface UserManagementLocal extends UserManagement {
 
+	/**
+	 * Returns the existing player for a user or create a new one
+	 * @param user
+	 * @return
+	 */
 	Player getOrCreatePlayer(User user);
 
+	/**
+	 * Retunrs the existing spectator for a user or create a new one
+	 * @param currentUser
+	 * @return
+	 */
 	Spectator getOrCreateSpectator(User currentUser);
 
+	/**
+	 * Register a new user with given username and password
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws UsernameAlreadyTakenException
+	 */
 	User register(String username, String password) throws UsernameAlreadyTakenException;
 
+	/**
+	 * Login a user with a username and a password
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws UserDoesNotExistException
+	 */
 	User login(String username, String password) throws UserDoesNotExistException;
 
+	/**
+	 * Logs a user out
+	 * @param currentUser
+	 */
 	public void logout(User currentUser);
 
+	/**
+	 * Request the sending of a user message
+	 */
 	void sendUserMessage();
 
+	/**
+	 * Request the sending of a user message
+	 * @param p
+	 * @throws PlayerDoesNotExistsException
+	 * @throws NotLoggedInException
+	 */
 	void requestPlayerMessage(Player p) throws PlayerDoesNotExistsException, NotLoggedInException;
 
+	/**
+	 * Delete user from database and all games
+	 * @param user
+	 * @param password
+	 * @throws PlayerDoesNotExistsException
+	 */
 	void unregister(User user, String password) throws PlayerDoesNotExistsException;
 }
