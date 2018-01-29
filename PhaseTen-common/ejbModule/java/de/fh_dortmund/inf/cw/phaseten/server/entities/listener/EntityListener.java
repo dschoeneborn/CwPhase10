@@ -9,6 +9,7 @@ import javax.persistence.PrePersist;
 
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Player;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
+import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 
 /***
  * EntityListener für das UserManagement.**
@@ -25,19 +26,22 @@ public class EntityListener {
 	@PrePersist
 	public void newEntity(Object entity) {
 
-		Class<? extends Object> clazz = entity.getClass();
+		if(entity instanceof User)
+		{
+			Class<? extends Object> clazz = entity.getClass();
 
-		try {
-			Method increaseCoins = clazz.getMethod("increaseCoins", Integer.class);
+			try {
+				Method increaseCoins = clazz.getMethod("increaseCoins", Integer.class);
 
-			int initialCoins = 500;
+				int initialCoins = 500;
 
-			increaseCoins.invoke(entity, initialCoins);
+				increaseCoins.invoke(entity, initialCoins);
 
-		}
-		catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			e.printStackTrace();
+			}
+			catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

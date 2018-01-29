@@ -110,7 +110,7 @@ public class User implements Serializable {
 	 *
 	 * @param coinsToAdd
 	 */
-	public void increaseCoins(int coins) {
+	public void increaseCoins(Integer coins) {
 		this.coins += coins;
 	}
 
@@ -119,7 +119,7 @@ public class User implements Serializable {
 	 *
 	 * @param coins
 	 */
-	public void decreaseCoins(int coins) {
+	public void decreaseCoins(Integer coins) {
 		this.coins -= coins;
 	}
 
@@ -128,7 +128,7 @@ public class User implements Serializable {
 	 *
 	 * @param coinsToSet
 	 */
-	public void setCoins(int coinsToSet) {
+	public void setCoins(Integer coinsToSet) {
 		coins = coinsToSet;
 	}
 
