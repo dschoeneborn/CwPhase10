@@ -22,7 +22,7 @@ public class CoinManagementBean implements CoinManagementRemote, CoinManagementL
 
 	@Override
 	public void increaseCoins(User user, int coins) {
-		user.increaseCoins(coins);
+		user.increaseCoins(new Integer(coins));
 		em.merge(user);
 		em.flush();
 	}
@@ -32,14 +32,14 @@ public class CoinManagementBean implements CoinManagementRemote, CoinManagementL
 		if (user.getCoins() < coins) {
 			throw new InsufficientCoinSupplyException();
 		}
-		user.decreaseCoins(coins);
+		user.decreaseCoins(new Integer(coins));
 		em.merge(user);
 		em.flush();
 	}
 
 	@Override
 	public void setCoins(User user, int coins) {
-		user.setCoins(coins);
+		user.setCoins(new Integer(coins));
 		em.merge(user);
 		em.flush();
 	}
