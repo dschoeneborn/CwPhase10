@@ -607,12 +607,14 @@ public class GameManagementBean implements GameManagementLocal {
 	private void aiTurn(Game game, Player player) {
 		// take card
 		switch (aiManagment.takeCard(player, game)) {
-		case DISCARD_PILE: {
-			takeCardFromLiFoStack(player, game);
-		}
-		case DRAWER_PILE: {
-			takeCardFromPullstack(player, game);
-		}
+			case DISCARD_PILE: {
+				takeCardFromLiFoStack(player, game);
+				break;
+			}
+			case DRAWER_PILE: {
+				takeCardFromPullstack(player, game);
+				break;
+			}
 		}
 
 		// do moves
@@ -627,7 +629,9 @@ public class GameManagementBean implements GameManagementLocal {
 				if (!action.isDockPileAlreadyExisting()) {
 					DockPile dockPile = action.getDockpile();
 					for (Card card : action.getCards()) {
-						dockPile.addLast(card);
+						if(!dockPile.addLast(card)) {
+							System.err.println("AI logic problem!");
+						}
 					}
 					piles.add(dockPile);
 				}
@@ -635,7 +639,9 @@ public class GameManagementBean implements GameManagementLocal {
 				else {
 					for (Card card : action.getCards()) {
 						DockPile dockPile = entityManager.find(DockPile.class, action.getDockpile().getId());
-						dockPile.addLast(card);
+						if(!dockPile.addLast(card)) {
+							System.err.println("AI logic problem!");
+						}
 						player.removeCardFromPlayerPile(card);
 					}
 				}
