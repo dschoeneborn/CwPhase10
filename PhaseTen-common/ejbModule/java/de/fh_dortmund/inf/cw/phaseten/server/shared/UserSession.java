@@ -8,6 +8,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 
 /**
@@ -47,13 +49,15 @@ public interface UserSession {
 	 * Create a new player for the saved user
 	 * @return
 	 * @throws NotLoggedInException
+	 * @throws UserIsSpectatorException
 	 */
-	Player getOrCreatePlayer() throws NotLoggedInException;
+	Player getOrCreatePlayer() throws NotLoggedInException, UserIsSpectatorException;
 
 	/**
 	 * Create a spectator for the saved user
 	 * @return
 	 * @throws NotLoggedInException
+	 * @throws UserIsPlayerException
 	 */
-	Spectator getOrCreateSpectator() throws NotLoggedInException;
+	Spectator getOrCreateSpectator() throws NotLoggedInException, UserIsPlayerException;
 }

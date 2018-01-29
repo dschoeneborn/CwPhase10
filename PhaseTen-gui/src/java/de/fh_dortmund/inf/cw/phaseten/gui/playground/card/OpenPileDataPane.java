@@ -8,6 +8,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Card;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.OpenPileGuiData;
 
 /**
@@ -40,7 +41,7 @@ public class OpenPileDataPane extends PilePane implements ICardDropTarget{
 		} catch (MoveNotValidException e) {
 		} catch (NotLoggedInException e) {
 		} catch (GameNotInitializedException e) {
-		}
+		} catch (UserIsSpectatorException e) {}
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 
 /**
@@ -21,15 +23,17 @@ public interface UserManagementLocal extends UserManagement {
 	 * Returns the existing player for a user or create a new one
 	 * @param user
 	 * @return
+	 * @throws UserIsSpectatorException
 	 */
-	Player getOrCreatePlayer(User user);
+	Player getOrCreatePlayer(User user) throws UserIsSpectatorException;
 
 	/**
 	 * Retunrs the existing spectator for a user or create a new one
 	 * @param currentUser
 	 * @return
+	 * @throws UserIsPlayerException
 	 */
-	Spectator getOrCreateSpectator(User currentUser);
+	Spectator getOrCreateSpectator(User currentUser) throws UserIsPlayerException;
 
 	/**
 	 * Register a new user with given username and password

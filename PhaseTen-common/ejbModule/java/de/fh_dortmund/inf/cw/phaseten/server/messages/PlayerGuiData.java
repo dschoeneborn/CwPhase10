@@ -21,6 +21,7 @@ public class PlayerGuiData implements Serializable {
 	private long id;
 	private int negativePoints;
 	private int roundStage;
+	private int remainingCards;
 
 	/**
 	 * Initializes a new player-object with all information the gui needs
@@ -30,12 +31,13 @@ public class PlayerGuiData implements Serializable {
 	 * @param negativePoints
 	 * @param roundStage
 	 */
-	public PlayerGuiData(String playerName, int phase, long id, int negativePoints, int roundStage) {
+	public PlayerGuiData(String playerName, int phase, long id, int negativePoints, int roundStage, int remainingCards) {
 		this.phase = phase;
 		this.name = playerName;
 		this.negativePoints = negativePoints;
 		this.id = id;
 		this.roundStage = roundStage;
+		this.remainingCards = remainingCards;
 	}
 
 	/**
@@ -80,13 +82,18 @@ public class PlayerGuiData implements Serializable {
 		return roundStage;
 	}
 
+	public int getRemainingCards()
+	{
+		return remainingCards;
+	}
+
 	/**
 	 * Generates a playerguidata-object from the real player object
 	 * @param player
 	 * @return
 	 */
 	public static PlayerGuiData from(Player player) {
-		return new PlayerGuiData(player.getName(), player.getPhase().getValue(), player.getId(), player.getNegativePoints(), player.getRoundStage().getValue());
+		return new PlayerGuiData(player.getName(), player.getPhase().getValue(), player.getId(), player.getNegativePoints(), player.getRoundStage().getValue(), player.getPlayerPile().getSize());
 	}
 
 	/**

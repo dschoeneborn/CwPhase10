@@ -26,6 +26,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersExceptio
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.GameGuiData;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
@@ -85,7 +87,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException {
+	public void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException, UserIsSpectatorException {
 		userSessionRemote.requestPlayerMessage();
 	}
 
@@ -133,53 +135,53 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException {
+	public void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException, UserIsSpectatorException {
 		userSessionRemote.enterLobbyAsPlayer();
 	}
 
 	@Override
-	public void enterLobbyAsSpectator() throws NotLoggedInException {
+	public void enterLobbyAsSpectator() throws NotLoggedInException, UserIsPlayerException {
 		userSessionRemote.enterLobbyAsSpectator();
 	}
 
 	@Override
-	public void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException {
+	public void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException, UserIsSpectatorException {
 		userSessionRemote.startGame();
 	}
 
 	@Override
 	public void takeCardFromPullstack()
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		userSessionRemote.takeCardFromPullstack();
 	}
 
 	@Override
 	public void takeCardFromLiFoStack()
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		userSessionRemote.takeCardFromLiFoStack();
 	}
 
 	@Override
 	public void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachToFront)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		userSessionRemote.addToPileOnTable(cardId, dockPileId, tryToAttachToFront);
 	}
 
 	@Override
 	public void layPhaseToTable(Collection<DockPile> cards)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		userSessionRemote.layPhaseToTable(cards);
 	}
 
 	@Override
 	public void layCardToLiFoStack(long cardId)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException {
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException {
 		userSessionRemote.layCardToLiFoStack(cardId);
 	}
 
 	@Override
 	public void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException,
-	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException {
+	NotLoggedInException, PlayerDoesNotExistsException, GameNotInitializedException, UserIsSpectatorException {
 		userSessionRemote.laySkipCardForPlayer(destinationPlayerId, cardId);
 	}
 
@@ -189,7 +191,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public boolean playerIsInGame() throws NotLoggedInException {
+	public boolean playerIsInGame() throws NotLoggedInException, UserIsSpectatorException {
 		return userSessionRemote.playerIsInGame();
 	}
 
@@ -209,7 +211,7 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public Collection<Card> getCards() throws NotLoggedInException {
+	public Collection<Card> getCards() throws NotLoggedInException, UserIsSpectatorException {
 		return userSessionRemote.getCards();
 	}
 
@@ -253,9 +255,14 @@ public class ServiceHandlerImpl extends Observable implements ServiceHandler {
 	}
 
 	@Override
-	public Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException
+	public Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException, UserIsSpectatorException
 	{
 		return userSessionRemote.getDockPileTypesForPlayer();
+	}
+
+	@Override
+	public boolean userIsInGame() throws NotLoggedInException {
+		return userSessionRemote.isUserInGame();
 	}
 
 	/**

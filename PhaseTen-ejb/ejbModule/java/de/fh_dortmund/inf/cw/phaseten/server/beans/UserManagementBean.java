@@ -32,6 +32,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.Spectator;
 import de.fh_dortmund.inf.cw.phaseten.server.entities.User;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.CoinManagementLocal;
 import de.fh_dortmund.inf.cw.phaseten.server.shared.LobbyManagementLocal;
@@ -163,17 +165,21 @@ public class UserManagementBean implements UserManagementLocal {
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#getOrCreatePlayer(de.fh_dortmund.inf.cw.phaseten.server.entities.User)
 	 */
 	@Override
-	public Player getOrCreatePlayer(User user) {
+	public Player getOrCreatePlayer(User user) throws UserIsSpectatorException {
 		User currentUser = em.find(User.class, user.getId());
 
 		Player foundPlayer = null;
 
 		if (currentUser.getPlayer() != null) {
 			foundPlayer = currentUser.getPlayer();
-		} else {
+		} else if(currentUser.getSpectator() == null) {
 			foundPlayer = new Player(currentUser.getLoginName());
 			em.persist(foundPlayer);
 			currentUser.setPlayer(foundPlayer);
+		}
+		else if(currentUser.getSpectator() != null)
+		{
+			throw new UserIsSpectatorException();
 		}
 		em.flush();
 
@@ -184,17 +190,21 @@ public class UserManagementBean implements UserManagementLocal {
 	 * @see de.fh_dortmund.inf.cw.phaseten.server.shared.UserManagementLocal#getOrCreateSpectator(de.fh_dortmund.inf.cw.phaseten.server.entities.User)
 	 */
 	@Override
-	public Spectator getOrCreateSpectator(User user) {
+	public Spectator getOrCreateSpectator(User user) throws UserIsPlayerException {
 		User currentUser = em.find(User.class, user.getId());
 
 		Spectator foundSpectator = null;
 
 		if (currentUser.getSpectator() != null) {
 			foundSpectator = currentUser.getSpectator();
-		} else {
+		} else if(currentUser.getPlayer() == null){
 			foundSpectator = new Spectator(currentUser.getLoginName());
 			em.persist(foundSpectator);
 			currentUser.setSpectator(foundSpectator);
+		}
+		else if(currentUser.getPlayer() != null)
+		{
+			throw new UserIsPlayerException();
 		}
 
 		em.flush();

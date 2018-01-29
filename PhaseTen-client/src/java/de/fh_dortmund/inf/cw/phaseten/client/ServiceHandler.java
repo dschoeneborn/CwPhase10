@@ -16,6 +16,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersExceptio
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserDoesNotExistException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 
@@ -25,29 +27,29 @@ import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
  */
 public interface ServiceHandler extends MessageListener {
 
-	void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException;
+	void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException, UserIsSpectatorException;
 
 	void requestLobbyMessage();
 
-	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException;
+	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException, UserIsSpectatorException;
 
-	void enterLobbyAsSpectator() throws NotLoggedInException;
+	void enterLobbyAsSpectator() throws NotLoggedInException, UserIsPlayerException;
 
 	void addAI() throws NoFreeSlotException;
 
-	void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException;
+	void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException, UserIsSpectatorException;
 
 	void requestGameMessage() throws PlayerDoesNotExistsException, NotLoggedInException, GameNotInitializedException;
 
-	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
-	void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+	void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	void layPhaseToTable(Collection<DockPile> cards)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException, NotLoggedInException,
-	PlayerDoesNotExistsException, GameNotInitializedException;
+	PlayerDoesNotExistsException, GameNotInitializedException, UserIsSpectatorException;
 
 	void register(String username, String password) throws UsernameAlreadyTakenException;
 
@@ -61,7 +63,7 @@ public interface ServiceHandler extends MessageListener {
 
 	void exitLobby() throws NotLoggedInException;
 
-	boolean playerIsInGame() throws NotLoggedInException;
+	boolean playerIsInGame() throws NotLoggedInException, UserIsSpectatorException;
 
 	Collection<PlayerGuiData> getLobbyPlayers();
 
@@ -69,15 +71,17 @@ public interface ServiceHandler extends MessageListener {
 
 	User getUser() throws NotLoggedInException;
 
-	Collection<Card> getCards() throws NotLoggedInException;
+	Collection<Card> getCards() throws NotLoggedInException, UserIsSpectatorException;
 
 	void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachFront)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	void layCardToLiFoStack(long cardId)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	void unregister(String password) throws NotLoggedInException, PlayerDoesNotExistsException;
 
-	Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException;
+	Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException, UserIsSpectatorException;
+
+	boolean userIsInGame() throws NotLoggedInException;
 }

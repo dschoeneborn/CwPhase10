@@ -27,10 +27,10 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UsernameAlreadyTakenExce
  * @author Sven Krefeld
  */
 public class LoginWindow extends GuiWindow implements ActionListener {
-	
+
 	private static final String ACTIONCOMMAND_LOGIN = "login";
 	private static final String ACTIONCOMMAND_REGISTER = "register";
-	
+
 	private static final String SUCCESSFULLY_REGISTERED = "Successfully registered";
 	private static final String USERNAME_TAKEN = "Username is already taken";
 	private static final String PASSWORD_NOT_MATCH = "Passwords do not match";
@@ -42,7 +42,7 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 	private static final String PASSWORD = "Password";
 	private static final String REPEAT_PASSWORD = "Repeat Password";
 	private static final String LOGIN_INVALID = "Username-password-combination is wrong";
-	
+
 	private static final long serialVersionUID = -3411026015858719190L;
 
 	private ServiceHandler serviceHandler;
@@ -73,54 +73,54 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 	{
 		switch(e.getActionCommand())
 		{
-			case ACTIONCOMMAND_LOGIN: login(); break;
-			case ACTIONCOMMAND_REGISTER: register(); break;
-			default: break;
+		case ACTIONCOMMAND_LOGIN: login(); break;
+		case ACTIONCOMMAND_REGISTER: register(); break;
+		default: break;
 		}
 	}
-	
+
 	private Container setUI() {
-	        JPanel panel = new JPanel(new SpringLayout());
-	        
-	        JButton login = new JButton(LOGIN);
-	        login.setActionCommand(ACTIONCOMMAND_LOGIN);
-	        login.addActionListener(this);
-	        
-	        JButton register = new JButton(REGISTER);
-	        register.setActionCommand(ACTIONCOMMAND_REGISTER);
-	        register.addActionListener(this);
-	        
-	        usernameLogin = new JTextField("", 15);
-	        passwordLogin = new JPasswordField("", 15);
-	        usernameRegister = new JTextField("", 15);
-	        passwordRegister = new JPasswordField("", 15);
-	        passwordWdhRegister = new JPasswordField("", 15);
-	        statusLabel = new JLabel();
-	        
-	        panel.add(new JLabel(USERNAME + ": "));
-	        panel.add(usernameLogin);
-	        panel.add(new JLabel(PASSWORD + ": "));
-	        panel.add(passwordLogin);
-	        panel.add(new JLabel());
-	        panel.add(login);
-	        panel.add(new JLabel(USERNAME + ": "));
-	        panel.add(usernameRegister);
-	        panel.add(new JLabel(PASSWORD + ": "));
-	        panel.add(passwordRegister);
-	        panel.add(new JLabel(REPEAT_PASSWORD + ": "));
-	        panel.add(passwordWdhRegister);
-	        panel.add(new JLabel());
-	        panel.add(register);
-	        panel.add(new JLabel());
-	        panel.add(statusLabel);
-	 
-	        makeCompactGrid(panel,
-	                8, 2,
-	                6, 6,       
-	                6, 6);  
-	       return panel;	        
+		JPanel panel = new JPanel(new SpringLayout());
+
+		JButton login = new JButton(LOGIN);
+		login.setActionCommand(ACTIONCOMMAND_LOGIN);
+		login.addActionListener(this);
+
+		JButton register = new JButton(REGISTER);
+		register.setActionCommand(ACTIONCOMMAND_REGISTER);
+		register.addActionListener(this);
+
+		usernameLogin = new JTextField("", 15);
+		passwordLogin = new JPasswordField("", 15);
+		usernameRegister = new JTextField("", 15);
+		passwordRegister = new JPasswordField("", 15);
+		passwordWdhRegister = new JPasswordField("", 15);
+		statusLabel = new JLabel();
+
+		panel.add(new JLabel(USERNAME + ": "));
+		panel.add(usernameLogin);
+		panel.add(new JLabel(PASSWORD + ": "));
+		panel.add(passwordLogin);
+		panel.add(new JLabel());
+		panel.add(login);
+		panel.add(new JLabel(USERNAME + ": "));
+		panel.add(usernameRegister);
+		panel.add(new JLabel(PASSWORD + ": "));
+		panel.add(passwordRegister);
+		panel.add(new JLabel(REPEAT_PASSWORD + ": "));
+		panel.add(passwordWdhRegister);
+		panel.add(new JLabel());
+		panel.add(register);
+		panel.add(new JLabel());
+		panel.add(statusLabel);
+
+		makeCompactGrid(panel,
+				8, 2,
+				6, 6,
+				6, 6);
+		return panel;
 	}
-	
+
 	/**
 	 * @author Björn Merschmeier
 	 */
@@ -128,14 +128,14 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 	{
 		String username = usernameLogin.getText();
 		String password = passwordLogin.getText();
-		
+
 		if(!username.isEmpty() && !password.isEmpty())
 		{
 			try
 			{
 				serviceHandler.login(username, password);
 
-				if(serviceHandler.playerIsInGame())
+				if(serviceHandler.userIsInGame())
 				{
 					this.getGuiManager().showPlaygoundGui();
 				}
@@ -155,7 +155,7 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 			}
 		}
 	}
-	
+
 	/**
 	 * @author Björn Merschmeier
 	 */
@@ -164,7 +164,7 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 		String username = usernameRegister.getText();
 		String password = passwordRegister.getText();
 		String passwordWdh = passwordWdhRegister.getText();
-		
+
 		if(!username.isEmpty() && !password.isEmpty())
 		{
 			if( password.equals(passwordWdh) ) {
@@ -179,13 +179,13 @@ public class LoginWindow extends GuiWindow implements ActionListener {
 				{
 					statusLabel.setText(USERNAME_TAKEN);
 					statusLabel.setForeground(Color.RED);
-				}					
+				}
 			}
 			else
 			{
 				statusLabel.setText(PASSWORD_NOT_MATCH);
 				statusLabel.setForeground(Color.RED);
-			}						
+			}
 		}
 		else
 		{

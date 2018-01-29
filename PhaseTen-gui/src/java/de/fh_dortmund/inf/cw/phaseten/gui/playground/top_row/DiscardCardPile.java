@@ -20,6 +20,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 
 /**
  * @author Robin Harbecke
@@ -29,24 +30,26 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscarding
  */
 public class DiscardCardPile extends CardPilePane {
 	private static final long serialVersionUID = 7330764386204801790L;
-	
+
 	protected ServiceHandler serviceHandler;
-	
+
 	public DiscardCardPile(ServiceHandler serviceHandler) {
 		this.serviceHandler = serviceHandler;
 		this.setDropTarget(new DropTarget(this, new CardDropTargetListener()));
 		this.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent evt) { 
+			public void mouseClicked(MouseEvent evt) {
 				super.mouseClicked(evt);
 				try {
 					DiscardCardPile.this.serviceHandler.takeCardFromLiFoStack();
 				} catch (MoveNotValidException e) {
-					System.out.println("Move not valide");				
+					System.out.println("Move not valide");
 				} catch (NotLoggedInException e) {
 					System.out.println("Not logged in");
 				} catch (GameNotInitializedException e) {
 					System.out.println("Game not initialized");
+				} catch (UserIsSpectatorException e) {
+					System.out.println("User is Spectator");
 				}
 			}
 		});
@@ -65,14 +68,16 @@ public class DiscardCardPile extends CardPilePane {
 			try {
 				card = (Card) transfarable.getTransferData(CardTransfarable.cardFlavor);
 				DiscardCardPile.this.serviceHandler.layCardToLiFoStack(card.getId());
-			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | TakeCardBeforeDiscardingException e) {				
+			} catch (UnsupportedFlavorException | IOException | NotYourTurnException | TakeCardBeforeDiscardingException e) {
 			} catch (MoveNotValidException e) {
-				System.out.println("Move not valide");				
+				System.out.println("Move not valide");
 			} catch (NotLoggedInException e) {
 				System.out.println("Not logged in");
 			} catch (GameNotInitializedException e) {
 				System.out.println("Game not initialized");
-			}									
+			} catch (UserIsSpectatorException e) {
+				System.out.println("User is spectator");
+			}
 		}
 
 		@Override

@@ -17,6 +17,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.entities.DockPile;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.GameNotInitializedException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 
 /**
  * @author Robin Harbecke
@@ -44,18 +45,20 @@ public class LayPhaseRowPane extends JPanel{
 			{
 				this.rightLayPhaseCardsWrapperPane = new LayPhaseCardsWrapperPane(this.serviceHandler, this.playerCardsPane, piles.get(1));
 			}
+			this.add(this.leftLayPhaseCardsWrapperPane);
+			this.add(this.rightLayPhaseCardsWrapperPane);
+			this.layPhaseCardsWrapperPanes = new LayPhaseCardsWrapperPane[]{this.leftLayPhaseCardsWrapperPane,this.rightLayPhaseCardsWrapperPane};
+			this.sendDataButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					LayPhaseRowPane.this.layCurrentPhaseCards();
+				}
+			});
 		} catch (NotLoggedInException e1) {
 			e1.printStackTrace();
+		} catch (UserIsSpectatorException e1) {
+			System.out.println("User is a spectator and have no dockpiles");
 		}
-		this.add(this.leftLayPhaseCardsWrapperPane);
-		this.add(this.rightLayPhaseCardsWrapperPane);
-		this.layPhaseCardsWrapperPanes = new LayPhaseCardsWrapperPane[]{this.leftLayPhaseCardsWrapperPane,this.rightLayPhaseCardsWrapperPane};
-		this.sendDataButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				LayPhaseRowPane.this.layCurrentPhaseCards();
-			}
-		});
 		this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
 		this.add(sendDataButton);
 	}
@@ -103,6 +106,8 @@ public class LayPhaseRowPane extends JPanel{
 			System.out.println("Not logged in");
 		} catch (GameNotInitializedException e) {
 			System.out.println("Game not initialized");
+		} catch (UserIsSpectatorException e) {
+			System.out.println("User is a spectator");
 		}
 	}
 }

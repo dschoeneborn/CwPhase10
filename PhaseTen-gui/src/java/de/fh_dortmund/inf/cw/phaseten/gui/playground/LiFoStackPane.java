@@ -18,6 +18,7 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.MoveNotValidException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotYourTurnException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.TakeCardBeforeDiscardingException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 
 /**
  * @author Robin Harbecke
@@ -55,6 +56,8 @@ public class LiFoStackPane extends CardPilePane {
 				System.out.println("Not logged in");
 			} catch (GameNotInitializedException e) {
 				System.out.println("Game not initialized");
+			} catch (UserIsSpectatorException e) {
+				System.out.println("User is Spectator");
 			}
 			return;
 		}

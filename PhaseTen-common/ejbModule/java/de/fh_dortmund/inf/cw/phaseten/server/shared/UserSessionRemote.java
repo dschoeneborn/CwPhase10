@@ -16,6 +16,8 @@ import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NoFreeSlotException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotEnoughPlayersException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.NotLoggedInException;
 import de.fh_dortmund.inf.cw.phaseten.server.exceptions.PlayerDoesNotExistsException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsPlayerException;
+import de.fh_dortmund.inf.cw.phaseten.server.exceptions.UserIsSpectatorException;
 import de.fh_dortmund.inf.cw.phaseten.server.messages.PlayerGuiData;
 
 /**
@@ -36,8 +38,9 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws InsufficientCoinSupplyException  If the player does not own enough coins.
 	 *
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
-	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException;
+	void enterLobbyAsPlayer() throws NoFreeSlotException, PlayerDoesNotExistsException, NotLoggedInException, InsufficientCoinSupplyException, UserIsSpectatorException;
 
 	/**
 	 * Enters lobby as a spectator
@@ -45,8 +48,9 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 *
 	 * @author Tim Prange
+	 * @throws UserIsPlayerException
 	 */
-	void enterLobbyAsSpectator() throws NotLoggedInException;
+	void enterLobbyAsSpectator() throws NotLoggedInException, UserIsPlayerException;
 
 	void addAI() throws NoFreeSlotException;
 
@@ -58,8 +62,9 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws NotEnoughPlayersException  If there are not enough players in the lobby.
 	 *
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
-	void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException;
+	void startGame() throws NotEnoughPlayersException, PlayerDoesNotExistsException, NotLoggedInException, UserIsSpectatorException;
 
 	/**
 	 * Takes a card from the pull stack.
@@ -70,8 +75,9 @@ public interface UserSessionRemote extends UserSession {
 	 *
 	 *
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
-	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+	void takeCardFromPullstack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	/**
 	 * Takes a card from the lifo stack.
@@ -81,8 +87,9 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
 	 *
 	 * @author Tim Prange
+	 * @throws UserIsSpectatorException
 	 */
-	void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+	void takeCardFromLiFoStack() throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	/**
 	 * Adds the card to a pile.
@@ -94,10 +101,11 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
+	 * @throws UserIsSpectatorException
 	 *
 	 */
 	void addToPileOnTable(long cardId, long dockPileId, boolean tryToAttachToFront)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	/**
 	 * Lays a collection of cards as a Phase.
@@ -108,10 +116,11 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
+	 * @throws UserIsSpectatorException
 	 *
 	 */
 	void layPhaseToTable(Collection<DockPile> cards)
-			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+			throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	/**
 	 * Lays a card on the lifo stack.
@@ -122,8 +131,9 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws MoveNotValidException  If the move is against the rules.
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
+	 * @throws UserIsSpectatorException
 	 */
-	void layCardToLiFoStack(long cardId) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException;
+	void layCardToLiFoStack(long cardId) throws MoveNotValidException, NotLoggedInException, GameNotInitializedException, UserIsSpectatorException;
 
 	/**
 	 * Lays a skip card for a player.
@@ -136,9 +146,10 @@ public interface UserSessionRemote extends UserSession {
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws GameNotInitializedException  If the game is not initialized yet.
 	 * @throws PlayerDoesNotExistsException  If the player does not exist.
+	 * @throws UserIsSpectatorException
 	 */
 	void laySkipCardForPlayer(long destinationPlayerId, long cardId) throws MoveNotValidException, NotLoggedInException,
-	PlayerDoesNotExistsException, GameNotInitializedException;
+	PlayerDoesNotExistsException, GameNotInitializedException, UserIsSpectatorException;
 
 	/**
 	 * Player exits the lobby.
@@ -156,8 +167,9 @@ public interface UserSessionRemote extends UserSession {
 	 *
 	 *
 	 * @throws NotLoggedInException  If the player is not logged in.
+	 * @throws UserIsSpectatorException
 	 */
-	boolean playerIsInGame() throws NotLoggedInException;
+	boolean playerIsInGame() throws NotLoggedInException, UserIsSpectatorException;
 
 	/**
 	 * Returns players in the lobby.
@@ -182,8 +194,9 @@ public interface UserSessionRemote extends UserSession {
 	 *
 	 * @throws NotLoggedInException  If the player is not logged in.
 	 * @throws PlayerDoesNotExistsException  If the player does not exist.
+	 * @throws UserIsSpectatorException
 	 */
-	void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException;
+	void requestPlayerMessage() throws PlayerDoesNotExistsException, NotLoggedInException, UserIsSpectatorException;
 
 	/**
 	 * Requests a lobby message.
@@ -198,8 +211,9 @@ public interface UserSessionRemote extends UserSession {
 	 * @author Björn Merschmeier
 	 * @return cards
 	 * @throws NotLoggedInException  If the player is not logged in.
+	 * @throws UserIsSpectatorException
 	 */
-	Collection<Card> getCards() throws NotLoggedInException;
+	Collection<Card> getCards() throws NotLoggedInException, UserIsSpectatorException;
 
 	/**
 	 * Delete the saved user from the database. Proxy-Method
@@ -213,7 +227,10 @@ public interface UserSessionRemote extends UserSession {
 	 * Return the dockpile-types the player currently needs in his phase
 	 * @return
 	 * @throws NotLoggedInException
+	 * @throws UserIsSpectatorException
 	 */
-	Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException;
+	Collection<Class<? extends DockPile>> getDockPileTypesForPlayer() throws NotLoggedInException, UserIsSpectatorException;
+
+	boolean isUserInGame() throws NotLoggedInException;
 
 }
