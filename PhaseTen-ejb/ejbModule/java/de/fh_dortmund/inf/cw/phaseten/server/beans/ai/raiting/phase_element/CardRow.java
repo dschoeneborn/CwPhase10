@@ -33,23 +33,25 @@ public class CardRow extends PhaseElement{
 		SimPile foundPile = SimPile.empty;
 		SimPile remainingCards = pile;
 		int missingCardCount = this.rowLength;
-		for(int cardValue = startValue ; cardValue <= startValue + this.rowLength;cardValue++) {
+		for(int cardValue = startValue ; cardValue < startValue + this.rowLength;cardValue++) {
+			boolean isFound = false;
 			for (Card card : pile.getCards()) {
-				if(card.getCardValue().getValue() == cardValue) {
+				if(!isFound && card.getCardValue().getValue() == cardValue) {
 					foundPile = foundPile.addCard(card);
 					remainingCards = remainingCards.removeCard(card);
 					missingCardCount--;
-					break;//sorry but im lazy
+					isFound = true;
 				}
 			}
-		}
-		for (Card card : pile.getCards()) {
-			if(missingCardCount > 0 && card.getCardValue() == CardValue.WILD) {
-				foundPile = foundPile.addCard(card);
-				remainingCards = remainingCards.removeCard(card);
-				missingCardCount--;
+			for (Card card : pile.getCards()) {
+				if(!isFound && card.getCardValue() == CardValue.WILD) {
+					foundPile = foundPile.addCard(card);
+					remainingCards = remainingCards.removeCard(card);
+					missingCardCount--;
+					isFound = true;
+				}
 			}
-		}
+		}		
 		
 		if(missingCardCount > 0) {
 			return new MissingResult(missingCardCount, remainingCards);
